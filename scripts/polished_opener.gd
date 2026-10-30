@@ -19,6 +19,13 @@ func _ready() -> void:
         var door=Doorway.new();door.target=player;door.open_front=buildings.find(b)==1;b.add_child(door);portals.append(door)
     for spec in [[3,Vector2(1080,390),62],[5,Vector2(800,815),58],[6,Vector2(850,835),55],[4,Vector2(1100,810),82],[8,Vector2(410,345),40],[10,Vector2(1220,620),82]]:
         var s=Clan.prop(spec[0],spec[1],spec[2]);actors.add_child(s)
+    # A hunting work area gives the camp a visible meat-and-hide economy.
+    # Decorative for now: do not imply a processing interaction exists yet.
+    var hunt_station=Sprite2D.new()
+    hunt_station.texture=load("res://assets/overhaul/hunt_workstation.png")
+    hunt_station.scale=Vector2.ONE*(190.0/1536.0)
+    hunt_station.position=Vector2(1150,920-1024.0*hunt_station.scale.y*0.5)
+    actors.add_child(hunt_station)
     transition=ColorRect.new();transition.color=Color(0.025,0.02,0.015,0);transition.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);transition.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui_root.add_child(transition)
 
 func _process(delta: float) -> void:
