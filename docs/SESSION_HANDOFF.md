@@ -16,7 +16,7 @@ The requested customization is delivered. Next: gather the user's playtest feedb
 
 ## Runtime
 
-Godot 4.4.1: `/workspace/scratch/dcdfb20f8502/runtime/Godot_v4.4.1-stable_linux.x86_64`. Original Xvfb binary was truncated; a good executable was extracted from runtime/xvfb-complete.deb into `/workspace/scratch/5065e2351aee/xserver`. Launch Xvfb and Godot within the same exec subprocess environment (separate exec calls cannot share its X display). Scratch render helper: `/workspace/scratch/5065e2351aee/render_test.py`. Set CHIEFS_REVIEW_DIR for test screenshots. All tests use isolated XDG_DATA_HOME.
+The former Godot runtime under `/workspace/scratch/dcdfb20f8502/runtime` is no longer present. Do not assume a previous scratch runtime survives. The checked-in release workflows provision Godot 4.4.1 and matching export templates independently. Original Xvfb binary was truncated; a good executable was extracted from runtime/xvfb-complete.deb into `/workspace/scratch/5065e2351aee/xserver`. Launch Xvfb and Godot within the same exec subprocess environment (separate exec calls cannot share its X display). Scratch render helper: `/workspace/scratch/5065e2351aee/render_test.py`. Set CHIEFS_REVIEW_DIR for test screenshots. All tests use isolated XDG_DATA_HOME.
 
 Terminal Git push lacks credentials. Use GitHub connector blob/tree/commit/ref operations with the actual upstream base tree and parent, preserving history. All source/art changes are remotely committed. Verify actual branch heads for subsequent checkpoints. Never force-push or replace repository ancestry.
 

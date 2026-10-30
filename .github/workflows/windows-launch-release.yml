@@ -28,7 +28,7 @@ jobs:
           mkdir -p builds/windows
           Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/ChiefsOfWar.exe
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd
-          XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/ChiefsOfWar.exe --quit-after 180 --audio-driver Dummy -- --fresh
+          XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/ChiefsOfWar.exe --max-fps 60 --audio-driver Dummy -- --fresh --startup-smoke
       - name: Assemble and verify the player ZIP
         run: python tools/package_windows.py --exe builds/windows/ChiefsOfWar.exe --output builds/player-package --version 0.4.2 --source "$GITHUB_SHA"
       - uses: actions/upload-artifact@v4

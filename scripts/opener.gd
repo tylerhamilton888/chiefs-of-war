@@ -67,9 +67,13 @@ var portrait_shader: ShaderMaterial
 var scenery_root:=Node2D.new()
 var veil: ColorRect
 var drill_target:=""
+var shutting_down:=false
 
 func _ready() -> void:
     super._ready()
+    get_tree().auto_accept_quit=false
+    if "--startup-smoke" in OS.get_cmdline_user_args():
+        get_tree().create_timer(3.0).timeout.connect(quit_game)
     for e in enemies:
         e.hp=0; e.actor.dead=true; e.actor.hide()
     var old_player=player
@@ -110,8 +114,11 @@ func _ready() -> void:
         var path="res://assets/opener/"+n+".wav"
         if ResourceLoader.exists(path): sounds[n]=load(path)
     if sounds.has("ambient") and not "--test" in OS.get_cmdline_user_args():
-        var ambience=AudioStreamPlayer.new(); ambience.stream=sounds.ambient; ambience.volume_db=-26; ambience.name="Ambience"; add_child(ambience); ambience.play()
-        ambience.finished.connect(ambience.play)
+        var ambient_stream: AudioStreamWAV=sounds.ambient.duplicate()
+        ambient_stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
+        ambient_stream.loop_begin=0
+        ambient_stream.loop_end=int(ambient_stream.get_length()*ambient_stream.mix_rate)
+        var ambience=AudioStreamPlayer.new(); ambience.stream=ambient_stream; ambience.volume_db=-26; ambience.name="Ambience"; add_child(ambience); ambience.play()
     ready_opener=true
     restore_extra(initial_save)
     apply_look()
@@ -854,10 +861,29 @@ func restore_extra(data: Dictionary) -> void:
         wolves[i].stage="dead" if wolves[i].hp<=0 else "idle"
     if returned: hunter.position=Vector2(805,600)
 func sound(name: String) -> void:
-    if audio_enabled: super.sound(name)
+    if audio_enabled and not shutting_down: super.sound(name)
 
 func numeric(value) -> bool:
     return (value is int or value is float) and is_finite(float(value))
+func _notification(what: int) -> void:
+    if what==NOTIFICATION_WM_CLOSE_REQUEST: quit_game()
+
+func quit_game() -> void:
+    if shutting_down: return
+    if created and not "--combat-yard" in OS.get_cmdline_user_args() and not save_game():
+        say("Save failed; staying in game.")
+        return
+    shutting_down=true
+    set_process(false)
+    set_physics_process(false)
+    for child in get_children():
+        if child is AudioStreamPlayer:
+            child.stop()
+            child.stream=null
+    # Let the audio mixer release stopped playback before destroying the tree.
+    await get_tree().create_timer(0.15).timeout
+    get_tree().quit()
+
 func _exit_tree() -> void:
     for child in get_children():
         if child is AudioStreamPlayer: child.stop(); child.stream=null

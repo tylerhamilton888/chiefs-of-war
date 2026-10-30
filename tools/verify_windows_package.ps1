@@ -10,7 +10,7 @@ $env:APPDATA = Join-Path $env:RUNNER_TEMP 'chiefs-isolated-appdata'
 New-Item -ItemType Directory -Force -Path $env:APPDATA | Out-Null
 function Invoke-GameSmoke([string]$Name, [string[]]$GameArgs) {
     $log = Join-Path $env:RUNNER_TEMP ($Name + '-startup.log')
-    $arguments = @('--headless', '--audio-driver', 'Dummy', '--quit-after', '180', '--log-file', ('"' + $log + '"'), '--') + $GameArgs
+    $arguments = @('--headless', '--audio-driver', 'Dummy', '--max-fps', '60', '--log-file', ('"' + $log + '"'), '--', '--startup-smoke') + $GameArgs
     # Deliberately launch outside the extracted directory and from a path with spaces.
     $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $env:RUNNER_TEMP -PassThru
     if (!$process.WaitForExit(120000)) { $process.Kill(); throw "$Name startup timed out." }

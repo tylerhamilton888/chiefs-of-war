@@ -1,12 +1,14 @@
 # Chiefs of War — The Ancestral Hearth
 
-An original 2D Orc sandbox in Godot 4.4.1. Version 0.4.1 expands character appearance and includes the recovered Axe and Iron combat/gathering improvements. The opening connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
+An original 2D Orc sandbox in Godot 4.4.1. Version 0.4.2 provides a clear standalone Windows game package, retaining the expanded character appearance and recovered Axe and Iron combat/gathering improvements. The opening connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
 
 ## Play
 
-**[Download the verified 0.4.1 Windows playtest](https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.4.1/Chiefs-of-War-0.4.1-Windows.zip)** · [Release notes and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.4.1).
+**[Download the ChiefsOfWar Windows game (0.4.2)](https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.4.2/ChiefsOfWar-Windows-0.4.2.zip)** · [Release notes and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.4.2).
 
-Extract the Windows ZIP, then run `ChiefsOfWar.exe`. No Godot installation is needed. `Combat-Practice.bat` opens an unsaved practice yard without reading or changing your campaign. Existing characters can use Esc → Appearance without restarting.
+Right-click the downloaded ZIP → **Extract All** → open the extracted folder → double-click **ChiefsOfWar.exe** (Windows may display it as **ChiefsOfWar**). No Godot installation, editor or source project is needed.
+
+The game executable and **START HERE.txt** are at the top level. Technical files are in **Support**. **Extras/Combat Practice.bat** opens an unsaved practice yard without reading or changing your campaign. Existing characters can use Esc → Appearance without restarting.
 
 Name your Orc and choose face, hair, independent beard and mustache, skin, hair color and clan cloth. Enter the Ash Hall and speak to Yrsa. Help Bren finish the timber store, practice your axe and dodge, then follow the eastern trail to the overdue hunter. Clear the Greytooth pack, take its leader's pelt, return to Yrsa, and ask Harn to forge your iron kit. The journal updates throughout. You can gather and explore ahead of its suggested order.
 
