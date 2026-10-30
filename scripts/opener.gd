@@ -250,7 +250,7 @@ func player_hit(direction: Vector2) -> void:
         impact_feedback(w.position,"hit",Color("b1543c"),"45" if forged else "32")
         return
     var offset=DUMMY-player.position
-    if offset.length()<105 and offset.normalized().dot(direction)>0.35:
+    if offset.length()<105 and offset.normalized().dot(direction)>0.35 and has_line(player.position,DUMMY,null):
         training_hits=mini(3,training_hits+1)
         impact_feedback(DUMMY,"wood",Color("b9a16c"),"Good contact")
         var t=create_tween(); t.tween_property(dummy,"rotation",0.06,0.06); t.tween_property(dummy,"rotation",0.0,0.12)
@@ -282,7 +282,7 @@ func enemy_tick(_delta: float) -> void: pass
 func wolf_strike(w) -> void:
     if room>=0 or modal.visible: return
     var off: Vector2=player.position-w.position
-    if off.length()<80 and off.normalized().dot(w.locked_direction)>-0.15 and player.invulnerable<=0:
+    if off.length()<80 and off.normalized().dot(w.locked_direction)>-0.15 and player.invulnerable<=0 and has_line(w.position,player.position,null):
         hurt((28 if w.alpha else 18)*(0.6 if player.equipment=="iron" else 1.0))
         player.invulnerable=0.55; player.recoil=w.locked_direction*170
         sound("hit"); shake=4
@@ -359,7 +359,10 @@ func finish_work() -> void:
         if built==3: sound("success"); say("The store is ready. Bren can work here. Try Harn's practice dummy before taking the eastern trail.")
     elif busy_kind.begins_with("ore:"):
         var id=busy_kind.substr(4)
-        if state.objects.has(id) and state.objects[id].state=="intact": state.damage(id,1000); ore+=3; toast("3 surface ore",player.position)
+        if state.objects.has(id) and state.objects[id].state=="intact":
+            var pos: Vector2=state.point(state.objects[id])
+            state.damage(id,1000); ore+=3
+            impact_feedback(pos,"metal",Color("c2b8a0"),"3 surface ore")
     busy_kind=""
 func hall_menu() -> void:
     if not introduced:

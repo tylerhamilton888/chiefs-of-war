@@ -67,11 +67,12 @@ func _physics_process(delta: float) -> void:
  if held:return
  if hp<=0:
   death_clock+=delta
-  pose((2 if death_clock<0.08 else 3 if death_clock<0.18 else 4 if death_clock<0.35 else 5) if cleaved else (4 if death_clock<0.22 else 5),cleaved)
+  var show_cleave: bool=cleaved and game.dismember_enabled
+  pose((2 if death_clock<0.08 else 3 if death_clock<0.18 else 4 if death_clock<0.35 else 5) if show_cleave else (4 if death_clock<0.22 else 5),show_cleave)
   queue_redraw();return
  vulnerable_cooldown=maxf(0,vulnerable_cooldown-delta)
  if vulnerable>0:
-  vulnerable=maxf(0,vulnerable-delta);velocity=Vector2.ZERO;pose(3)
+  vulnerable=maxf(0,vulnerable-delta);velocity=recoil;recoil=recoil.move_toward(Vector2.ZERO,delta*1000);move_and_slide();pose(3)
   if vulnerable<=0:state="recover";clock=0;posture=0;vulnerable_cooldown=2.0
   queue_redraw();return
  if not is_instance_valid(target):return
@@ -79,7 +80,7 @@ func _physics_process(delta: float) -> void:
  clock+=delta
  if fear>0:velocity=Vector2.ZERO;pose(3)
  elif state=="windup":
-  velocity=Vector2.ZERO;pose(0)
+  velocity=Vector2.ZERO;pose(1)
   if clock>=0.65:
    state="attack";clock=0;pose(2);strike.emit(self)
  elif state=="attack":

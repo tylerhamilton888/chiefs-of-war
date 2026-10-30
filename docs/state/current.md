@@ -1,29 +1,25 @@
 # Current implementation state
 
-Updated: 2026-10-30. Default branch: `warlord` (renamed from `main`). **0.4.0 reconstruction is in progress; no new verified release yet.**
+Updated: 2026-10-30. Default branch: `warlord` (renamed from `main`). **0.4.0 combat playtest preparation is in progress; no newly published build yet.**
 
-Canonical playable baseline: warlord `132e4f876b91d88499bab9efd0790c6a86087081`, GitHub release v0.3.2 Clan and Hearth. Working branch: `recovery/axe-and-iron-2026-10-30`; initial recovery checkpoint `1bea3094c6529e4121d5f8201c05064bcf3748b3`. Check actual Git heads for newer checkpoints.
+Playable release baseline: v0.3.2, game source `132e4f876b91d88499bab9efd0790c6a86087081`. Active source: `recovery/axe-and-iron-2026-10-30`. Check actual Git heads for latest checkpoints.
 
-## Implemented baseline
+## Implemented
 
-Named male Orc with skin/cloth palettes, leather/iron whole outfits, movement/buffered axe/Space dodge; Ashfang village, Yrsa/Harn/Bren/Torren, three enterable furnished buildings; tree harvesting/log collection, ore collection, three-stage timber store, autonomous timber worker/storage, palisades; axe/dodge tutorial, eastern hunter/wolf expedition, pelt return and iron reward; save/load, provision healing, recoverable defeat, menus and guarded fire/recovery.
+Named male Orc, palette and leather/iron outfit selection; Ashfang village, four named NPCs, three enterable buildings; tree chopping/falling/log collection, surface ore collection, staged timber store, physical worker cargo/storage, palisades; tutorial, wolf hunt, hunter return and iron reward; campaign save/load, healing, recoverable defeat and guarded fire.
 
-Historical baseline reports 170 checks and actual-engine review; use QA.md for that evidence. Fresh testing of the reconstruction must be recorded separately.
+Recovery branch adds optional earned side-on goblin/rival-Orc finishers, optional goblin cleave, blood/dismember settings, raiders after the iron reward and legacy-save-compatible combat state. Current feel pass reduces axe windup/recovery, buffers late-dodge clicks, adds raider cursor targeting/recoil, consistent contact feedback, focus-loss pause, target-removal cleanup and an unsaved `--combat-yard` practice mode.
 
-## In progress now
+## Evidence and remaining work
 
-- Earned optional side-on goblin/rival-Orc finishers and restrained goblin cleave; post-iron-kit raider encounter, options and combat save extension.
-- New generated complete-character animation candidates require crop/contact/identity review, not merely successful import.
-- Documentation sharding is complete: categorized requirements, root agent routing, architecture/assets/recovery guides, decision/state records.
+Fresh baseline suites passed: foundation 35, camp 27, motion 20, full opener 48 (zero recoveries), opener edges 17, rendered polish 23; worker storage check passed. New feel suite passed 7. Practice entry/save isolation/rendered menu passed. Execution edge suite expanded to 28; target-removal cleanup is under recheck.
 
-The complete Git clone and asset import now succeed after the user made the repo public. Missing-asset recovery is no longer the active blocker. Fresh reconstruction checks: `opener_test.gd` passed **48 checks, 0 failures, 0 recoveries**; `execution_test.gd` passed **24 checks, 0 failures**. These are mechanics/regression results, not visual acceptance. Engine screenshots were captured; crop/contact/identity review and the remaining regression suites are pending.
-
-The execution implementation and its new tests/assets live on the recovery branch. The default branch retains the playable 0.3.2 implementation plus continuity documentation; do not assume an execution file exists on warlord.
+Actual engine sequences captured for goblin cleave, mirrored Orc finisher and tree chopping/falling. Review found neighboring-axe fragments in the original finisher atlas. Repacked artwork is being generated and must be inspected/imported before export. Native Windows and human playfeel remain unverified.
 
 ## Planned, not delivered
 
-Expanded facial/hair/beard/mustache creator; individual armor slots; full directional enemy/execution animation; block/parry/heavy combat; richer schedules/relationships/family; full invasion/chieftain duel/new-tribe prologue; settlement politics, conquest, larger-world persistence, broader hunting/industry and disaster systems. Female playable characters are not initial scope.
+Expanded face/hair creator; individual armor slots; full directional enemy/finisher animation; block/parry/heavy combat; richer schedules/relationships/family; full invasion/chieftain duel/new-tribe prologue; settlement politics, larger-world persistence and broader industry. Female playable characters are not initial scope.
 
-## Acceptance still required
+## Documentation
 
-Validate actual contact/crop/scale, cancellation/interruption/target-loss, pause/work/interior interactions, ordinary kills, options, save compatibility and complete opening. Export and inspect pack, publish real Windows release with source/checksums. Native Windows and human playfeel must be reported honestly; automation cannot certify fun.
+Eight categorized design shards preserve all 19 master-brief sections verbatim. Requirements, decisions, engineering contracts and active status are separated. Root AGENTS.md is the session entry point. Source-download blocker was resolved when the user made the repo public; do not repeat that investigation.

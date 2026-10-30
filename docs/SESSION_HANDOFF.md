@@ -24,3 +24,7 @@ Documentation: all 19 master-brief sections are preserved in eight design shards
 ## Documentation placement
 
 Continuity documentation is also maintained on warlord so a fresh checkout finds AGENTS.md immediately. Game code, new execution tests and generated finisher assets remain on the recovery branch until validated. Inspect branch ancestry before merging; preserve documentation changes made on warlord. No new 0.4.0 release is implied by the documentation commit.
+
+## Latest combat feel work
+
+User prioritized combat and gathering feel before their imminent playtest. Runtime changes and tests are being checkpointed on the recovery branch. Fresh baseline/feel/practice suites pass; expanded execution target-removal check exposed a freed-reference lock and was fixed with an explicit execution-running flag (recheck running). A real engine recording exposed stray neighboring axe fragments in finisher crops. Imagegen atlas repacking is in progress; do not publish the original atlas as visually accepted. Use tests/impact_visual.gd for a live sequence and tests/practice_test.gd for campaign isolation. Practice mode must never load or save the real campaign. Windows publication remains required.
