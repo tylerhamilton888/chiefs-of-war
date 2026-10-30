@@ -55,3 +55,12 @@ Not accepted as final art or finished gameplay. The generated axe-action sheet w
 - Registered appearance in walking, axe attacks, both outfits, HUD portrait and mirrored finishers.
 - Preserved recovered combat timing, dodge buffering, gathering feedback, spaced finisher artwork and save-isolated practice.
 - Added reproducible release CI, customization persistence/migration tests and rendered layout review. See QA.md for exact validation and known native-Windows/art limitations.
+
+
+## 0.4.2 — Clear Windows launch — 2026-10-30
+
+- Graceful audio shutdown; creator and unsaved practice can exit without a campaign save.
+
+- One root ChiefsOfWar.exe with embedded game resources and a short START HERE guide. Optional practice is in Extras; build details/licenses are in Support.
+- Replaced the packaged README's stale version heading with simple player instructions. Existing campaign location and gameplay remain unchanged.
+- Added repeatable package assembly, GUI executable/ZIP integrity checks, and native Windows headless launch checks from a path with spaces and another working directory. Publication waits for the Windows gate.

@@ -41,7 +41,7 @@ The standard route is **GitHub Actions**, not a browser release form. The connec
 2. Commit/sync source with upstream ancestry and expected-head protection. A push to `warlord` runs `.github/workflows/windows-release.yml` in **build/check mode only**. It does not publish a release. The run retains the Windows ZIP and logs as Actions artifacts for 14 days.
 3. When release delivery is authorized, create the branch `release/vX.Y.Z` at that exact tested source commit using GitHub `create_branch` (or authenticated Git). A branch push triggers publication. Alternatively, GitHub Actions → Windows build and release → Run workflow → select the intended source branch → check `publish`. The manual action defaults to build/check only. No new permission is needed when the user has already requested delivery.
 4. The runner imports, tests, renders, exports, checks the pack and ZIP, and saves an artifact **before** publishing. It creates/resumes a draft, uploads files, downloads them again, verifies checksums/archive/source identity, and only then publishes. A retry of the same published source verifies it without replacing anything. Another source under that tag fails explicitly. Timeouts, retained logs and a run summary provide a concrete failure instead of an indefinite browser upload.
-5. Confirm the run succeeded and the release has `draft=false`, its Windows ZIP, checksum and preview. Record source SHA, run ID, release URL and relevant limitations in current state/handoff. Automated Linux pack checks do not establish native Windows or human playfeel acceptance.
+5. Confirm the run succeeded and the release has `draft=false`, its Windows ZIP and checksum (legacy packages also require a preview). Record source SHA, run ID, release URL and relevant limitations in current state/handoff. The native Windows job verifies extracted normal/practice startup and graceful exit, path spaces, external working directories and campaign isolation. Human graphics/playfeel acceptance remains separate.
 
 Do not use the old `release/customization-0.4.1` branch for new work: its historical workflow hard-codes an already-published version. The reusable workflow replaces it on `warlord`.
 
@@ -60,7 +60,15 @@ If GitHub already succeeded, finish verification and report the link. If a run f
 
 ## Fast playtest
 
-Run the packaged `Combat-Practice.bat`, or `godot --path . -- --combat-yard`. This mode never loads or writes campaign files; reset through its pause menu. Use a temporary XDG_DATA_HOME and `--combat-yard --test` for practice_test.gd, which writes a deliberate sentinel only in that isolated location. The normal EXE continues the campaign.
+Run the packaged `Extras/Combat Practice.bat`, or `godot --path . -- --combat-yard`. This mode never loads or writes campaign files; reset through its pause menu. Use a temporary XDG_DATA_HOME and `--combat-yard --test` for practice_test.gd, which writes a deliberate sentinel only in that isolated location. The normal EXE continues the campaign.
 
 
-Verified download is v0.4.1 (a published prerelease with attached assets). A separate v0.4.0 release has no assets as of this audit; it is not a playable delivery. Use the explicit v0.4.1 URL in the README, not GitHub's generic latest-stable shortcut. Preserve historical releases unless the user asks to remove them.
+The verified 0.4.1 release remains available historically. The empty manual v0.4.0 is not a playable delivery; leave historical releases intact. Use the explicit current download in README rather than the generic latest-stable shortcut.
+
+## Clear Windows player package (0.4.2)
+
+`release.json` selects `package_layout: clear-launch`. `tools/package_windows.py` builds a ZIP with one root GUI executable, `ChiefsOfWar.exe`, and `START HERE.txt`; optional practice goes in Extras and technical information/notices in Support. Game resources are embedded. `tools/release.py` understands both this format and historical legacy downloads while retaining draft-first publication, verified downloads and immutable public releases.
+
+The reusable `windows-release.yml` keeps the recovered regressions, render checks, logs and resumable publication. A separate native Windows job tests the exact extracted ZIP before the publish job can run. Startup uses `--startup-smoke` to request the same graceful exit used by the game after three seconds; no `--test` flag disables audio. APPDATA is isolated. The checked-in PowerShell test enforces a timeout and rejects script/runtime errors.
+
+The one-version `windows-launch-release.yml` was started before the concurrent recovery workflow arrived. Its successful source/run is recorded in current state. It is removed from canonical warlord; use only the reusable workflow for future versions. Do not republish 0.4.2 from a different source commit.

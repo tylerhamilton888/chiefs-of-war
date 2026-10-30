@@ -34,6 +34,29 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source commit"):
             release.validate_files(self.directory, self.data, "b" * 40)
 
+    def test_clear_launch_layout_and_source(self):
+        data = {**self.data, "package_layout": "clear-launch"}
+        archive, checksum = release.names(data)
+        with zipfile.ZipFile(self.directory / archive, "w") as package:
+            for name in ["ChiefsOfWar.exe", "START HERE.txt", "Extras/Combat Practice.bat", "Support/THIRD_PARTY_NOTICES.txt"]:
+                package.writestr(name, "test fixture")
+            package.writestr("Support/BUILD.txt", f"Source commit: {self.sha}\n")
+        digest = hashlib.sha256((self.directory / archive).read_bytes()).hexdigest()
+        (self.directory / checksum).write_text(f"{digest}  {archive}\n")
+        self.assertEqual(len(release.validate_files(self.directory, data, self.sha)), 2)
+        with self.assertRaisesRegex(ValueError, "source commit"):
+            release.validate_files(self.directory, data, "b" * 40)
+
+    def test_clear_launch_rejects_legacy_layout(self):
+        data = {**self.data, "package_layout": "clear-launch"}
+        old_archive, _, _ = release.names(self.data)
+        archive, checksum = release.names(data)
+        payload = (self.directory / old_archive).read_bytes()
+        (self.directory / archive).write_bytes(payload)
+        (self.directory / checksum).write_text(f"{hashlib.sha256(payload).hexdigest()}  {archive}\n")
+        with self.assertRaisesRegex(ValueError, "incomplete"):
+            release.validate_files(self.directory, data, self.sha)
+
     def test_corrupt_archive_rejected(self):
         (self.directory / release.names(self.data)[0]).write_bytes(b"truncated")
         with self.assertRaisesRegex(ValueError, "checksum"):

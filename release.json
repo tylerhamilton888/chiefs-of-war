@@ -1,6 +1,7 @@
 {
-  "version": "0.4.1",
-  "title": "0.4.1 — Faces of Ashfang",
-  "notes": "docs/RELEASE_0_4_1.md",
-  "prerelease": true
+  "version": "0.4.2",
+  "title": "0.4.2 \u2014 ChiefsOfWar Windows Playtest",
+  "notes": "docs/RELEASE_0_4_2.md",
+  "prerelease": true,
+  "package_layout": "clear-launch"
 }

@@ -37,6 +37,8 @@ def manifest():
 
 
 def names(data):
+    if data.get("package_layout") == "clear-launch":
+        return (f"ChiefsOfWar-Windows-{data['version']}.zip", f"SHA256SUMS-{data['version']}.txt")
     return (f"Chiefs-of-War-{data['version']}-Windows.zip", f"SHA256SUMS-{data['version']}.txt", "creator.png")
 
 
@@ -53,7 +55,7 @@ def same_source(release, sha):
 
 
 def validate_files(directory, data, sha):
-    archive_name, checksum_name, preview_name = names(data)
+    archive_name, checksum_name, *previews = names(data)
     paths = [directory / name for name in names(data)]
     if any(not p.is_file() or p.stat().st_size == 0 for p in paths):
         raise ValueError("Windows ZIP, checksum or preview is missing/empty")
@@ -64,14 +66,19 @@ def validate_files(directory, data, sha):
         raise ValueError("Windows ZIP checksum mismatch")
     with zipfile.ZipFile(archive) as package:
         required = {"ChiefsOfWar.exe", "README.txt", "Combat-Practice.bat", "BUILD.txt", "THIRD_PARTY_NOTICES.txt"}
+        build_name = "BUILD.txt"
+        if data.get("package_layout") == "clear-launch":
+            required = {"ChiefsOfWar.exe", "START HERE.txt", "Extras/Combat Practice.bat", "Support/BUILD.txt", "Support/THIRD_PARTY_NOTICES.txt"}
+            build_name = "Support/BUILD.txt"
         if not required.issubset(package.namelist()) or package.testzip():
             raise ValueError("Windows ZIP is incomplete/corrupt")
         if any(package.getinfo(name).file_size == 0 for name in required):
             raise ValueError("Windows ZIP contains an empty required file")
-        if f"Source commit: {sha}\n" not in package.read("BUILD.txt").decode():
+        if f"Source commit: {sha}\n" not in package.read(build_name).decode():
             raise ValueError("Packaged source commit does not match the requested release")
-    if not (directory / preview_name).read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
-        raise ValueError("Preview is not a PNG")
+    for preview_name in previews:
+        if not (directory / preview_name).read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("Preview is not a PNG")
     return paths
 
 

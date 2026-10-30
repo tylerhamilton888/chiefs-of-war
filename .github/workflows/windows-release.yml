@@ -20,6 +20,10 @@ jobs:
   validate-and-release:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    outputs:
+      publish: ${{ steps.release.outputs.publish }}
+      complete: ${{ steps.release.outputs.complete }}
+      version: ${{ steps.release.outputs.version }}
     env:
       GODOT_SILENCE_ROOT_WARNING: '1'
     steps:
@@ -80,17 +84,10 @@ jobs:
           mkdir -p builds/windows
           Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/ChiefsOfWar.exe 2>&1 | tee builds/logs/export.log
           XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/ChiefsOfWar.exe --quit-after 120 -- --test --combat-yard 2>&1 | tee builds/logs/pack-smoke.log
-          cp docs/PLAYTEST.md builds/windows/README.txt
-          printf '@echo off\r\ncd /d "%%~dp0"\r\nstart "" "ChiefsOfWar.exe" --combat-yard\r\n' > builds/windows/Combat-Practice.bat
-          printf 'Source commit: %s\nNative Windows playtesting remains unverified.\n' "$GITHUB_SHA" > builds/windows/BUILD.txt
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd 2>&1 | tee builds/logs/notices.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/*.log; then exit 1; fi
           cp "$RUNNER_TEMP/review/creator.png" builds/creator.png
-          cd builds/windows
-          zip -q -9 "../Chiefs-of-War-$RELEASE_VERSION-Windows.zip" ChiefsOfWar.exe README.txt Combat-Practice.bat BUILD.txt THIRD_PARTY_NOTICES.txt
-          cd ..
-          sha256sum "Chiefs-of-War-$RELEASE_VERSION-Windows.zip" > "SHA256SUMS-$RELEASE_VERSION.txt"
-          unzip -t "Chiefs-of-War-$RELEASE_VERSION-Windows.zip"
+          python3 tools/package_windows.py --exe builds/windows/ChiefsOfWar.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
       - name: Preserve build before publication
         if: steps.release.outputs.complete != 'true'
         uses: actions/upload-artifact@v4
@@ -103,11 +100,6 @@ jobs:
             builds/*.zip
             builds/SHA256SUMS-*.txt
             builds/creator.png
-      - name: Publish draft only after uploaded downloads verify
-        if: steps.release.outputs.publish == 'true' && steps.release.outputs.complete != 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 tools/release.py publish
       - name: Preserve diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -116,15 +108,32 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
           path: builds/logs/
-      - name: Record outcome
-        if: success()
+  windows-startup:
+    needs: validate-and-release
+    if: needs.validate-and-release.outputs.complete != 'true'
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-${{ needs.validate-and-release.outputs.version }}-${{ github.sha }}
+          path: dist
+      - name: Verify native Windows launch and clean exit
+        shell: pwsh
+        run: ./tools/verify_windows_package.ps1 -Archive (Resolve-Path 'dist/ChiefsOfWar-Windows-${{ needs.validate-and-release.outputs.version }}.zip')
+  publish:
+    needs: [validate-and-release, windows-startup]
+    if: needs.validate-and-release.outputs.publish == 'true' && needs.validate-and-release.outputs.complete != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-${{ needs.validate-and-release.outputs.version }}-${{ github.sha }}
+          path: builds
+      - name: Publish draft only after Windows and downloaded assets verify
         env:
-          RELEASE_VERSION: ${{ steps.release.outputs.version }}
-          PUBLISHED: ${{ steps.release.outputs.publish }}
-        run: |
-          printf 'Source: `%s`\n\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
-          if [ "$PUBLISHED" = true ]; then
-            printf 'Published and verified: https://github.com/%s/releases/tag/v%s\n' "$GITHUB_REPOSITORY" "$RELEASE_VERSION" >> "$GITHUB_STEP_SUMMARY"
-          else
-            printf 'Build/check run only. Windows ZIP is attached to this run; no release was changed.\n' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/release.py publish
