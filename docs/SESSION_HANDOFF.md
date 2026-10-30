@@ -12,7 +12,11 @@ Implemented customization lives in scripts/appearance.gd, orc_palette.gdshader, 
 
 Published v0.4.1 — Faces of Ashfang: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.4.1 . Source `339183d219d89a4a497d3eb2b9dae1def686cfc2`, CI run `41094541852` succeeded including regressions, rendered menus, export, pack smoke and ZIP integrity. ZIP is 78,926,376 bytes; SHA-256 `c7dad59b295069f4f3ba13f8039e7b55851da837915ff17721d3f8cc12320b81`. Native Windows playtesting remains unverified.
 
-The requested customization is delivered. Next: gather the user's playtest feedback on appearance and combat/gathering feel; do not automatically expand scope. The release workflow is scoped to the explicit release/customization-0.4.1 branch; do not push ordinary follow-up docs to that branch (it would try to republish the existing tag).
+The requested customization is delivered. Subsequent task: diagnose repeated publication/chat failures and make publication reliable. The reusable `.github/workflows/windows-release.yml`, `release.json`, and `tools/release.py` replace the one-version workflow. See engineering/validation-and-release.md for the authoritative procedure and incident evidence. Publishing is done by GitHub Actions; ordinary `warlord` pushes only build/check. Do not return to the browser upload path or push to the historical release/customization-0.4.1 branch.
+
+Local publication guards pass 14 failure/retry tests. Full GitHub workflow validation is pending for this repair. Do not claim ChatGPT's internal unknown-error root cause is diagnosed; those logs are unavailable. v0.4.1 is the latest verified playable build. The manually published v0.4.0 has no attached assets and has been left intact.
+
+After workflow verification, gather the user's appearance/combat/gathering playtest feedback; do not automatically expand game scope.
 
 ## Runtime
 

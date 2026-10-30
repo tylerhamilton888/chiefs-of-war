@@ -35,21 +35,32 @@ Run relevant tests against the exported pack as well when possible. A pack run u
 
 ## Publish and verify
 
-Commit/sync final source, documentation and asset provenance; preserve upstream ancestry. Publish an actual GitHub release with Windows ZIP, checksum file and useful engine preview/clip. Confirm it is published rather than draft and verify assets are attached with correct names/sizes. Use GitHub Actions for release uploads. The verified path is `.github/workflows/customization-release.yml`, successfully used by run `41094541852`. Do not repeatedly attempt unauthenticated terminal pushes or switch to browser uploads when this workflow can perform the release.
+The standard route is **GitHub Actions**, not a browser release form. The connector can sync source but has no release upload operation, and this environment has no authenticated terminal Git push. GitHub's runner has its own short-lived `github.token`; do not ask the user for a token or pass binary releases through chat tool arguments.
 
-Record source SHA, release URL and tests in current state/handoff. Do not call source-only progress a playable release, or omit known native-Windows/animation/human-playtest limitations. If blocked, checkpoint explicit WIP and identify the concrete blocker.
+1. Update `release.json` (version, title, notes path, prerelease flag), the project version and release notes for an actual new game release. Preserve the current prerelease policy unless the requested milestone warrants changing it. Never reuse a published version for another source commit.
+2. Commit/sync source with upstream ancestry and expected-head protection. A push to `warlord` runs `.github/workflows/windows-release.yml` in **build/check mode only**. It does not publish a release. The run retains the Windows ZIP and logs as Actions artifacts for 14 days.
+3. When release delivery is authorized, create the branch `release/vX.Y.Z` at that exact tested source commit using GitHub `create_branch` (or authenticated Git). A branch push triggers publication. Alternatively, GitHub Actions → Windows build and release → Run workflow → select the intended source branch → check `publish`. The manual action defaults to build/check only. No new permission is needed when the user has already requested delivery.
+4. The runner imports, tests, renders, exports, checks the pack and ZIP, and saves an artifact **before** publishing. It creates/resumes a draft, uploads files, downloads them again, verifies checksums/archive/source identity, and only then publishes. A retry of the same published source verifies it without replacing anything. Another source under that tag fails explicitly. Timeouts, retained logs and a run summary provide a concrete failure instead of an indefinite browser upload.
+5. Confirm the run succeeded and the release has `draft=false`, its Windows ZIP, checksum and preview. Record source SHA, run ID, release URL and relevant limitations in current state/handoff. Automated Linux pack checks do not establish native Windows or human playfeel acceptance.
+
+Do not use the old `release/customization-0.4.1` branch for new work: its historical workflow hard-codes an already-published version. The reusable workflow replaces it on `warlord`.
+
+### Interrupted chat or ambiguous tool result
+
+Read GitHub state before retrying any mutation: `GET /repos/tylerhamilton888/chiefs-of-war/actions/runs?per_page=10` and the release/tag/assets. Use the GitHub connector's read-only `fetch`; retain only compact status fields, never dump full API responses or binary/base64 data into the conversation. Resume/poll the existing run. The connector's rerun-failed-jobs operation can retry a failed run; do not create a replacement chat, duplicate release branch or replacement tag as a troubleshooting step.
+
+If GitHub already succeeded, finish verification and report the link. If a run failed, retrieve that job's logs and fix its concrete error. If a tool fails repeatedly, checkpoint source/run IDs and explain the exact blocker; do not cycle through the same failing path. An empty published release is not a playable build. Do not silently delete or rewrite a user's manual release.
+
+### October 30 incident: confirmed evidence and limits
+
+- Release v0.4.1 was published by `github-actions[bot]` at 17:01:01 UTC / 1:01:01 p.m. Eastern. Run `41094541852` passed every step. Its Windows ZIP is 78,926,376 bytes and SHA-256 is `c7dad59b295069f4f3ba13f8039e7b55851da837915ff17721d3f8cc12320b81`.
+- A separate manually published v0.4.0 appeared at 18:29:26 UTC / 2:29:26 p.m. Eastern with no attached assets. It is not the latest playable Windows build.
+- The historical workflow was hard-coded to one branch/tag/version and used a single `gh release create` operation; it was not a reusable, resumable release path. Browser-based publication was also documented because the connector lacked upload support.
+- ChatGPT's internal error trace is unavailable. None of this proves why Work displayed “unknown error”; don't label a browser timeout, context size, permissions, or repository corruption as the established cause. The changes remove avoidable release dependencies and preserve progress outside the chat; they do not promise to repair the ChatGPT service.
 
 ## Fast playtest
 
 Run the packaged `Combat-Practice.bat`, or `godot --path . -- --combat-yard`. This mode never loads or writes campaign files; reset through its pause menu. Use a temporary XDG_DATA_HOME and `--combat-yard --test` for practice_test.gd, which writes a deliberate sentinel only in that isolated location. The normal EXE continues the campaign.
 
-
-## Repeatable publication and recovery
-
-1. Start from current `warlord`. The 0.4.1 source and art are already merged. Preserve any new upstream changes.
-2. For the next requested release, adapt the checked-in workflow to a new explicit release branch and unused version tag. Update the project version, release notes and artifact names together. The existing `release/customization-0.4.1` trigger/tag is historical; pushing to it again would try to create an already-existing release.
-3. Commit/sync the source first, then create the chosen release branch at that exact commit. GitHub Actions performs import, regressions, rendered UI checks, export, packaged-resource smoke, ZIP integrity, checksum and publication.
-4. Inspect the run status and failing step/logs. A failed build is a concrete CI failure; it is not evidence about a ChatGPT client error. If the run is successful, inspect release metadata and assets before taking any further write action. Do not publish duplicates because the chat UI stalled.
-5. Record the immutable source SHA, release URL, ZIP size/digest and run ID in current state/handoff, then bring the accepted source and continuity updates into `warlord` with ancestry preserved.
 
 Verified download is v0.4.1 (a published prerelease with attached assets). A separate v0.4.0 release has no assets as of this audit; it is not a playable delivery. Use the explicit v0.4.1 URL in the README, not GitHub's generic latest-stable shortcut. Preserve historical releases unless the user asks to remove them.

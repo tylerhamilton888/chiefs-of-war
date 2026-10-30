@@ -42,5 +42,6 @@ Continue this existing Godot 4.4.1 / GDScript game. Do not create a replacement 
 - Keep design intent separate from implementation status and test evidence. Record exact test suites, failures, source commit and remaining visual/native-platform limitations.
 - Use the checked-in GitHub Actions release path documented in `docs/engineering/validation-and-release.md`; inspect existing run/release state before retrying publication. Do not use the historical 0.4.1 branch/tag for a new release.
 - A finished requested build includes the actual downloadable Windows GitHub release, source reference and checksums. A source commit or a promise to publish is not release completion.
+- Publish through `.github/workflows/windows-release.yml` and `release.json`; read the release runbook first. Do not return to browser uploads or invent a one-version workflow. Check existing release assets/run status before retrying an interrupted action; a chat error does not prove GitHub failed.
 - Do not call a feature polished or fun solely because automated tests pass. Inspect actual engine output; retain pending human playtest judgments honestly.
 - Update `docs/state/current.md` and `docs/SESSION_HANDOFF.md` when state changes; update the relevant shard and decisions only when requirements change. Avoid appending contradictory notes across many files.

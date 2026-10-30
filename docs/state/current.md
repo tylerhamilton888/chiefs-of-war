@@ -14,4 +14,6 @@ Customization: 73 headless / 74 rendered checks passed. Fresh opener 48, edges 1
 
 ## Remaining broader scope
 
+Publication repair (2026-10-30): reusable GitHub Actions build/release workflow, draft-first verified uploads, safe retries, source-version conflict checks, and retained build/log artifacts replace the one-version publishing setup. 14 publication failure/retry tests pass locally; full GitHub run is pending. Game content/version remains 0.4.1. See engineering/validation-and-release.md for evidence and recovery instructions; ChatGPT's internal error cause is not established.
+
 Block/parry/heavy combat; richer social schedules/family; full invasion/chieftain duel/adoption prologue; expanded world and industry. Male Orc player scope remains; female NPCs remain important characters.
