@@ -1,3 +1,5 @@
+> Historical architecture notes. For the current entry points and ownership, read [engineering/architecture.md](engineering/architecture.md). Statements about early prototype scope describe those versions.
+
 # Architecture
 
 `world_state.gd` owns serializable object records keyed by persistent IDs and sparse 32-pixel terrain edits. It is independent of rendering, physics and input. Each wall and roof is its own object; no building or harvestable tree is painted into the ground. A future building aggregate can coordinate construction, ownership and structural collapse without replacing per-part state.

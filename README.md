@@ -53,3 +53,7 @@ Import `project.godot` in Godot 4.4.1 and press F5. Main scene: `scenes/opener.t
 Validation: 147 automated checks pass, including a complete opening through movement, timed attacks, building, hunting, return and forging. Actual Linux OpenGL game views were inspected. The exported Windows pack launches under the Linux engine; native Windows execution and human playtesting were not performed here. These checks establish functionality, not a verdict on fun.
 
 See `docs/QA.md`, `docs/ASSET_PROVENANCE.md`, `docs/ART_PROMPTS.md`, and `docs/ROADMAP.md`.
+
+## Development context
+
+Future sessions start with [AGENTS.md](AGENTS.md), the [documentation map](docs/README.md), and [current implementation state](docs/state/current.md). The initial writeup is preserved and split into focused requirements; planned features are kept separate from implemented work and validation evidence.

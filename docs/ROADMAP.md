@@ -8,7 +8,7 @@ Next acceptance gates:
 
 1. Human playtest movement, axe contact, dodge timing, target clarity and hunting difficulty. Do not equate passing automation with fun.
 2. Lock full-body identity, foot anchors and armor continuity across walking, attacks and recovery. Give wolves proper north/south sets. Replace weak frames rather than adding more content around them.
-3. Expand creator faces/hair/body choices, including female player art, once one complete animation set is accepted.
+3. Expand creator faces/hair/body choices, for the initial male player scope, once one complete animation set is accepted. Female Orc NPC quality remains important; female playable characters are not a current milestone.
 4. Add individual equipment slots with consistent full-frame clothing registration and a dedicated gathering tool.
 5. Author richer room layouts, building damage/collapse art and structural destruction; develop NPC schedules and relationships.
 6. Implement the playable village invasion, invading chieftain encounter and adoption into the new tribe from the original prologue. The present slice ends after the first expedition and iron reward.
