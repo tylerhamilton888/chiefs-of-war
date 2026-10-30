@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — Hearth and Steel
+
+- Main menu, Continue and three independent character/world save slots; legacy save retained as slot one.
+- Directional RMB blocking, timed parries, guard depletion/breaks and attacker stagger.
+- Whole-body block/dodge poses for both outfits and four directions.
+- Building-led menu, terrain, scenery and NPC art pass; classic fantasy clothing for Yrsa.
+- Save-slot, menu-flow and defense regression coverage, plus native Windows menu/creator/practice checks.
+
 ## 0.1.0 — 2026-10-29
 
 - Established separate private Chiefs of War project and Godot architecture.

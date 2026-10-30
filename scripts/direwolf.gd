@@ -52,8 +52,8 @@ func _physics_process(delta: float) -> void:
         velocity=locked_direction*(530 if alpha else 400)
         show_pose(5)
         if clock>0.15:
-            strike.emit(self)
             stage="recover"; clock=0; cooldown=1.2 if alpha else 1.0
+            strike.emit(self)
     elif stage=="recover":
         velocity=Vector2.ZERO; show_pose(0)
         if clock>0.60: stage="idle"; clock=0
@@ -92,3 +92,6 @@ func _draw() -> void:
         var a:=locked_direction.angle()
         draw_colored_polygon(PackedVector2Array([Vector2.ZERO,Vector2.from_angle(a-0.25)*reach,Vector2.from_angle(a+0.25)*reach]),Color(0.9,0.35,0.15,0.18))
         draw_arc(Vector2.ZERO,reach,a-0.25,a+0.25,14,Color(1,0.54,0.26),2)
+
+func parried() -> void:
+    stage="idle";clock=0;stagger=0.9;cooldown=1.0;velocity=Vector2.ZERO;offset_recoil=-locked_direction*120

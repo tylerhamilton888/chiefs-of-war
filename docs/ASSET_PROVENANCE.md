@@ -46,3 +46,7 @@ Early narrow-bodied replacement candidates were rejected and are not used. Four-
 ## 2026-10-30 — customization candidates
 
 `assets/customization/faces.png`, `hair.png`, `facial-hair.png`: original OpenAI built-in image generation outputs, made for this project. Faces use the project's existing `rest_leather.png` as the style reference. Prompts specify massive adult Orc jaws, bald clean-shaven face variants, Northern warrior hair, and separate beard/mustache overlays on true transparency. No third-party game art used. Face/hair pieces are registered inside the full-body sprite shader; they are not new independently drawn action sequences or approved final art. Prompt specification and registration are recorded in `docs/engineering/customization.md` and `scripts/appearance.gd`.
+
+## Hearth and Steel candidate art
+
+See [engineering/hearth-and-steel.md](engineering/hearth-and-steel.md) for the six new asset paths, reference inputs and final prompt set. Generated with the built-in image tool; inspected in-engine, pending user visual acceptance.

@@ -1,5 +1,5 @@
 extends RefCounted
-const IDLE=preload("res://assets/polish/clan_idle.png")
+const IDLE=preload("res://assets/overhaul/clan_idle.png")
 const PORTRAITS=preload("res://assets/polish/clan_portraits.png")
 const DECOR=preload("res://assets/polish/decor.png")
 const DECOR_RECTS=[Rect2(10,34,312,266),Rect2(324,100,466,205),Rect2(790,153,320,146),Rect2(1113,67,322,240),Rect2(10,318,360,352),Rect2(424,375,285,300),Rect2(738,388,365,296),Rect2(1112,381,324,292),Rect2(34,680,272,375),Rect2(409,661,187,379),Rect2(698,681,353,366),Rect2(1067,679,371,365)]

@@ -4,9 +4,10 @@ uniform vec4 cloth_color : source_color = vec4(0.325,0.42,0.53,1.0);
 uniform vec3 legacy_cloth_tint = vec3(1.0);
 uniform bool iron_cloth = false;
 uniform bool custom_head = false;
-uniform sampler2D faces_art : source_color, filter_linear;
-uniform sampler2D hair_art : source_color, filter_linear;
-uniform sampler2D facial_art : source_color, filter_linear;
+uniform float head_clear_up = -0.12;
+uniform sampler2D faces_art : source_color, filter_linear_mipmap;
+uniform sampler2D hair_art : source_color, filter_linear_mipmap;
+uniform sampler2D facial_art : source_color, filter_linear_mipmap;
 uniform int face_id = 0;
 uniform int hair_id = -1;
 uniform int beard_id = -1;
@@ -56,7 +57,7 @@ void fragment() {
         vec4 face=layer(faces_art,q,vec4(col/3.0,float(face_id)/3.0,1.0/3.0,1.0/3.0));
         face.rgb*=skin_tint;
         if(rear && q.y>0.36) face.a=0.0; // collar occludes the neck from behind
-        if(q.x>0.08 && q.x<1.05 && q.y> -0.12 && q.y<0.22 && max(c.r,max(c.g,c.b))<0.28) c.a=0.0; // old topknot
+        if(q.x>(head_clear_up< -0.2 ? -0.4 : 0.08) && q.x<(head_clear_up< -0.2 ? 1.5 : 1.05) && q.y>head_clear_up && q.y<0.22 && max(c.r,max(c.g,c.b))<0.28) c.a=0.0; // old topknot
         c=over(c,face);
         if(hair_id>=0) c=over(c,hair_shade(layer(hair_art,q,vec4(col/3.0,float(hair_id)/3.0,1.0/3.0,1.0/3.0))));
         if(!rear) {

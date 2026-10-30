@@ -23,7 +23,8 @@ function Invoke-GameSmoke([string]$Name, [string[]]$GameArgs) {
     if ($contents -notmatch 'Godot Engine') { throw "$Name engine startup was not confirmed." }
     Write-Host "WINDOWS PACKAGED STARTUP PASS: $Name"
 }
-Invoke-GameSmoke 'normal-game' @('--fresh')
+Invoke-GameSmoke 'main-menu' @()
+Invoke-GameSmoke 'new-character' @('--fresh')
 $saveDir = Join-Path $env:APPDATA 'Godot/app_userdata/Chiefs of War'
 New-Item -ItemType Directory -Force -Path $saveDir | Out-Null
 $save = Join-Path $saveDir 'ancestral_hearth_v1.json'

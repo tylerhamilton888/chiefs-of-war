@@ -300,9 +300,22 @@ func wolf_strike(w) -> void:
     if room>=0 or modal.visible: return
     var off: Vector2=player.position-w.position
     if off.length()<80 and off.normalized().dot(w.locked_direction)>-0.15 and player.invulnerable<=0 and has_line(w.position,player.position,null):
+        if defend_strike(w,40.0 if w.alpha else 26.0,(28 if w.alpha else 18)*(0.6 if player.equipment=="iron" else 1.0)):return
         hurt((28 if w.alpha else 18)*(0.6 if player.equipment=="iron" else 1.0))
         player.invulnerable=0.55; player.recoil=w.locked_direction*170
         sound("hit"); shake=4
+func defend_strike(attacker,guard_cost: float,damage: float) -> bool:
+    var result: String=player.defend(attacker.position-player.position,guard_cost)
+    if result=="hit":return false
+    sound("metal");shake=1.4
+    if result=="parry":
+        attacker.parried();toast("PARRY",player.position-Vector2(0,80));player.invulnerable=0.12
+    elif result=="block":
+        hurt(damage*0.15);toast("BLOCK",player.position-Vector2(0,80));player.invulnerable=0.18
+        player.recoil=(player.position-attacker.position).normalized()*55
+    else:
+        hurt(damage*0.6);toast("GUARD BROKEN",player.position-Vector2(0,80));player.invulnerable=0.25
+    return true
 func wolf_slain(w) -> void:
     kills+=1; sound("hit"); toast("Pack leader down" if w.alpha else "Greytooth down",w.position)
     if w.alpha: say("The pack leader is dead. Approach it and press E to take the pelt.")
@@ -717,6 +730,7 @@ func toggle_audio() -> void:
 func toggle_impact() -> void:
     accessibility_flash=not accessibility_flash; pause_menu()
 func _input(event: InputEvent) -> void:
+    if event is InputEventMouseButton and not event.pressed and event.button_index==MOUSE_BUTTON_RIGHT:player.end_guard()
     if event is InputEventMouseButton and not event.pressed and event.button_index==MOUSE_BUTTON_LEFT: held_attack=false
 func _unhandled_input(event: InputEvent) -> void:
     if not ready_opener or (creator and creator.visible): return
@@ -750,6 +764,8 @@ func _unhandled_input(event: InputEvent) -> void:
             KEY_R:
                 if room<0 and get_global_mouse_position().distance_to(player.position)<150: state.set_terrain(Vector2i(get_global_mouse_position()/32),"earth")
     if modal.visible or room>=0 or work_time>0: return
+    if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_RIGHT:
+        held_attack=false;player.begin_guard(get_global_mouse_position()-player.global_position);return
     if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT:
         if place_mode:
             var pos=(get_global_mouse_position()/32).floor()*32+Vector2(16,16)

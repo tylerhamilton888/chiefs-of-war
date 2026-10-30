@@ -176,7 +176,7 @@ func help_menu() -> void:
     var items=[[introduced,"Meet Yrsa in the Ash Hall"],[built==3,"Help Bren finish the timber store"],[training_hits>=3 and training_dodges>=1,"Practice your axe and dodge"],[trophy and returned,"Bring Torren home and claim the Greytooth pelt"],[forged,"Return to Yrsa, then earn Harn's iron kit"]]
     for item in items:
         var l=label(("✓  " if item[0] else "○  ")+item[1],17);l.add_theme_color_override("font_color",Color("839b72") if item[0] else Color("ded0b0"));modal_box.add_child(l)
-    modal_box.add_child(HSeparator.new());modal_box.add_child(label("WASD move  •  Hold LMB axe  •  Space dodge  •  E interact\nI belongings  •  B palisade  •  F5 save\nExplore at your own pace; the journal suggests your next step.",15))
+    modal_box.add_child(HSeparator.new());modal_box.add_child(label("WASD move  •  Hold LMB axe  •  RMB block / timed parry  •  Space dodge  •  E interact\nI belongings  •  B palisade  •  F5 save\nExplore at your own pace; the journal suggests your next step.",15))
     button("Return to the hearth  [Esc]",close_modal,modal_box);finish_sheet()
 func pause_menu() -> void:
     begin_sheet("CHIEFS OF WAR","THE ANCESTRAL HEARTH  ·  GAME PAUSED","pause")

@@ -122,3 +122,6 @@ func _draw() -> void:
  if state=="windup":
   var a:=locked_direction.angle()
   draw_arc(Vector2.ZERO,90,a-0.42,a+0.42,14,Color("efae56"),3)
+
+func parried() -> void:
+ state="vulnerable";clock=0;vulnerable=1.1;cooldown=1.0;posture=0;velocity=Vector2.ZERO;recoil=-locked_direction*90

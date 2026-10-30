@@ -38,6 +38,7 @@ static func apply(material: ShaderMaterial, look: Dictionary, skin: int, cloth: 
     material.set_shader_parameter("facial_art",FACIAL_ART)
 static func frame(material: ShaderMaterial, texture: Texture2D, rect: Rect2, direction: int, action: String="rest", index: int=0) -> void:
     if material==null or texture==null:return
+    material.set_shader_parameter("head_clear_up",-0.12)
     var origin=Vector2(214,110)
     if direction==1:origin=Vector2(158,110)
     elif direction==2:origin=Vector2(270,110)

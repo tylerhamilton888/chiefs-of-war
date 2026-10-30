@@ -23,3 +23,5 @@ No rigid classes or forced leadership, no vegetable-farming foundation for Orc f
 ## October 30 playtest direction
 
 User requested an actual main menu, multiple character/save slots, a major art pass matching the favored buildings, and tighter combat with better animation, blocking and parrying. Implementation target: three isolated campaign slots (legacy path remains slot one), warm timber/stone/ivory/crimson illustrated style, RMB directional block with a brief timed parry, and authored whole-body defensive poses. These changes are in progress on feature/hearth-menu-and-combat, not yet in published 0.4.2.
+
+Adult female NPC clothing direction: traditional fantasy silhouettes with fitted leather, bare shoulders, some midriff and split/shorter skirts, while retaining grounded proportions, neutral poses and practical boots/bracers. User explicitly wants this balance, not an overtly sexualized game. Updated Yrsa candidate atlas follows this direction.

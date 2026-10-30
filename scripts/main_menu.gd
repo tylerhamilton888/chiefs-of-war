@@ -4,7 +4,9 @@ var content: VBoxContainer
 var status: Label
 func _ready() -> void:
     get_tree().auto_accept_quit=true
-    if "--combat-yard" in OS.get_cmdline_user_args() or "--fresh" in OS.get_cmdline_user_args():
+    var first_boot=not Slots.booted
+    Slots.booted=true
+    if first_boot and ("--combat-yard" in OS.get_cmdline_user_args() or "--fresh" in OS.get_cmdline_user_args()):
         Slots.practice="--combat-yard" in OS.get_cmdline_user_args();Slots.fresh=true
         get_tree().change_scene_to_file.call_deferred("res://scenes/opener.tscn");return
     Slots.restore_selection();Slots.practice=false;Slots.fresh=false
@@ -22,22 +24,22 @@ func action(text: String,callback: Callable,parent: Node) -> Button:
 func build() -> void:
     for child in get_children():child.queue_free()
     var bg=ColorRect.new();bg.color=Color("171b18");bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(bg)
-    var art=TextureRect.new();art.texture=load("res://assets/opener/architecture_aligned.png");art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);art.modulate=Color(0.46,0.42,0.34);add_child(art)
-    var shade=ColorRect.new();shade.color=Color(0.055,0.065,0.055,0.65);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(shade)
-    var center=CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(center)
-    var panel=PanelContainer.new();panel.custom_minimum_size=Vector2(820,0);panel.add_theme_stylebox_override("panel",style("211e19ed","90734d"));center.add_child(panel)
+    var art=TextureRect.new();art.texture=load("res://assets/overhaul/menu_hearth.png");art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);art.modulate=Color.WHITE;add_child(art)
+    var shade=ColorRect.new();shade.color=Color(0.055,0.065,0.055,0.12);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(shade)
+    var center=CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);center.offset_left=32;center.offset_right=-500;add_child(center)
+    var panel=PanelContainer.new();panel.custom_minimum_size=Vector2(720,0);panel.add_theme_stylebox_override("panel",style("211e19ec","90734d"));center.add_child(panel)
     content=VBoxContainer.new();content.add_theme_constant_override("separation",10);panel.add_child(content)
     var title=words("CHIEFS OF WAR",48);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(title)
     var sub=words("THE ANCESTRAL HEARTH",16,"b99a66");sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(sub)
     content.add_child(HSeparator.new())
     var current=Slots.info(Slots.selected)
-    var resume=action("Continue • "+current.name,func():launch(Slots.selected,false),content);resume.disabled=current.empty or not current.valid
+    var resume=action("Continue • "+current.name if not current.empty else "Continue • no character yet",func():launch(Slots.selected,false),content);resume.disabled=current.empty or not current.valid
     content.add_child(words("CHARACTERS & SAVE SLOTS",16,"b99a66"))
     for i in Slots.COUNT:
         var info=Slots.info(i);var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);content.add_child(row)
         var label_text="%d   %s"%[i+1,info.name]
         if not info.empty and info.valid:label_text+="   •   Day %d   •   %s"%[info.day,info.outfit.capitalize()]
-        var l=words(label_text,18);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(l)
+        var l=words(label_text,17);l.clip_text=true;l.custom_minimum_size.x=420;l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(l)
         var index=i;var empty=info.empty
         var b=action("New character" if empty else "Play",func():launch(index,empty),row);b.custom_minimum_size.x=190;b.disabled=not info.valid
     status=words("Each character has its own world, progress and checkpoints.",15,"b5ac98");content.add_child(status)

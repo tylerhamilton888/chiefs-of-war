@@ -15,6 +15,7 @@ Press Esc, then Appearance, to change your existing Orc's look.
 Downloading a new build does not erase your campaign.
 
 CONTROLS
+RMB: hold to block toward the cursor; time the press just before impact to parry.
 WASD: move       Left mouse: swing axe       Space: dodge
 E: interact     I: inventory                J: journal
 Esc: pause      F5: save                    C: switch owned outfits
@@ -30,3 +31,9 @@ Your campaign is stored separately from this download in:
 %APPDATA%\Godot\app_userdata\Chiefs of War\ancestral_hearth_v1.json
 
 Build information and engine notices are in Support.
+
+MAIN MENU & CHARACTERS
+Choose New character in one of three empty slots. Play loads that slot.
+Continue resumes the last selected character. Your original save is slot one.
+Esc > Main menu / characters saves before returning to the slot menu.
+Practice is separate and never writes campaign saves.

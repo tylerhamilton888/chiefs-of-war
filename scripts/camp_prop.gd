@@ -1,6 +1,6 @@
 extends "res://scripts/world_prop.gd"
 var previous:=""
-const CELLS={"tree":Rect2(5,2,500,508),"stump":Rect2(525,5,490,500),"log":Rect2(1030,5,500,500),"rock":Rect2(5,520,500,495),"wall":Rect2(525,520,490,495),"hearth":Rect2(1030,520,500,495)}
+const CELLS={"tree":Rect2(4,0,505,562),"stump":Rect2(570,218,445,305),"log":Rect2(1060,170,450,360),"rock":Rect2(32,585,480,390),"wall":Rect2(553,550,465,420),"hearth":Rect2(1062,575,445,390)}
 const SCALE={"tree":0.44,"stump":0.13,"log":0.15,"rock":0.21,"wall":0.20,"hearth":0.17}
 func refresh() -> void:
     if sprite==null: return
@@ -23,7 +23,7 @@ func refresh() -> void:
     var kind: String="stump" if data.kind=="tree" and data.state!="intact" else data.kind
     if CELLS.has(kind):
         sprite.visible=true
-        sprite.texture=load("res://assets/camp/props.png")
+        sprite.texture=load("res://assets/overhaul/props.png")
         sprite.region_rect=CELLS[kind]
         sprite.scale=Vector2.ONE*SCALE[kind]
         sprite.position=Vector2(0,-CELLS[kind].size.y*SCALE[kind]*0.5+7)

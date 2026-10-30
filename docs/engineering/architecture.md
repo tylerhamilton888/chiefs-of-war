@@ -6,12 +6,13 @@ This map describes the 0.4.1 customization/recovered-combat source. Historical v
 
 ## Entry and inheritance
 
-`project.godot` → `scenes/opener.tscn` → `execution_opener.gd` → `polished_opener.gd` → `opener.gd` → `camp.gd`.
+`project.godot` → `scenes/main_menu.tscn` → `scenes/opener.tscn` → `execution_opener.gd` → `polished_opener.gd` → `opener.gd` → `camp.gd`.
 
 This is an existing layered prototype, not permission to rewrite it wholesale. Overrides are invoked during parent `_ready()`: guard access to child-layer fields until initialized. Earlier scenes/tests exercise earlier layers and must remain functional.
 
 | Owner | Responsibility |
 | --- | --- |
+| `save_slots.gd`, `main_menu.gd` | Three isolated campaigns, menu entry and practice routing; legacy save is slot one |
 | `world_state.gd` | Serializable independent world objects, stable IDs, material edits, finite resources and guarded fire |
 | `world_prop.gd`, `camp_prop.gd` | Rendering/collision derived from world records; tree/material feedback |
 | `building.gd` | Three-stage/section building visuals and collision, independent wall/roof records |
@@ -30,7 +31,7 @@ This is an existing layered prototype, not permission to rewrite it wholesale. O
 - Outdoor collision is layer 1; actors layer 2; interior obstacles layer 4. Room transitions reparent player/mask and suspend outdoor actors. Only the current room's furniture collides.
 - Axe damage is triggered by the actor's contact event, then range/facing/line-of-sight tested by the world. Do not apply damage on initial button press or cosmetic frame playback.
 - The execution coordinator owns its shared contact event; target cannot pay out twice. Every interruption path must restore control and release a living held target.
-- Existing campaign path is `user://ancestral_hearth_v1.json`, opener_version 1, extending camp/world snapshots. Add optional fields with defaults; do not reject an old valid save merely because it has no execution fields.
+- Slot one campaign path is `user://ancestral_hearth_v1.json`; slot two/three and recovery checkpoints are routed by save_slots.gd, opener_version 1, extending camp/world snapshots. Add optional fields with defaults; do not reject an old valid save merely because it has no execution fields.
 - World tests and saves use stable object IDs. Workers move a real bundle into cargo and then storage; do not generate timber solely from elapsed time.
 - Modal pause stops actions/simulation; held input must be cleared. Test creator, work cancellation, death/recovery, interiors and save restoration when introducing action locks.
 - Guarded fire has explicit ignition, an eight-second warning/checkpoint, wet protection/firebreaks and independent recovery. No offline disaster simulation.

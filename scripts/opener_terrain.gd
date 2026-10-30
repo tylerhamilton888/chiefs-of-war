@@ -2,6 +2,7 @@ extends "res://scripts/terrain.gd"
 var mask_image: Image
 var mask_texture: ImageTexture
 func _ready() -> void:
+    texture=load("res://assets/overhaul/ground.png")
     mask_image=Image.create(112,44,false,Image.FORMAT_RGB8)
     mask_texture=ImageTexture.create_from_image(mask_image)
     var paint=ShaderMaterial.new(); paint.shader=load("res://scripts/ground_blend.gdshader")

@@ -39,7 +39,7 @@ func start_practice() -> void:
  tip_shown.raiders=true
  close_modal();pause_actors(false)
  begin_sheet("Combat & gathering practice","UNSAVED PRACTICE SESSION","practice")
- modal_box.add_child(label("Your campaign is untouched. Raider targets are east and southeast; the training dummy is north. Chop nearby pines, collect timber with E, and compare leather/iron with C.\n\nWASD move · hold left mouse to swing · Space dodge. Two hits stagger a raider: move alongside and press F, or Shift+F for the goblin cleave.\n\nEsc opens combat options and Reset practice. Restart as often as you like.",17))
+ modal_box.add_child(label("Your campaign is untouched. Raider targets are east and southeast; the training dummy is north. Chop nearby pines, collect timber with E, and compare leather/iron with C.\n\nWASD move · hold left mouse to swing · RMB block / timed parry · Space dodge. Two hits stagger a raider: move alongside and press F, or Shift+F for the goblin cleave.\n\nEsc opens combat options and Reset practice. Restart as often as you like.",17))
  button("Enter the yard",close_modal,modal_box);finish_sheet()
 func update_quest() -> void:
  super.update_quest()
@@ -165,6 +165,7 @@ func raider_strike(r) -> void:
  if room>=0 or modal.visible:return
  var off: Vector2=player.position-r.position
  if off.length()<100 and off.normalized().dot(r.locked_direction)>0.4 and player.invulnerable<=0 and has_line(r.position,player.position,null):
+  if defend_strike(r,38.0 if r.kind=="orc" else 24.0,(26 if r.kind=="orc" else 15)*(0.6 if player.equipment=="iron" else 1.0)):return
   hurt((26 if r.kind=="orc" else 15)*(0.6 if player.equipment=="iron" else 1.0));player.invulnerable=0.45;player.recoil=r.locked_direction*130;shake=3.2;sound("hit")
 func raider_slain(r) -> void:
  for f in floating:
