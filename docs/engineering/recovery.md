@@ -14,7 +14,7 @@ Do not let many new images, scripts and test results exist only in the conversat
 
 Private-repository terminal Git was unauthenticated. GitHub text reads worked; binary `fetch_file` above 1 MiB returned empty contents, binary `fetch_blob` attempted UTF-8 decoding, and browser downloads timed out. The user then made the repository public. A complete normal Git clone succeeded and all original artwork imported. **That blocker is resolved; do not repeat the old recovery investigation.**
 
-Canonical baseline was main `132e4f876b91d88499bab9efd0790c6a86087081` (0.3.2). WIP execution reconstruction was saved at `1bea3094c6529e4121d5f8201c05064bcf3748b3` on `recovery/axe-and-iron-2026-10-30`. Old chat claims about an unpublished 0.4.0 passing tests were not independently recoverable and are not fresh evidence.
+Canonical baseline was warlord `132e4f876b91d88499bab9efd0790c6a86087081` (0.3.2). WIP execution reconstruction was saved at `1bea3094c6529e4121d5f8201c05064bcf3748b3` on `recovery/axe-and-iron-2026-10-30`. Old chat claims about an unpublished 0.4.0 passing tests were not independently recoverable and are not fresh evidence.
 
 Prefer a normal checkout when available. If only GitHub writes work, create blobs/tree/commit from the actual upstream base tree and parent, preserving unrelated paths and expected branch head. Never force-push reconstructed local root history or upload zero-byte failed asset downloads.
 
