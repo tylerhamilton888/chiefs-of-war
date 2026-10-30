@@ -1,17 +1,15 @@
-# Roadmap after 0.2
+# Roadmap after 0.3
 
-The rejected 3D experiment is abandoned. Continue original 2D illustrated art using the user's uploaded October 29 board. Warcraft II informs readability and painted RTS language, not IP/assets.
+Keep original 2D illustrated art. Use a square-aligned elevated view: readable fronts and roof tops without diagonal building rotation. Warcraft II informs readability, not imported IP/assets.
 
-## Current playable core
+Implemented opening: named Orc with palette choices, home-clan conversations, independent tree harvesting, staged storehouse construction, axe/dodge practice, eastern hunting expedition, injured hunter, telegraphed Greytooth combat, pelt return and earned iron equipment. Afterward: timber worker, defenses, interior storage and guarded fire experiments.
 
-Gather timber/ore, build a three-stage storehouse, craft and equip iron, fight three rival Orcs, dodge, enter hall/forge/store, speak through portraits, rest/eat, assign a timber worker, place palisades, clear firebreaks, test controlled fire, save and reload.
+Next acceptance gates:
 
-## Next acceptance gates
-
-1. Lock one Orc's identity and foot anchors across directions. Replace weak passing/recovery frames and reconcile walk/attack armor details. Review in motion at actual gameplay scale.
-2. Dedicated pick and axe tool animations, stronger contact reaction and authored enemy hurt/death frames.
-3. Individual armor slots with consistent full-frame clothing registration.
-4. More authored interiors, distinct NPC sprites and schedules, room-specific props and better destruction art.
-5. Huntable creature with tested attack/reward loop; more enemy silhouettes and navigation around construction.
-6. Expand the playable loop toward 15–30 minutes of varied play; current compact camp is smaller.
-7. Only then implement the birth-tribe expedition/invasion and longer sandbox progression.
+1. Human playtest movement, axe contact, dodge timing, target clarity and hunting difficulty. Do not equate passing automation with fun.
+2. Lock full-body identity, foot anchors and armor continuity across walking, attacks and recovery. Give wolves proper north/south sets. Replace weak frames rather than adding more content around them.
+3. Expand creator faces/hair/body choices, including female player art, once one complete animation set is accepted.
+4. Add individual equipment slots with consistent full-frame clothing registration and a dedicated gathering tool.
+5. Author richer room layouts, building damage/collapse art and structural destruction; develop NPC schedules and relationships.
+6. Implement the playable village invasion, invading chieftain encounter and adoption into the new tribe from the original prologue. The present slice ends after the first expedition and iron reward.
+7. Expand into varied 15–30 minute play and the larger sandbox only after the opening feels right in human hands.

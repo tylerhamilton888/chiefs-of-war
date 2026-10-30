@@ -1,7 +1,7 @@
 extends RefCounted
 ## Authoritative simulation data; graphics and collision are derived from this state.
 const CELL := 32
-const SIZE := Vector2i(48,32)
+const SIZE := Vector2i(112,44)
 const MAX_HP := {"tree":100.0,"stump":35.0,"log":35.0,"rock":140.0,"wall":150.0,"roof":95.0,"hearth":999.0}
 const FUEL := {"tree":70.0,"stump":15.0,"log":25.0,"rock":0.0,"wall":100.0,"roof":65.0,"hearth":0.0}
 var objects: Dictionary = {}

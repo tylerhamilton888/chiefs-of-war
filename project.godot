@@ -2,8 +2,8 @@ config_version=5
 
 [application]
 config/name="Chiefs of War"
-config/version="0.2.0-first-hearth"
-run/main_scene="res://scenes/camp.tscn"
+config/version="0.3.0-ancestral-hearth"
+run/main_scene="res://scenes/opener.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [display]

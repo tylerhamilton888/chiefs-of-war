@@ -22,3 +22,11 @@ Prompt specifications are retained in ART_PROMPTS.md. Original image pixels are 
 All `assets/camp/*.png` are original project candidates produced with the built-in image-generation tool using the user's October 29 character/style board and subsequent generated character references. They are **AI-generated in a hand-drawn visual style**, not human-drawn commissions. No Warcraft II asset files were imported; its role is general readability/art-direction reference only. Photoreal-looking first-pass portraits and architecture were rejected in favor of the user's inked reference.
 
 `architecture.png`, `props.png`, `portraits.png`, `walk_leather.png`, `walk_iron.png`, `attack_leather.png`, `attack_iron.png`, `floor.png`, and `npcs.png` supply the current art. Atlas metadata preserves original image pixels and selects whole-body regions. Four short WAVs were newly synthesized from decaying oscillators and seeded noise; no external audio recordings were used. Current sprites remain unapproved candidates.
+
+## 0.3 assets
+
+`assets/opener/wolf.png`, `details.png`, `architecture_aligned.png`, and `earth.png` were generated with the built-in image tool on 2026-10-30. The architecture is a new square-aligned redraw of the project's earlier generated architecture, replacing its diagonal yaw. Wolf and detail atlases contain complete isolated poses/objects; their source pixels are preserved and regions are described in JSON. The earth tile contains no harvestable scenery. A live terrain-mask shader blends it with the grass.
+
+`ambient.wav`, `swing.wav`, `growl.wav` and `success.wav` are original deterministic synthesizer outputs (seeded noise, filters, oscillators and envelopes), without sampled recordings. Their generation script is in `tools/make_opener_audio.py`.
+
+The skin/cloth shader is a limited palette recoloring, not a body-part rig or an independently layered armor system. This release does not claim final animation approval or human-authored drawings.

@@ -1,17 +1,23 @@
-# 0.2 QA
+# 0.3 QA — The Ancestral Hearth
 
-Godot 4.4.1 Linux import and actual OpenGL viewport rendering checked. Native Windows execution is unavailable; Windows export is verified as an export/package only.
+Godot 4.4.1. 127 checks passed:
 
-- 35 existing foundation checks pass: object state, fire ignition/spread/wetness/barriers, collision, movement and persistence.
-- 27 camp integration checks pass: movement, attack windup/contact/recovery, range and facing, duplicate-safe resources, material gates, staged construction, room collision/return point, forging, mitigation, dodge, defeat rewards, worker cargo/storage, progress save/restore, modal pausing.
-- Actual worker navigation/gather/deposit test passes: Bren cut a tree, removed its bundle, returned and deposited three timber. Actual engine hall/dialogue/strike captures were inspected.
+- 35 foundation checks: independent world objects, persistent depletion, fire ignition/spread, wetness, firebreaks, movement, collision and saving.
+- 27 legacy camp checks: attack timing/range/facing, resource duplication, construction, independent building collision, enter/leave, equipment, damage mitigation, worker cargo and pause.
+- 48 opening checks: character identity, actual movement through the village and interiors, conversations, two trees felled through timed contact frames, physical log collection, cancelled and completed construction, dummy practice, hunter encounter, four live wolf fights with telegraphs and dodges, harvesting, return, single-use reward, forging, save/reload and worker navigation/deposit. The bot completed the sequence without defeat recovery. It uses movement and attack commands, not damage/resource grants or teleports to complete the quest.
+- 17 edge checks: provision preservation at full health, saving east of the old map bounds, malformed identity rejection before mutation, attack cancellation and pause/resume, held-input release, hidden-furniture collision, warned/cancelled fire and checkpoint restore, defeat recovery, reunion reward gating and buffered attack completion.
 
-Art is not final: generated directional sheets have uneven poses and armor continuity; metadata corrects reversed side rows. Cut-off recovery cells are omitted, returning to the ready pose. This does not constitute approval of final animation quality. Interiors share a compact layout and building destruction uses visual columns pending authored damage art. No hunting or narrative invasion yet.
+Visual review used actual Linux OpenGL viewports: character setup, square-aligned village buildings, distinct room furnishings, portrait dialogue, wolf telegraph and pause menu. It caught and corrected scalloped path rendering, wrapped objective markers, oversized modal panels, palette double-multiplication and invisible furnishing collisions. The ground blend samples live terrain state; trees/buildings are separate objects.
 
-Commands:
+Windows export validation: successful x86-64 embedded-PCK export, launch of that pack through Linux Godot, and ZIP integrity. Native Windows execution is not available in this environment. Automated combat does not establish human difficulty or fun. Sprite continuity and the limited creator remain open acceptance items.
+
+Commands (use separate temporary XDG_DATA_HOME directories for parallel tests):
+
 ```
-godot --headless --path . --script tests/foundation_test.gd -- --fresh
-godot --headless --path . --script tests/camp_test.gd -- --fresh
-godot --headless --path . --script tests/worker_test.gd -- --fresh
+godot --headless --path . --fixed-fps 60 --script tests/foundation_test.gd -- --fresh
+godot --headless --path . --fixed-fps 60 --script tests/camp_test.gd -- --fresh
+godot --headless --path . --fixed-fps 60 --script tests/opener_test.gd -- --fresh --test
+godot --headless --path . --fixed-fps 60 --script tests/opener_edges.gd -- --fresh --test
 ```
-Use an isolated XDG_DATA_HOME for automated tests. Test scripts and the old harness are excluded from release packaging where possible; the 3D prototype is ignored.
+
+`--test` skips the initial creator overlay and audio playback; the opening test explicitly opens and commits the creator. The visual capture script runs without that flag. Production UI and audio are included in the export.

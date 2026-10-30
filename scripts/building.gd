@@ -5,8 +5,8 @@ var parts: Array[float]=[1.0,1.0,1.0]
 var panels=[]
 var body:=StaticBody2D.new()
 func _ready() -> void:
-    var texture=load("res://assets/camp/architecture.png")
-    var region: Rect2=[Rect2(0,0,600,550),Rect2(605,0,495,550),Rect2(1120,0,416,550)][kind]
+    var texture=load("res://assets/opener/architecture_aligned.png")
+    var region: Rect2=[Rect2(18,23,577,511),Rect2(602,21,484,511),Rect2(1123,78,388,453)][kind]
     var factor:=0.56 if kind==0 else 0.60
     add_child(body)
     for i in 3:
