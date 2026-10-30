@@ -11,6 +11,7 @@ var npc_time:=0.0
 var sheet_kind:=""
 var npc_hint: Label
 var return_trophy: Sprite2D
+const VILLAGERS=preload("res://assets/overhaul/villagers.png")
 
 func _ready() -> void:
     super._ready()
@@ -26,6 +27,14 @@ func _ready() -> void:
     hunt_station.scale=Vector2.ONE*(190.0/1536.0)
     hunt_station.position=Vector2(900,955-1024.0*hunt_station.scale.y*0.5)
     actors.add_child(hunt_station)
+    # Visual residents only; population and pregnancy simulation are future work.
+    var resident_rects=[Rect2(0,0,495,887),Rect2(495,0,495,887),Rect2(990,0,410,887),Rect2(1400,0,374,887)]
+    var resident_places=[Vector2(470,625),Vector2(1120,580),Vector2(1040,680),Vector2(500,855)]
+    for i in resident_rects.size():
+        var resident=Node2D.new();resident.position=resident_places[i];actors.add_child(resident)
+        var art=Sprite2D.new();art.texture=VILLAGERS;art.region_enabled=true;art.region_rect=resident_rects[i]
+        var factor=90.0/850.0
+        art.scale=Vector2.ONE*factor;art.position=Vector2(0,-887.0*factor*0.5+3.0);resident.add_child(art)
     transition=ColorRect.new();transition.color=Color(0.025,0.02,0.015,0);transition.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);transition.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui_root.add_child(transition)
 
 func _process(delta: float) -> void:

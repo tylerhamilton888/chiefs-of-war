@@ -29,3 +29,7 @@ Adult female NPC clothing direction: traditional fantasy silhouettes with fitted
 ## October 30 visual direction — current work in progress
 
 The user chose the colorful settlement concept (Library: `Orc stronghold, forge and great fire.png`) as the direction: Warcraft II Remastered is the main readability and visual reference, with a light Graveyard Keeper influence on lived-in sandbox atmosphere. Use original art, square-aligned buildings and readable game-scale forms. The two center characters are a promising male player and female NPC proportion/design baseline; preserve individual NPC variety. The experience should combine satisfying home and work routines with powerful, martial, brutal Orc culture; meat, hides, hunting and forging fit the settlement. The user explicitly rejected the earlier gritty, sepia painterly concept. Generated concepts are not accepted production animation frames.
+
+## Later character direction
+
+The user wants the playable male Orc to support a range of weapons and armor eventually, and a wider variety of male and female NPCs, including visibly expectant adult women as groundwork for eventual population mechanics. Current two-outfit swaps are not a general equipment system. Future equipment must retain the approved imposing Orc silhouette, fit consistently across all poses and directions, and be coordinated with combat hit timing; don't substitute detached floating equipment or break saved appearances. Expectant sprites do not imply that births or population simulation are implemented.

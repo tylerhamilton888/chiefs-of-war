@@ -25,3 +25,5 @@ Block/parry/heavy combat; richer social schedules/family; full invasion/chieftai
 ## Later visual overhaul checkpoint (WIP branch only)
 
 The post-0.5.0 art overhaul is incomplete. `wip/orc-art-scale` builds on release source 485491b and includes the experimental hunting station, greener clan idle atlas and lighter grass shading; it is not the published release or a finished overhaul. Godot 4.4.1 import and rendered world/menu/interior/defense review ran in Linux; the original dense new grass candidate was rejected after review. Fresh headless customization: 73 checks, 0 failures; defense timing and 48 pose checks: pass. Earlier unchanged workstation integration passed the 48-check opener suite. A full game-wide art pass, player/animation continuity, portraits, building scale, and native Windows review remain pending.
+
+The latest WIP adds four static ambient Orc residents, including an expectant adult woman, as visual character variety. No pregnancy, birth, or population mechanics are implemented by this art. Equipment remains the existing whole-outfit leather/iron swap; independent armor and weapons are future work. This is not a completed overhaul.
