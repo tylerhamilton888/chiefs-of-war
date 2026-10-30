@@ -33,3 +33,5 @@ The user chose the colorful settlement concept (Library: `Orc stronghold, forge 
 ## Later character direction
 
 The user wants the playable male Orc to support a range of weapons and armor eventually, and a wider variety of male and female NPCs, including visibly expectant adult women as groundwork for eventual population mechanics. Current two-outfit swaps are not a general equipment system. Future equipment must retain the approved imposing Orc silhouette, fit consistently across all poses and directions, and be coordinated with combat hit timing; don't substitute detached floating equipment or break saved appearances. Expectant sprites do not imply that births or population simulation are implemented.
+
+The user observed that recent male Orc motion candidates are too hunched compared with the approved concept. Default standing posture should be more upright and imposing, with head carried high, broad shoulders, a deep chest and powerful legs; action-specific forward leans remain natural. Do not make males slender or reduce their massive proportions. Review front, side and rear poses against the approved reference.
