@@ -56,3 +56,7 @@ See [engineering/hearth-and-steel.md](engineering/hearth-and-steel.md) for the s
 `assets/overhaul/hunt_workstation.png` and `assets/overhaul/clan_green.png` are original AI-generated illustration candidates created with the built-in image-generation tool. The settlement concept approved by the user and existing clan sprite sheet were used as visual references. The workstation is decorative and its gameplay-scale layout requires review; clan art retains the existing 4×2 identities and idle poses. These are not human-drawn or final user-approved assets.
 
 `assets/overhaul/villagers.png` is an original AI-generated four-character idle atlas made with the built-in image tool using the approved settlement concept and existing clan sheet as style references: an older hunter, a broad smith, a female Orc and an expectant female Orc. Each is a visual candidate, not a hand-drawn or player-approved final sprite. The four are currently static background residents, with no behavior, relationships, or population simulation.
+
+## Art overhaul: portraits and wolves
+
+`assets/overhaul/clan_portraits.png` and `assets/overhaul/wolf.png` are generated edits made with the built-in image generator, using the project's own original portrait and wolf atlases and the approved settlement/clan concepts as references. Portrait identities and 2x2 registration are retained, and wolf poses are intended to retain the existing 4x2 atlas layout. Candidates require human approval; these are not human-drawn art.

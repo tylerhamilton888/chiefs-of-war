@@ -24,7 +24,7 @@ func _ready() -> void:
     home=position
     collision_layer=2; collision_mask=1
     var c=CollisionShape2D.new(); var s=CircleShape2D.new(); s.radius=19; c.shape=s; add_child(c)
-    sprite.texture=load("res://assets/opener/wolf.png")
+    sprite.texture=load("res://assets/overhaul/wolf.png")
     sprite.region_enabled=true
     rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/wolf.json"))
     sprite.scale=Vector2.ONE*(0.32 if alpha else 0.25)
