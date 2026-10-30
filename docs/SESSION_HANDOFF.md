@@ -2,9 +2,9 @@
 
 Read AGENTS.md, docs/state/current.md, then only the relevant design/engineering shard.
 
-## Active work
+## Canonical state
 
-User requested expanded face/hair/skin customization and starting colors after the recovery conversation failed. Working checkout: `/workspace/scratch/5065e2351aee/chiefs-of-war`, branch `feature/orc-customization`. Based on GitHub recovery commit `7c9f30a24a2dae923765581eb827e40f177d9192`; local checkpoint `491e296` preserves later recovered combat artwork and fixes. Do not touch or discard the old `/workspace/scratch/dcdfb20f8502/chiefs-of-war-complete` workspace.
+Canonical development branch: `warlord`. The customization and recovered combat changes are merged there; do not reconstruct or re-merge them from old chats. Verified source checkpoint before this documentation audit: `9c1ab3ad00cab4b34813185d359474f47d07be84`. Historical feature/recovery branches are retained for traceability. Local workspace paths below are optional runtime aids, not the source of truth. Preserve any surviving uncommitted work in older workspaces.
 
 Implemented customization lives in scripts/appearance.gd, orc_palette.gdshader, opener.gd and opener_actor.gd, with finisher integration in execution_opener.gd. Documentation: engineering/customization.md. Review generated artwork as candidate art, not new hand-drawn full-body actions.
 
@@ -19,3 +19,7 @@ The requested customization is delivered. Next: gather the user's playtest feedb
 Godot 4.4.1: `/workspace/scratch/dcdfb20f8502/runtime/Godot_v4.4.1-stable_linux.x86_64`. Original Xvfb binary was truncated; a good executable was extracted from runtime/xvfb-complete.deb into `/workspace/scratch/5065e2351aee/xserver`. Launch Xvfb and Godot within the same exec subprocess environment (separate exec calls cannot share its X display). Scratch render helper: `/workspace/scratch/5065e2351aee/render_test.py`. Set CHIEFS_REVIEW_DIR for test screenshots. All tests use isolated XDG_DATA_HOME.
 
 Terminal Git push lacks credentials. Use GitHub connector blob/tree/commit/ref operations with the actual upstream base tree and parent, preserving history. All source/art changes are remotely committed. Verify actual branch heads for subsequent checkpoints. Never force-push or replace repository ancestry.
+
+## Repository readiness audit — 2026-10-30
+
+Confirmed default branch is warlord; feature/orc-customization was identical to its head at audit start. Release source is an ancestor of that head, with documentation-only follow-up changes. Release assets and successful CI were verified against GitHub. Original master-brief checksum and all 19 section assignments across eight shards verified. Current scene/script literal resource references resolve. No build executables, archives or .godot cache are tracked. Stale unmerged-combat notes were corrected. See engineering/validation-and-release.md for the proven Actions publication path and the empty historical v0.4.0 release. Gameplay code and published artifacts were not changed by this audit.

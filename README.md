@@ -4,6 +4,8 @@ An original 2D Orc sandbox in Godot 4.4.1. Version 0.4.1 expands character appea
 
 ## Play
 
+**[Download the verified 0.4.1 Windows playtest](https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.4.1/Chiefs-of-War-0.4.1-Windows.zip)** · [Release notes and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.4.1).
+
 Extract the Windows ZIP, then run `ChiefsOfWar.exe`. No Godot installation is needed. `Combat-Practice.bat` opens an unsaved practice yard without reading or changing your campaign. Existing characters can use Esc → Appearance without restarting.
 
 Name your Orc and choose face, hair, independent beard and mustache, skin, hair color and clan cloth. Enter the Ash Hall and speak to Yrsa. Help Bren finish the timber store, practice your axe and dodge, then follow the eastern trail to the overdue hunter. Clear the Greytooth pack, take its leader's pelt, return to Yrsa, and ask Harn to forge your iron kit. The journal updates throughout. You can gather and explore ahead of its suggested order.

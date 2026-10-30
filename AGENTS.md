@@ -14,6 +14,7 @@ Continue this existing Godot 4.4.1 / GDScript game. Do not create a replacement 
 | --- | --- | --- |
 | Scope, progression, player freedom | `docs/design/vision.md` | `docs/ROADMAP.md` |
 | World, tribes, culture, society | `docs/design/world-and-culture.md` | `docs/state/decisions.md` |
+| Appearance editor, palettes, identity persistence | `docs/design/characters-and-animation.md` | `docs/engineering/customization.md` |
 | Characters, portraits, movement, equipment art | `docs/design/characters-and-animation.md` | `docs/engineering/assets.md`, `docs/ASSET_PROVENANCE.md` |
 | Melee, enemies, hunting combat | `docs/design/combat-and-bestiary.md` | `docs/engineering/architecture.md` |
 | Finishers, blood, dismemberment | `docs/design/executions.md` | `scripts/execution_opener.gd`, `scripts/raider.gd` |
@@ -39,6 +40,7 @@ Continue this existing Godot 4.4.1 / GDScript game. Do not create a replacement 
 - Preserve upstream ancestry. Do not force-push a reconstructed root history. If terminal write authentication is absent, use GitHub tools with the actual upstream parent/base tree and only explicit changed paths.
 - Never upload empty/partial asset recoveries. Validate bytes, imports and hashes before substituting source files.
 - Keep design intent separate from implementation status and test evidence. Record exact test suites, failures, source commit and remaining visual/native-platform limitations.
+- Use the checked-in GitHub Actions release path documented in `docs/engineering/validation-and-release.md`; inspect existing run/release state before retrying publication. Do not use the historical 0.4.1 branch/tag for a new release.
 - A finished requested build includes the actual downloadable Windows GitHub release, source reference and checksums. A source commit or a promise to publish is not release completion.
 - Do not call a feature polished or fun solely because automated tests pass. Inspect actual engine output; retain pending human playtest judgments honestly.
 - Update `docs/state/current.md` and `docs/SESSION_HANDOFF.md` when state changes; update the relevant shard and decisions only when requirements change. Avoid appending contradictory notes across many files.
