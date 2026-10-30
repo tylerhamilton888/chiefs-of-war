@@ -21,6 +21,7 @@ The numbered sections were split **without dropping or paraphrasing the original
 ## Engineering and continuity
 
 - [Architecture map](engineering/architecture.md): actual entry points, ownership and contracts.
+- [Customization](engineering/customization.md): appearance catalogs, persistence, previews and frame registration.
 - [Asset pipeline](engineering/assets.md): atlases, frame anchors, identity and provenance.
 - [Validation and release](engineering/validation-and-release.md): reproducible checks and Windows delivery.
 - [Recovery](engineering/recovery.md): checkpoints, file integrity and known tool limitations.

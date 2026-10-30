@@ -35,3 +35,5 @@ Foundation 35, camp 27, complete opening 48, edge cases 17 and motion 20 checks 
 ## 2026-10-30 — Faces of Ashfang customization
 
 Fresh Godot 4.4.1 Linux checks: customization 73 headless checks (74 including rendered layout), opener 48 with zero recoveries, opener edges 17, motion 20, feel 10, execution 28; all passed. Practice entry/save sentinel passed and its expanded pause menu was verified in a rendered run. Headless font/layout measurements are not substituted for actual rendered UI checks. Creator, four facings, both outfits, ordinary attack frames and mirrored finishers were captured and inspected; iron finisher head registration was corrected. Windows export succeeded; native Windows execution remains unverified. Release CI repeats regression/export/resource smoke gates before attaching the ZIP.
+
+GitHub release CI run 41094541852 independently passed import/regressions, rendered creator and practice menus, Windows export, packaged-resource smoke and ZIP integrity. Published v0.4.1 source: 339183d219d89a4a497d3eb2b9dae1def686cfc2. ZIP SHA-256: c7dad59b295069f4f3ba13f8039e7b55851da837915ff17721d3f8cc12320b81.

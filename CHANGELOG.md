@@ -45,3 +45,13 @@ Not accepted as final art or finished gameplay. The generated axe-action sheet w
 - Furnished the hall, forge and storehouse with distinct hearths, feasting furniture, tools, timber, provisions, banners and torches. Added village props and a visible earned hall trophy.
 - Kept central walking routes open and enabled furniture collision only in the active room. Preserved 0.3 saves.
 - 147 existing gameplay/motion checks and 23 new rendered polish checks passed. Reviewed engine screenshots at 1280x800. Native Windows playtest remains pending.
+
+
+## 0.4.1 — Faces of Ashfang — 2026-10-30
+
+- Expanded the creator with three faces, shaved/loose/swept-braid/twin-braid hair, independent beards and mustaches, eight hair colors, twelve skins and twelve cloth colors.
+- Added color swatches, randomize, enlarged animated previews, four facings and cosmetic outfit preview.
+- Added Esc → Appearance for existing campaigns. Cancel restores identity; old saves preserve the original head until edited; position/progression remain intact.
+- Registered appearance in walking, axe attacks, both outfits, HUD portrait and mirrored finishers.
+- Preserved recovered combat timing, dodge buffering, gathering feedback, spaced finisher artwork and save-isolated practice.
+- Added reproducible release CI, customization persistence/migration tests and rendered layout review. See QA.md for exact validation and known native-Windows/art limitations.

@@ -2,7 +2,7 @@
 
 Engine: Godot 4.4.1; GDScript; Windows x86-64 first. Read this map before changing ownership. Historical layer details are retained in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
-This map includes the **recovery branch** implementation. On warlord/v0.3.2 the scene enters `polished_opener.gd` directly; `execution_opener.gd` and `raider.gd` are unfinished recovery-branch additions.
+This map describes the 0.4.1 customization/recovered-combat source. Historical v0.3.2 enters polished_opener.gd directly; the current scene enters execution_opener.gd. See current state for the published source reference.
 
 ## Entry and inheritance
 
@@ -20,6 +20,7 @@ This is an existing layered prototype, not permission to rewrite it wholesale. O
 | `polished_opener.gd` | Clan portraits/idle art, furnished interiors, animated doorways and focused menus |
 | `execution_opener.gd` | Optional raiders, execution orchestration/options, extension save data; see current state for validation |
 | `orc.gd` → `camp_actor.gd` → `opener_actor.gd` | Actor motion, outfit atlases, buffered axe contact, dodge, control locks and palette |
+| `appearance.gd`, `orc_palette.gdshader` | Appearance catalogs, sanitized identity, full-body frame registration and cosmetic rendering; see customization.md |
 | `direwolf.gd` | Wolf telegraph/lunge/recovery/loot and death |
 | `raider.gd` | Goblin/Orc health/posture/vulnerability/telegraph, whole-body combat/death poses |
 | `clan_art.gd`, `doorway.gd`, terrain scripts/shaders | Atlas layouts, proximity doors, square-aligned authored environment |

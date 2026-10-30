@@ -1,6 +1,6 @@
-# Axe and Iron playtest
+# Faces of Ashfang playtest
 
-CHIEFS OF WAR 0.4.0 — AXE AND IRON PLAYTEST
+CHIEFS OF WAR 0.4.1 — FACES OF ASHFANG PLAYTEST
 
 Extract the entire ZIP first.
 ChiefsOfWar.exe: normal campaign (continues your existing save).
@@ -33,7 +33,7 @@ ore collection is still a simple timed action. Native Windows execution and huma
 playfeel were not verified in the Linux build environment. The full invasion prologue,
 parry/block/heavy attacks and wider sandbox systems remain future work.
 
-Source and exact validation are recorded in BUILD-INFO.txt and repository docs/QA.md.
+Source and exact validation are recorded in BUILD.txt and repository docs/QA.md.
 Engine: Godot 4.4.1. Original generated illustration candidates; no Warcraft assets.
 
 ## Faces of Ashfang — 0.4.1
