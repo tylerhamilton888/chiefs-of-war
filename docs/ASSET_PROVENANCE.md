@@ -60,3 +60,5 @@ See [engineering/hearth-and-steel.md](engineering/hearth-and-steel.md) for the s
 ## Art overhaul: portraits and wolves
 
 `assets/overhaul/clan_portraits.png` and `assets/overhaul/wolf.png` are generated edits made with the built-in image generator, using the project's own original portrait and wolf atlases and the approved settlement/clan concepts as references. Portrait identities and 2x2 registration are retained, and wolf poses are intended to retain the existing 4x2 atlas layout. Candidates require human approval; these are not human-drawn art.
+
+`assets/motion/source/overhaul/` holds six original AI-generated rest/stride/strike atlas edits in leather and iron, using existing motion atlases and the accepted settlement concept as references. They are unintegrated candidates, not final or human-drawn sprites; their changed dimensions and shifted pose registration require detailed review and rework.
