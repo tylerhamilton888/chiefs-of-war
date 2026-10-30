@@ -27,3 +27,7 @@ godot --headless --path . --fixed-fps 60 --script tests/opener_edges.gd -- --fre
 ```
 
 `--test` skips the initial creator overlay and audio playback; the opening test explicitly opens and commits the creator. The visual capture script runs without that flag. Production UI and audio are included in the export.
+
+## 0.3.2 validation
+
+Foundation 35, camp 27, complete opening 48, edge cases 17 and motion 20 checks pass. New `tests/polish_test.gd` adds 23 checks covering active-room furniture collision, actual walking through every room, doorway approach behavior, forge frontage, menu viewport bounds, disabled actions, timber transfer and reward visibility. Run this suite with a rendering display (OpenGL), `--fixed-fps 60 --script tests/polish_test.gd -- --test --fresh`; headless font/layout measurements do not represent the rendered UI. `tests/polish_visual.gd` captures creator, village, doors, rooms and menus to `/tmp/chiefs032-visual` (create directory first). Rendered at 1280x800 using Mesa software OpenGL. Native Windows execution and subjective playfeel were not tested here.

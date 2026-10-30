@@ -1,6 +1,6 @@
 # Chiefs of War — The Ancestral Hearth
 
-An original 2D Orc sandbox in Godot 4.4.1. Version 0.3.1 updates the Orc physique and locomotion. The opening connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
+An original 2D Orc sandbox in Godot 4.4.1. Version 0.3.2 polishes the clan characters, menus, doorways and room furnishings. The opening connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
 
 ## Play
 

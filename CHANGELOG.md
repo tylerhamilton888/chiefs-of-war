@@ -36,3 +36,12 @@ Not accepted as final art or finished gameplay. The generated axe-action sheet w
 - Replaced forearm-dominated walk poses with leg contact/passing poses, reduced cadence, aligned pelvis/ground anchors, and stopped accelerated walk playback during dodges.
 - Preserved existing campaign saves, controls, combat timing, and opening progression.
 - Added an engine motion review and 20 motion/import checks. Windows build distributed as a GitHub release.
+
+## 0.3.2 — Clan and Hearth — 2026-10-30
+
+- New distinct Torren, Harn, Bren and Yrsa portraits and planted idle poses, retaining hulking male Orc proportions.
+- Dedicated inventory, journal, pause, timber storage and fire recovery screens; clearer focus, disabled states and conversation layouts.
+- Animated hall/storehouse door leaves, threshold lighting, brief interior transitions and approach direction checks; the forge keeps its open frontage.
+- Furnished the hall, forge and storehouse with distinct hearths, feasting furniture, tools, timber, provisions, banners and torches. Added village props and a visible earned hall trophy.
+- Kept central walking routes open and enabled furniture collision only in the active room. Preserved 0.3 saves.
+- 147 existing gameplay/motion checks and 23 new rendered polish checks passed. Reviewed engine screenshots at 1280x800. Native Windows playtest remains pending.

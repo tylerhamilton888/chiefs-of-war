@@ -38,3 +38,7 @@ Five original source atlases in `assets/motion/source` were generated with the b
 `tools/pack_motion.cjs` extracts whole sprites, excludes disconnected neighbouring fragments, preserves their alpha, resizes uniformly and packs fixed pelvis/ground anchors. No skeletal deformation or rotating body parts. Left views mirror right views. Final assets: stride/rest/strike in both outfits. Source atlas backgrounds contain RGB matte values under zero alpha; this is not an opaque background in-game.
 
 Early narrow-bodied replacement candidates were rejected and are not used. Four-pose cycles remain a limited stylized animation, not a claim of final animation quality.
+
+## 0.3.2 clan and decor pass
+
+`assets/polish/clan_portraits.png`, `clan_idle.png` and `decor.png` are original AI-generated illustrations created with OpenAI image generation for this project. No third-party character art was copied. Direction: rugged inked/painted Orc clan, massive tusked male silhouettes, feminine tusked Yrsa, square-facing timber/iron furnishings. Runtime atlas regions are defined in `scripts/clan_art.gd`; preserve their alpha channels. Idle art has two key poses per NPC, not full bespoke animation cycles. Bren retains the existing shared locomotion and axe cycles when working.

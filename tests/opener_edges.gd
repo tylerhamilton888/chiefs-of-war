@@ -37,7 +37,7 @@ func run():
     var active_furniture:=0
     for n in world.interior.get_children():
         if n is StaticBody2D and n.has_meta("furnishing") and n.collision_layer!=0: active_furniture+=1
-    check(active_furniture==1,"hidden room furnishings leave no invisible collision")
+    check(active_furniture==4,"hall furnishings have only their intended active collisions")
     world.leave_room()
     world.player.position=Vector2(200,650); world.start_drill(); await frames(3)
     check(world.drill>7 and FileAccess.file_exists("user://hearth_fire_checkpoint.json"),"fire drill checkpoints before its warning")
