@@ -30,3 +30,11 @@ All `assets/camp/*.png` are original project candidates produced with the built-
 `ambient.wav`, `swing.wav`, `growl.wav` and `success.wav` are original deterministic synthesizer outputs (seeded noise, filters, oscillators and envelopes), without sampled recordings. Their generation script is in `tools/make_opener_audio.py`.
 
 The skin/cloth shader is a limited palette recoloring, not a body-part rig or an independently layered armor system. This release does not claim final animation approval or human-authored drawings.
+
+## 0.3.1 hulking Orc revision
+
+Five original source atlases in `assets/motion/source` were generated with the built-in image generation tool. Reference: the project's prior Orcs, revised toward Garrosh-like extreme nonhuman musculature without copying his costume. Prompts specify huge traps, near-neckless shoulders, outsized forearms/hands, projecting tusked jaw, and short thick legs. Leather: fur collar, crossed brown harness, blue loincloth; iron: dark plates, red loincloth.
+
+`tools/pack_motion.cjs` extracts whole sprites, excludes disconnected neighbouring fragments, preserves their alpha, resizes uniformly and packs fixed pelvis/ground anchors. No skeletal deformation or rotating body parts. Left views mirror right views. Final assets: stride/rest/strike in both outfits. Source atlas backgrounds contain RGB matte values under zero alpha; this is not an opaque background in-game.
+
+Early narrow-bodied replacement candidates were rejected and are not used. Four-pose cycles remain a limited stylized animation, not a claim of final animation quality.

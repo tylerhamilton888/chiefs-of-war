@@ -1,3 +1,9 @@
+# 0.3.1 motion revision
+
+147 checks: the existing 127 gameplay checks plus 20 motion/import checks for both outfits. Motion checks cover texture import, idle grounding, movement, stop, dodge cadence, attack facing and recovery. Functional tests alone initially missed invalid idle texture imports; the rendering review and dedicated motion test caught them, and both idle atlases were regenerated and reimported.
+
+Actual OpenGL review covers four facings in both outfits, moving/idle/strike transitions, character setup, village, and interiors. Windows export checked through the Linux engine; native Windows execution is not available here. Four-keyframe pose continuity and human playtest acceptance remain limitations.
+
 # 0.3 QA — The Ancestral Hearth
 
 Godot 4.4.1. 127 checks passed:

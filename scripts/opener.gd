@@ -521,7 +521,7 @@ func show_creator() -> void:
     box.add_child(label("CHIEFS OF WAR",32)); box.add_child(label("A son of the Ashfang",22))
     var row=HBoxContainer.new(); row.add_theme_constant_override("separation",35); box.add_child(row)
     var canvas=Control.new(); canvas.custom_minimum_size=Vector2(280,285); row.add_child(canvas)
-    preview=Sprite2D.new(); preview.region_enabled=true; preview.position=Vector2(140,145); canvas.add_child(preview)
+    preview=Sprite2D.new(); preview.region_enabled=true; preview.position=Vector2(140,120); canvas.add_child(preview)
     var fields=VBoxContainer.new(); fields.custom_minimum_size=Vector2(470,285); fields.add_theme_constant_override("separation",11); row.add_child(fields)
     fields.add_child(label("Your name",16)); name_input=LineEdit.new(); name_input.text=character_name; name_input.max_length=24; name_input.custom_minimum_size.y=38; fields.add_child(name_input)
     fields.add_child(label("Complexion",16)); var skins=OptionButton.new()
@@ -683,7 +683,15 @@ func enter_room(index: int) -> void:
     held_attack=false
     if ready_opener: player.cancel_action()
     super.enter_room(index)
-    room_npc.scale=Vector2.ONE*(0.115 if index==0 else 0.10)
+    if index==0:
+        room_npc.texture=load("res://assets/camp/npcs.png")
+        room_npc.scale=Vector2.ONE*0.115
+        room_npc.position=Vector2(800,440)
+    else:
+        room_npc.texture=load("res://assets/motion/rest_iron.png" if index==1 else "res://assets/motion/rest_leather.png")
+        room_npc.region_rect=Rect2(0,0,512,448)
+        room_npc.scale=Vector2.ONE*0.33
+        room_npc.position=Vector2(800,427)
     if ready_opener:
         for w in wolves: w.active=false
         hunter.hide()
@@ -766,3 +774,12 @@ func numeric(value) -> bool:
 func _exit_tree() -> void:
     for child in get_children():
         if child is AudioStreamPlayer: child.stop(); child.stream=null
+
+func portrait(index: int,size: Vector2) -> TextureRect:
+    var t=super.portrait(index,size)
+    if index==0:
+        var a=AtlasTexture.new()
+        a.atlas=load("res://assets/motion/rest_leather.png")
+        a.region=Rect2(165,115,182,165)
+        t.texture=a
+    return t

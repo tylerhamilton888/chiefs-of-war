@@ -13,6 +13,10 @@ var attack_texture: Texture2D
 var attack_rects: Array
 var walk_texture: Texture2D
 var walk_rects: Array
+var idle_texture: Texture2D
+var idle_rects: Array
+const STRIDE_DISTANCE := 112.0
+const MOTION_SCALE := 0.33
 var dead := false
 
 func _ready() -> void:
@@ -23,17 +27,21 @@ func _ready() -> void:
 
 func load_walk() -> void:
     var suffix:="iron" if equipment=="iron" else "leather"
-    walk_texture=load("res://assets/camp/walk_"+suffix+".png")
-    walk_rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/walk_"+suffix+".json"))
+    walk_texture=load("res://assets/motion/stride_"+suffix+".png")
+    walk_rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/stride_"+suffix+".json"))
+    idle_texture=load("res://assets/motion/rest_"+suffix+".png")
+    idle_rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/rest_"+suffix+".json"))
     frame_rects=walk_rects
     sprite.texture=walk_texture
+    phase=0.0
+    show_locomotion(false)
 
 func load_attack() -> void:
     var suffix:="iron" if equipment=="iron" else "leather"
-    var path:="res://assets/camp/attack_"+suffix+".png"
+    var path:="res://assets/motion/strike_"+suffix+".png"
     if ResourceLoader.exists(path):
         attack_texture=load(path)
-        attack_rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/attack_"+suffix+".json"))
+        attack_rects=JSON.parse_string(FileAccess.get_file_as_string("res://resources/strike_"+suffix+".json"))
 
 func equip(set_name: String) -> void:
     super.equip(set_name)
@@ -74,7 +82,9 @@ func _physics_process(delta: float) -> void:
         velocity=drive*430
     else:
         velocity=direction*145*(0.2 if attack_time>0 else 1.0)
+    var before:=position
     move_and_slide()
+    var traveled:=before.distance_to(position)
     if attack_time>0:
         attack_time=maxf(0,attack_time-delta)
         if attack_time<=0.37 and not did_hit:
@@ -88,15 +98,17 @@ func _physics_process(delta: float) -> void:
             sprite.scale=Vector2.ONE*0.31
             sprite.position=Vector2(0,(float(r[3])*0.5-float(r[4]))*0.31+4)
             return
-    sprite.texture=walk_texture
-    frame_rects=walk_rects
-    if direction.length()>0.01:
-        face(direction)
-        phase+=velocity.length()*delta/18.0
-    else: phase=1
-    last_frame=-1
-    update_frame(int(phase)%4)
-    var r: Array=frame_rects[facing][int(phase)%4]
-    sprite.scale=Vector2.ONE*0.31
-    sprite.position=Vector2(0,-float(r[3])*0.155+4)
+    if traveled>0.1:
+        face(velocity)
+        if dodge_time<=0: phase=fposmod(phase+traveled*4.0/STRIDE_DISTANCE,4.0)
+    else: phase=0.0
+    show_locomotion(traveled>0.1 and dodge_time<=0)
     queue_redraw()
+
+func show_locomotion(moving: bool) -> void:
+    sprite.texture=walk_texture if moving else idle_texture
+    var rects: Array=walk_rects if moving else idle_rects
+    var r: Array=rects[facing][int(phase)%4 if moving else 0]
+    sprite.region_rect=Rect2(r[0],r[1],r[2],r[3])
+    sprite.scale=Vector2.ONE*MOTION_SCALE
+    sprite.position=Vector2(0,(float(r[3])*0.5-float(r[4]))*MOTION_SCALE+4)

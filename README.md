@@ -1,6 +1,6 @@
 # Chiefs of War — The Ancestral Hearth
 
-An original 2D Orc sandbox in Godot 4.4.1. Version 0.3 connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
+An original 2D Orc sandbox in Godot 4.4.1. Version 0.3.1 updates the Orc physique and locomotion. The opening connects the home village to a first hunting expedition and an earned iron kit. The art uses square-aligned elevated views, inked outlines and painted materials.
 
 ## Play
 
@@ -44,12 +44,12 @@ Import `project.godot` in Godot 4.4.1 and press F5. Main scene: `scenes/opener.t
 - Character setup currently offers a name and three skin/three cloth palettes on one male Orc. Hair, faces, body choices and female player sprites are not implemented.
 - Equipment changes between two complete outfits. Individual armor slots remain future work.
 - This is the village/first-expedition opening, not the full invasion, chieftain duel and adoption prologue.
-- Illustrated assets are AI-generated, not human-drawn. Whole-body walk/attack frames still have uneven pose and armor continuity; final animation acceptance remains open.
+- Illustrated assets are AI-generated, not human-drawn. The new hulking leather/iron sets include planted idles, contact/passing walk poses and matched axe strikes. Four keyframes per direction remain visibly stylized; horizontal facings are mirrored, and some pose/armor continuity still needs refinement.
 - Wolves use side-facing whole-body poses, mirrored horizontally. They do not yet have four directional animation sets.
 - Three enterable buildings share a compact room shell with distinct furnishings and portraits. NPC schedules and relationship systems are future work.
 - Building sections have independent health and collision; visual destruction uses column removal, pending authored collapse art and structural support rules.
 - Surface changes are firebreaks, not terrain elevation or fluid simulation.
 
-Validation: 127 automated checks pass, including a complete opening through movement, timed attacks, building, hunting, return and forging. Actual Linux OpenGL game views were inspected. The exported Windows pack launches under the Linux engine; native Windows execution and human playtesting were not performed here. These checks establish functionality, not a verdict on fun.
+Validation: 147 automated checks pass, including a complete opening through movement, timed attacks, building, hunting, return and forging. Actual Linux OpenGL game views were inspected. The exported Windows pack launches under the Linux engine; native Windows execution and human playtesting were not performed here. These checks establish functionality, not a verdict on fun.
 
 See `docs/QA.md`, `docs/ASSET_PROVENANCE.md`, `docs/ART_PROMPTS.md`, and `docs/ROADMAP.md`.

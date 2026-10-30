@@ -77,21 +77,18 @@ func _physics_process(delta: float) -> void:
             buffered=0
             attack(buffered_direction)
         return
-    sprite.texture=walk_texture
-    frame_rects=walk_rects
     if traveled>0.1:
         face(velocity)
-        phase+=traveled/20.0
-        foot_distance+=traveled
-        if foot_distance>=39:
-            foot_distance=0
-            stepped.emit()
-    else: phase=1
-    var index:=int(phase)%4
-    var r: Array=frame_rects[facing][index]
-    sprite.region_rect=Rect2(r[0],r[1],r[2],r[3])
-    sprite.scale=Vector2.ONE*0.33
-    sprite.position=Vector2(0,-float(r[3])*0.165+4)
+        if dodge_time<=0:
+            phase=fposmod(phase+traveled*4.0/STRIDE_DISTANCE,4.0)
+            foot_distance+=traveled
+            if foot_distance>=STRIDE_DISTANCE*0.5:
+                foot_distance-=STRIDE_DISTANCE*0.5
+                stepped.emit()
+    else:
+        phase=0.0
+        foot_distance=0.0
+    show_locomotion(traveled>0.1 and dodge_time<=0)
     queue_redraw()
 
 func show_attack(index: int) -> void:
