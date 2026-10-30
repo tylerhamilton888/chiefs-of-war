@@ -1,6 +1,6 @@
 extends "res://scripts/polished_opener.gd"
 const Raider=preload("res://scripts/raider.gd")
-const FINISHER_ART=preload("res://assets/executions/hero.png")
+const FINISHER_ART=preload("res://assets/executions/hero-spaced.png")
 const CONTACT:=0.32
 const DURATION:=0.78
 var raiders: Array=[]
@@ -17,15 +17,15 @@ var combat_ready:=false
 var execution_hint: Label
 var selected_raider=null
 var practice_mode:="--combat-yard" in OS.get_cmdline_user_args()
-const HERO_RECTS=[Rect2(30,0,280,444),Rect2(303,0,278,444),Rect2(582,0,280,444),Rect2(880,0,355,444),Rect2(1210,0,324,444),Rect2(1535,0,235,444)]
-const HERO_ANCHORS=[160,450,735,1000,1330,1650]
+const HERO_RECTS=[Rect2(50,0,280,370),Rect2(420,0,275,370),Rect2(760,0,270,370),Rect2(1115,0,335,370),Rect2(1485,0,320,370),Rect2(1905,0,245,370)]
+const HERO_ANCHORS=[174,565,905,1230,1603,2027]
 func _ready() -> void:
  super._ready()
  for i in 3:
   var r=Raider.new();r.kind="orc" if i==2 else "goblin"
   r.position=[Vector2(1460,1240),Vector2(1830,1355),Vector2(2110,1355)][i];r.target=player;r.game=self
   actors.add_child(r);r.strike.connect(raider_strike);r.slain.connect(raider_slain);raiders.append(r)
- execution_hint=label("",16);execution_hint.position=Vector2(310,690);execution_hint.size=Vector2(660,36);execution_hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ execution_hint=label("",16);execution_hint.position=Vector2(310,610);execution_hint.size=Vector2(660,36);execution_hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  execution_hint.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui_root.add_child(execution_hint)
  combat_ready=true;restore_combat(initial_save)
  if practice_mode:call_deferred("start_practice")
@@ -130,9 +130,10 @@ func begin_execution(cleave: bool=false) -> bool:
 func show_finisher() -> void:
  var index:=0 if execution_clock<0.06 else 1 if execution_clock<0.17 else 2 if execution_clock<CONTACT else 3 if execution_clock<0.46 else 4 if execution_clock<0.61 else 5
  var rect: Rect2=HERO_RECTS[index]
- if player.equipment=="iron":rect.position.y=444;rect.size.y=443
- var s: Sprite2D=player.sprite;s.texture=FINISHER_ART;s.region_rect=rect;s.scale=Vector2.ONE*0.37;s.flip_h=execution_sign<0
- s.position=Vector2((rect.get_center().x-HERO_ANCHORS[index])*0.37*execution_sign,(rect.size.y*0.5-438)*0.37+4)
+ if player.equipment=="iron":rect.position.y=370;rect.size.y=354
+ var s: Sprite2D=player.sprite;s.texture=FINISHER_ART;s.region_rect=rect;s.scale=Vector2.ONE*0.42;s.flip_h=execution_sign<0
+ Appearance.frame(player.look_material,FINISHER_ART,rect,2,"finisher",index)
+ s.position=Vector2((rect.get_center().x-HERO_ANCHORS[index])*0.42*execution_sign,(rect.size.y*0.5-(341 if player.equipment=="iron" else 365))*0.42+4)
 func end_execution() -> void:
  if is_instance_valid(executing) and executing.hp>0:
   executing.held=false;executing.vulnerable=maxf(executing.vulnerable,0.25)
@@ -181,6 +182,7 @@ func pause_actors(paused: bool) -> void:
  for r in raiders:r.active=not paused and room<0 and forged
 func pause_menu() -> void:
  super.pause_menu()
+ button("Appearance",edit_appearance,modal_box)
  if practice_mode:button("Reset practice",func():get_tree().reload_current_scene(),modal_box)
  var b=button("Combat & brutality",combat_menu,modal_box);modal_box.move_child(b,modal_box.get_child_count()-1);finish_sheet()
 func combat_menu() -> void:

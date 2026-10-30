@@ -1,0 +1,11 @@
+# Orc appearance
+
+`Appearance` (`scripts/appearance.gd`) owns stable palette indices, the versioned identity dictionary, asset references and frame registration. `opener.gd` owns creator UI and campaign persistence. The actor updates the appearance material whenever it selects an idle, walking or attack frame; executions supply their own registration. Creator, HUD portrait and world character share the same choices, with independent materials for differently posed previews.
+
+Options: three face structures; shaved/loose mane/swept braid/twin braids; clean/short/braided beard; none/walrus/braided mustache; eight hair colors; twelve skin tones; twelve cloth colors. Beard and mustache are independent. Color swatches accompany names. Four-direction, idle/walk/axe and leather/iron previews do not grant equipment. Randomize changes appearance only. Pause → Appearance edits existing campaigns; Cancel restores the previous identity, and saving an edit does not move the character or reset progression.
+
+Customization art is an original generated candidate. Full-body illustrated action frames remain intact: the shader registers cosmetic artwork within the same sprite draw, with no separate moving head node, skeletal deformation, or replaced body animation. These layers need review for every new body/action atlas. This is not independently redrawn facial animation for every expression. The back-facing collar masks the neck. Hair is static within each pose, not simulated.
+
+Old saves without `appearance` retain version 0 (original head and palette math). Opening the appearance editor offers the new choices; Cancel preserves the old appearance. Numeric values are sanitized and clamped. Skin/cloth indices 0..2 retain their old meaning. Do not reorder catalogs; append new choices.
+
+Validation: `tests/customization_test.gd` covers identity persistence, legacy migration, malformed appearance, cancel, campaign preservation and all motion/outfit registrations. Render it with `CHIEFS_REVIEW_DIR` set to an output directory for a creator screenshot. `appearance_visual.gd` and `custom_finisher_visual.gd` capture actual shader rendering. These tests do not establish subjective playfeel or final art approval.

@@ -42,3 +42,7 @@ Early narrow-bodied replacement candidates were rejected and are not used. Four-
 ## 0.3.2 clan and decor pass
 
 `assets/polish/clan_portraits.png`, `clan_idle.png` and `decor.png` are original AI-generated illustrations created with OpenAI image generation for this project. No third-party character art was copied. Direction: rugged inked/painted Orc clan, massive tusked male silhouettes, feminine tusked Yrsa, square-facing timber/iron furnishings. Runtime atlas regions are defined in `scripts/clan_art.gd`; preserve their alpha channels. Idle art has two key poses per NPC, not full bespoke animation cycles. Bren retains the existing shared locomotion and axe cycles when working.
+
+## 2026-10-30 — customization candidates
+
+`assets/customization/faces.png`, `hair.png`, `facial-hair.png`: original OpenAI built-in image generation outputs, made for this project. Faces use the project's existing `rest_leather.png` as the style reference. Prompts specify massive adult Orc jaws, bald clean-shaven face variants, Northern warrior hair, and separate beard/mustache overlays on true transparency. No third-party game art used. Face/hair pieces are registered inside the full-body sprite shader; they are not new independently drawn action sequences or approved final art. Prompt specification and registration are recorded in `docs/engineering/customization.md` and `scripts/appearance.gd`.

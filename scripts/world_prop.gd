@@ -6,6 +6,7 @@ var sprite: Sprite2D
 var flame_time := 0.0
 var collision_state := ""
 var player: Node2D
+var canopy_alpha:=1.0
 const RECTS := {"tree":Rect2(45,0,440,558),"stump":Rect2(590,190,360,345),"log":Rect2(1045,95,455,435),"rock":Rect2(45,590,440,405),"wall":Rect2(555,570,420,385),"roof":Rect2(1030,555,475,435)}
 const SCALES := {"tree":0.53,"stump":0.14,"log":0.16,"rock":0.25,"wall":0.22,"roof":0.39}
 
@@ -57,7 +58,9 @@ func _process(delta: float) -> void:
     refresh()
     if is_instance_valid(player) and data.kind in ["tree","roof"] and data.state=="intact":
         var relative:=player.global_position-global_position
-        sprite.modulate.a=0.35 if relative.y<0 and relative.y> -240 and absf(relative.x)<100 else 1.0
+        var obscures: bool=relative.y<(70 if data.kind=="tree" else 0) and relative.y> -240 and absf(relative.x)<(120 if data.kind=="tree" else 100)
+        canopy_alpha=move_toward(canopy_alpha,0.35 if obscures else 1.0,delta*5)
+        sprite.modulate.a=canopy_alpha
 
 func _draw() -> void:
     if data.kind=="hearth":

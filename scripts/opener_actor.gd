@@ -1,4 +1,5 @@
 extends "res://scripts/camp_actor.gd"
+const Appearance=preload("res://scripts/appearance.gd")
 signal stepped
 signal swung
 var speed:=190.0
@@ -102,3 +103,13 @@ func show_attack(index: int) -> void:
     sprite.region_rect=Rect2(r[0],r[1],r[2],r[3])
     sprite.scale=Vector2.ONE*0.33
     sprite.position=Vector2(0,(float(r[3])*0.5-float(r[4]))*0.33+4)
+    Appearance.frame(look_material,sprite.texture,sprite.region_rect,facing,"strike",index)
+
+func show_locomotion(moving: bool) -> void:
+    super.show_locomotion(moving)
+    if look_material:Appearance.frame(look_material,sprite.texture,sprite.region_rect,facing,"stride" if moving else "rest",int(phase)%4 if moving else 0)
+func refresh_appearance_frame() -> void:
+    if not look_material:return
+    var action="strike" if sprite.texture==attack_texture else "stride" if sprite.texture==walk_texture else "rest"
+    var index=clampi(int(sprite.region_rect.position.x/512),0,3)
+    Appearance.frame(look_material,sprite.texture,sprite.region_rect,facing,action,index)

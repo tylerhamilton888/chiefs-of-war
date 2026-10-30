@@ -1,4 +1,5 @@
 extends "res://scripts/camp.gd"
+const Appearance=preload("res://scripts/appearance.gd")
 const Hero=preload("res://scripts/opener_actor.gd")
 const Wolf=preload("res://scripts/direwolf.gd")
 const OPENER_SAVE="user://ancestral_hearth_v1.json"
@@ -7,6 +8,15 @@ const HUNTER_HOME=Vector2(1950,575)
 var character_name:="Garruk"
 var complexion:=0
 var cloth:=0
+var appearance: Dictionary=Appearance.defaults()
+var appearance_before: Dictionary={}
+var creator_editing:=false
+var creator_selectors: Dictionary={}
+var preview_direction:=0
+var preview_action:="rest"
+var preview_outfit:="leather"
+var preview_material: ShaderMaterial
+var face_preview: TextureRect
 var created:=false
 var introduced:=false
 var bren_met:=false
@@ -516,48 +526,120 @@ func context_text() -> String:
     if place_mode: return "PALISADE • 2 timber • click clear ground • B cancels"
     return "Follow the eastern path or work at your own pace."
 
+func appearance_snapshot() -> Dictionary:
+    return {"appearance":appearance.duplicate(),"complexion":complexion,"cloth":cloth,"name":character_name}
+func edit_appearance() -> void:
+    close_modal()
+    show_creator()
 func show_creator() -> void:
-    pause_actors(true)
-    veil.show()
-    creator=PanelContainer.new(); creator.position=Vector2(200,105); creator.size=Vector2(880,580); ui_root.add_child(creator)
-    var box=VBoxContainer.new(); box.add_theme_constant_override("separation",17); creator.add_child(box)
-    box.add_child(label("CHIEFS OF WAR",32)); box.add_child(label("A son of the Ashfang",22))
-    var row=HBoxContainer.new(); row.add_theme_constant_override("separation",35); box.add_child(row)
-    var canvas=Control.new(); canvas.custom_minimum_size=Vector2(280,285); row.add_child(canvas)
-    preview=Sprite2D.new(); preview.region_enabled=true; preview.position=Vector2(140,120); canvas.add_child(preview)
-    var fields=VBoxContainer.new(); fields.custom_minimum_size=Vector2(470,285); fields.add_theme_constant_override("separation",11); row.add_child(fields)
-    fields.add_child(label("Your name",16)); name_input=LineEdit.new(); name_input.text=character_name; name_input.max_length=24; name_input.custom_minimum_size.y=38; fields.add_child(name_input)
-    fields.add_child(label("Complexion",16)); var skins=OptionButton.new()
-    for s in ["Sun-olive","Forest green","Ash-olive"]: skins.add_item(s)
-    skins.selected=complexion; skins.item_selected.connect(func(i): complexion=i; apply_look()); fields.add_child(skins)
-    fields.add_child(label("Clan cloth",16)); var colors=OptionButton.new()
-    for s in ["Storm blue","Deep teal","Muted violet"]: colors.add_item(s)
-    colors.selected=cloth; colors.item_selected.connect(func(i): cloth=i; apply_look()); fields.add_child(colors)
-    box.add_child(label("You are no chosen one. You are an Orc of the Ashfang, with two strong hands and a place to earn among your own.",19))
-    button("Begin at the ancestral hearth",begin_character,box)
-    name_input.grab_focus(); apply_look(); update_preview()
+    if is_instance_valid(creator): return
+    creator_editing=created
+    appearance_before=appearance_snapshot()
+    # Existing saves keep their original illustrated head until explicitly edited.
+    if appearance.version==0: appearance=Appearance.defaults()
+    pause_actors(true); held_attack=false; player.cancel_action(); veil.show()
+    creator_selectors.clear()
+    creator=PanelContainer.new(); creator.position=Vector2(100,40); creator.size=Vector2(1080,720); ui_root.add_child(creator)
+    var margin=MarginContainer.new()
+    for side in ["left","right","top","bottom"]:margin.add_theme_constant_override("margin_"+side,20)
+    creator.add_child(margin)
+    var box=VBoxContainer.new();box.add_theme_constant_override("separation",12);margin.add_child(box)
+    box.add_child(label("YOUR ASHFANG",30))
+    box.add_child(label("A face of your own. A place to earn.",17))
+    var row=HBoxContainer.new();row.add_theme_constant_override("separation",24);row.size_flags_vertical=Control.SIZE_EXPAND_FILL;box.add_child(row)
+    var left=VBoxContainer.new();left.custom_minimum_size.x=350;row.add_child(left)
+    var canvas=Control.new();canvas.custom_minimum_size=Vector2(350,240);left.add_child(canvas)
+    preview=Sprite2D.new();preview.region_enabled=true;preview.position=Vector2(175,115);canvas.add_child(preview)
+    preview_material=ShaderMaterial.new();preview_material.shader=load("res://scripts/orc_palette.gdshader");preview.material=preview_material
+    var view_row=HBoxContainer.new();left.add_child(view_row)
+    for view in [["Front",0],["Left",1],["Right",2],["Back",3]]:
+        button(view[0],func():preview_direction=view[1];update_preview(),view_row).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    var anim=OptionButton.new()
+    for title in ["Stand","Walk","Swing axe"]:anim.add_item(title)
+    anim.item_selected.connect(func(i):preview_action=["rest","stride","strike"][i];preview_time=0;update_preview());left.add_child(anim)
+    var outfit=OptionButton.new();outfit.add_item("Preview: leather");outfit.add_item("Preview: iron")
+    outfit.item_selected.connect(func(i):preview_outfit="leather" if i==0 else "iron";update_preview());left.add_child(outfit)
+    left.add_child(label("Outfit preview only; iron is earned in play.",14))
+    face_preview=portrait(0,Vector2(108,80));face_preview.size_flags_horizontal=Control.SIZE_SHRINK_CENTER;left.add_child(face_preview)
+    var right=VBoxContainer.new();right.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(right)
+    right.add_child(label("Name",16));name_input=LineEdit.new();name_input.text=character_name;name_input.max_length=24;name_input.custom_minimum_size.y=38;right.add_child(name_input)
+    var scroll=ScrollContainer.new();scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;right.add_child(scroll)
+    var fields=VBoxContainer.new();fields.size_flags_horizontal=Control.SIZE_EXPAND_FILL;fields.add_theme_constant_override("separation",8);scroll.add_child(fields)
+    creator_option(fields,"Face","face",Appearance.FACES,appearance.face)
+    creator_option(fields,"Hair","hair",Appearance.HAIRS,appearance.hair)
+    creator_option(fields,"Beard","beard",Appearance.BEARDS,appearance.beard)
+    creator_option(fields,"Mustache","mustache",Appearance.MUSTACHES,appearance.mustache)
+    creator_option(fields,"Hair color","hair_color",Appearance.HAIR_NAMES,appearance.hair_color)
+    creator_option(fields,"Skin tone","complexion",Appearance.SKINS,complexion)
+    creator_option(fields,"Clan cloth","cloth",Appearance.CLOTHS,cloth)
+    var actions=HBoxContainer.new();box.add_child(actions)
+    button("Randomize look",randomize_appearance,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    if creator_editing:button("Cancel",cancel_appearance,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    button("Save appearance" if creator_editing else "Begin at the ancestral hearth",begin_character,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    name_input.grab_focus();apply_look();update_preview()
+func creator_option(parent: Node,title: String,key: String,options: Array,selected: int) -> void:
+    var row=HBoxContainer.new();parent.add_child(row)
+    var caption=label(title,17);caption.custom_minimum_size.x=120;row.add_child(caption)
+    var choice=OptionButton.new();choice.custom_minimum_size.y=42;choice.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    for i in options.size():
+        if key in ["complexion","cloth","hair_color"]:
+            var swatch=Image.create(18,18,false,Image.FORMAT_RGBA8)
+            var color=Color.WHITE
+            if key=="cloth":color=Appearance.CLOTH_COLORS[i]
+            elif key=="hair_color":color=Appearance.HAIR_COLORS[i]
+            else:
+                var tint: Vector3=Appearance.SKIN_TINTS[i];color=Color(0.66*tint.x,0.58*tint.y,0.31*tint.z)
+            swatch.fill(color);choice.add_icon_item(ImageTexture.create_from_image(swatch),options[i])
+        else:choice.add_item(options[i])
+    choice.selected=selected;row.add_child(choice);creator_selectors[key]=choice
+    choice.item_selected.connect(func(i):
+        if key=="complexion":complexion=i
+        elif key=="cloth":cloth=i
+        else:appearance[key]=i
+        apply_look();update_preview())
+func randomize_appearance() -> void:
+    appearance=Appearance.defaults()
+    for key in ["face","hair","beard","mustache","hair_color"]:appearance[key]=randi_range(0,creator_selectors[key].item_count-1)
+    complexion=randi_range(0,Appearance.SKINS.size()-1);cloth=randi_range(0,Appearance.CLOTHS.size()-1)
+    for key in creator_selectors:creator_selectors[key].selected=complexion if key=="complexion" else cloth if key=="cloth" else appearance[key]
+    apply_look();update_preview()
 func update_preview() -> void:
     if not is_instance_valid(preview): return
-    var index=int(preview_time*5)%4
-    var row=int(preview_time/4)%4
-    var r: Array=player.walk_rects[row][index]
-    preview.texture=player.walk_texture; preview.region_rect=Rect2(r[0],r[1],r[2],r[3]); preview.scale=Vector2.ONE*0.85
-    preview.material=player.look_material
+    var index=int(preview_time*5)%4 if preview_action!="rest" else 0
+    var path="res://assets/motion/"+preview_action+"_"+preview_outfit+".png"
+    var texture: Texture2D=load(path)
+    var rect=Rect2(index*512,preview_direction*448,512,448)
+    preview.texture=texture;preview.region_rect=rect;preview.scale=Vector2.ONE*0.72
+    Appearance.apply(preview_material,appearance,complexion,cloth)
+    Appearance.frame(preview_material,texture,rect,preview_direction,preview_action,index)
+func dismiss_creator() -> void:
+    creator.hide();creator.queue_free();creator=null;preview=null;face_preview=null;creator_selectors.clear();veil.hide();pause_actors(false)
+func cancel_appearance() -> void:
+    appearance=appearance_before.appearance.duplicate();complexion=appearance_before.complexion;cloth=appearance_before.cloth
+    character_name=appearance_before.name;apply_look();dismiss_creator()
 func begin_character() -> void:
-    character_name=name_input.text.strip_edges()
-    if character_name.is_empty(): name_input.placeholder_text="Give your Orc a name"; name_input.grab_focus(); return
-    created=true; creator.hide(); creator.queue_free(); creator=null; veil.hide()
-    pause_actors(false); player.position=Vector2(620,430); camera.reset_smoothing()
-    say("Morning at your ancestral hearth. Yrsa is in the hall just north of you.")
-    save_game()
+    var chosen=name_input.text.strip_edges()
+    if chosen.is_empty():name_input.placeholder_text="Give your Orc a name";name_input.grab_focus();return
+    character_name=chosen;created=true
+    var editing=creator_editing
+    dismiss_creator()
+    if not editing:
+        player.position=Vector2(620,430);camera.reset_smoothing()
+        say("Morning at your ancestral hearth. Yrsa is in the hall just north of you.")
+    else:say("Appearance updated, "+character_name+".")
+    apply_look();update_ui()
+    if not save_game():say("Practice look updated; your campaign is untouched." if "--combat-yard" in OS.get_cmdline_user_args() else "Appearance applied for this session; saving was unavailable.")
 func apply_look() -> void:
     if not ready_opener: return
-    var skin=[Vector3.ONE,Vector3(0.70,0.95,0.78),Vector3(0.84,0.90,1.12)][complexion]
-    var fabric=[Vector3.ONE,Vector3(0.7,1.4,1.05),Vector3(1.4,0.9,1.2)][cloth]
-    player.look_material.set_shader_parameter("skin_tint",skin); player.look_material.set_shader_parameter("cloth_tint",fabric)
+    Appearance.apply(player.look_material,appearance,complexion,cloth)
+    player.refresh_appearance_frame()
     if portrait_shader==null:
-        portrait_shader=ShaderMaterial.new(); portrait_shader.shader=load("res://scripts/orc_palette.gdshader"); avatar.material=portrait_shader
-    portrait_shader.set_shader_parameter("skin_tint",skin)
+        portrait_shader=ShaderMaterial.new();portrait_shader.shader=load("res://scripts/orc_palette.gdshader");avatar.material=portrait_shader
+    var portrait_atlas=AtlasTexture.new();portrait_atlas.atlas=load("res://assets/motion/rest_leather.png");portrait_atlas.region=Rect2(190,90,132,145)
+    avatar.texture=portrait_atlas
+    Appearance.apply(portrait_shader,appearance,complexion,cloth)
+    Appearance.frame(portrait_shader,load("res://assets/motion/rest_leather.png"),Rect2(0,0,512,448),0)
+    if is_instance_valid(face_preview):face_preview.texture=avatar.texture;face_preview.material=portrait_shader
 
 func pause_actors(paused: bool) -> void:
     super.pause_actors(paused)
@@ -719,7 +801,7 @@ func save_game(path: String=OPENER_SAVE) -> bool:
     data.progress={"hp":hp,"ore":ore,"meat":meat,"stored":stored,"built":built,"forged":forged,"worker_active":worker_active,"worker_cargo":worker_cargo,"kills":kills,"trees_cut":trees_cut,"collected":collected,"quest":quest,"day":day,"equipment":player.equipment}
     var pos: Vector2=player.position if room<0 else return_pos
     data.player=[pos.x,pos.y]; data.worker=[worker.position.x,worker.position.y]; data.enemies=[0,0,0]
-    data.opener={"name":character_name,"complexion":complexion,"cloth":cloth,"created":created,"introduced":introduced,"bren_met":bren_met,"training_hits":training_hits,"training_dodges":training_dodges,"hunter_found":hunter_found,"trophy":trophy,"returned":returned,"rewarded":rewarded,"recovered_count":recovered_count,"audio":audio_enabled,"impact":accessibility_flash}
+    data.opener={"name":character_name,"appearance":appearance,"complexion":complexion,"cloth":cloth,"created":created,"introduced":introduced,"bren_met":bren_met,"training_hits":training_hits,"training_dodges":training_dodges,"hunter_found":hunter_found,"trophy":trophy,"returned":returned,"rewarded":rewarded,"recovered_count":recovered_count,"audio":audio_enabled,"impact":accessibility_flash}
     data.wolves=[]
     for w in wolves: data.wolves.append({"hp":w.hp,"harvested":w.harvested})
     var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
@@ -759,7 +841,9 @@ func load_game(path: String=OPENER_SAVE) -> bool:
 func restore_extra(data: Dictionary) -> void:
     if data.is_empty(): return
     var o: Dictionary=data.get("opener",{})
-    character_name=str(o.get("name","Garruk")).left(24); complexion=clampi(int(o.get("complexion",0)),0,2); cloth=clampi(int(o.get("cloth",0)),0,2)
+    character_name=str(o.get("name","Garruk")).left(24); complexion=clampi(int(o.get("complexion",0)),0,Appearance.SKINS.size()-1); cloth=clampi(int(o.get("cloth",0)),0,Appearance.CLOTHS.size()-1)
+    appearance=Appearance.clean(o.get("appearance",{}))
+    if not o.has("appearance"):appearance.version=0
     created=bool(o.get("created",false)); introduced=bool(o.get("introduced",false)); bren_met=bool(o.get("bren_met",false))
     training_hits=clampi(int(o.get("training_hits",0)),0,3); training_dodges=clampi(int(o.get("training_dodges",0)),0,1)
     hunter_found=bool(o.get("hunter_found",false)); trophy=bool(o.get("trophy",false)); returned=bool(o.get("returned",false)); rewarded=bool(o.get("rewarded",false))

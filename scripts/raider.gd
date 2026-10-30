@@ -23,6 +23,9 @@ var death_clock := 0.0
 var cleaved := false
 var held := false
 var fear := 0.0
+const ORC_ART=preload("res://assets/executions/orc-spaced.png")
+const ORC_RECTS=[Rect2(50,40,400,480),Rect2(550,60,400,450),Rect2(990,80,515,430),Rect2(30,650,460,330),Rect2(535,560,450,425),Rect2(1015,800,505,195)]
+const ORC_ANCHORS=[Vector2(270,506),Vector2(760,494),Vector2(1290,496),Vector2(280,965),Vector2(750,969),Vector2(1280,980)]
 const ART = preload("res://assets/executions/enemies.png")
 # Rectangles are authored around each full silhouette, with fixed foot anchors.
 const RECTS = [
@@ -39,7 +42,15 @@ func _ready() -> void:
  var c=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=19 if kind=="orc" else 14;c.shape=shape;add_child(c)
  sprite.texture=ART;sprite.region_enabled=true;add_child(sprite);pose(0)
 func pose(index: int,cleave_row: bool=false) -> void:
- var row:=2 if kind=="orc" else 1 if cleave_row else 0
+ if kind=="orc":
+  var frame:=clampi(index,0,5)
+  var region: Rect2=ORC_RECTS[frame]
+  sprite.texture=ORC_ART;sprite.region_rect=region;sprite.scale=Vector2.ONE*0.255
+  var placement: Vector2=(region.get_center()-ORC_ANCHORS[frame])*0.255
+  if sprite.flip_h:placement.x=-placement.x
+  sprite.position=placement;return
+ sprite.texture=ART
+ var row:=1 if cleave_row else 0
  var rect: Rect2=RECTS[row][clampi(index,0,5)]
  var scale_factor:=0.37 if kind=="orc" else 0.28
  var anchor:=Vector2(ANCHORS[row][clampi(index,0,5)],870 if row==2 else 545 if row==1 else 295)

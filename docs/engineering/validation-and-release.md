@@ -19,6 +19,8 @@ The execution tests and visual review script currently exist on `recovery/axe-an
 | `tests/opener_edges.gd` | Cancellation, save validation, menus, fire/recovery and buffered attacks |
 | `tests/motion_test.gd` | Outfit imports, grounding, cadence, facing and recovery |
 | `tests/polish_test.gd` | Rendered room collision, door approach, menu layout and trophy state |
+| `tests/feel_test.gd` | Axe contact latency, single impact, dodge follow-up, action locks and visible gathering damage |
+| `tests/practice_test.gd` | `--combat-yard` entry, campaign sentinel untouched, rendered menu fits |
 | `tests/execution_test.gd` | Execution opportunity, contact, cleanup, options and persistence; inspect current file for exact coverage |
 
 Command pattern: `godot --headless --path . --fixed-fps 60 --script tests/opener_test.gd -- --fresh --test`. Omit `--headless` and select `--rendering-method gl_compatibility` for rendered suites. Record the actual suite output and any Godot errors in QA.md; never carry forward old counts as fresh evidence.
@@ -36,3 +38,7 @@ Run relevant tests against the exported pack as well when possible. A pack run u
 Commit/sync final source, documentation and asset provenance; preserve upstream ancestry. Publish an actual GitHub release with Windows ZIP, checksum file and useful engine preview/clip. Confirm it is published rather than draft and verify assets are attached with correct names/sizes. The GitHub connection may not provide release-upload operations; an authorized signed-in browser is a fallback for that missing capability.
 
 Record source SHA, release URL and tests in current state/handoff. Do not call source-only progress a playable release, or omit known native-Windows/animation/human-playtest limitations. If blocked, checkpoint explicit WIP and identify the concrete blocker.
+
+## Fast playtest
+
+Run the packaged `Combat-Practice.bat`, or `godot --path . -- --combat-yard`. This mode never loads or writes campaign files; reset through its pause menu. Use a temporary XDG_DATA_HOME and `--combat-yard --test` for practice_test.gd, which writes a deliberate sentinel only in that isolated location. The normal EXE continues the campaign.

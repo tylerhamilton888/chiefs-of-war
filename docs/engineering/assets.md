@@ -24,3 +24,5 @@ Read [character/animation requirements](../design/characters-and-animation.md) a
 Use whole-character frames for primary animation. Horizontal mirroring is a current prototype limitation; do not claim four independently drawn directional executions. Keep configurable blood effects separate from baked art where possible.
 
 Validate downloaded assets against their upstream Git blob hashes. Empty API responses are missing bytes, not valid transparent images. `.godot/` is generated cache; source PNGs, import settings and UID files belong to version control, subject to the repository's existing conventions.
+
+The original hero atlas had neighboring axe fragments inside its frame rectangles. `hero-spaced.png` is the imagegen repacking edit; use its measured rectangles/anchors in execution_opener.gd, not the old HERO_RECTS. Preserve source candidates but exclude superseded atlases from release exports. Check enemy frame gutters similarly.
