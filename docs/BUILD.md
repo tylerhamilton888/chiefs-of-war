@@ -5,6 +5,8 @@ Install Godot 4.4.1 and its matching official export templates. Import the proje
 ```
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/foundation_test.gd -- --fresh
+godot --headless --path . --script tests/camp_test.gd -- --fresh
+godot --headless --path . --script tests/worker_test.gd -- --fresh
 godot --headless --path . --export-release "Windows Desktop" builds/windows/ChiefsOfWar.exe
 ```
 

@@ -1,17 +1,17 @@
-# Roadmap and acceptance gates
+# Roadmap after 0.2
 
-0. Foundation — implemented: separate repository, Godot project, modular state, tests, exports and documentation.
-1. Living Orc — in progress: two full-body outfit candidates, movement and frame inspector. Improve walk-cycle contact/pass poses, direction consistency, adult silhouette and action coverage before accepting art.
-2. Hands of the Peon — state foundations only: tree damage/felling and timber persistence tested with development commands. Still needs accepted axe actions, visible tree falling, carrying, storage and construction work animations.
-3. Blood and Iron — pending: responsive duel-quality melee, block/parry, Space dodge, one enemy and one huntable creature.
-4. First Hearth — pending: living NPC camp, autonomous peon deliveries, usable structures, and production fire response tools. Fire and destructibility foundations exist; balance, support/collapse and warnings need gameplay integration.
-5. A World Worth Living In — pending.
-6. Ashes of the Clan — pending; no cinematic production ahead of fundamentals.
+The rejected 3D experiment is abandoned. Continue original 2D illustrated art using the user's uploaded October 29 board. Warcraft II informs readability and painted RTS language, not IP/assets.
 
-## User direction amendments — 2026-10-29
+## Current playable core
 
-- Buildings must be modular and destructible; harvestable trees and rocks must be independent objects. World changes persist.
-- The world must support sculpting/modification; current surface-cell prototype is the foundation, not final terrain scope.
-- Chiefs of War must not imitate The Stellar Holds. Harsher silhouettes, brutal Orc physicality, rough defenses and a dangerous world take precedence over cozy camp imagery.
-- Visible equipment changes are central; test identity and action continuity across equipment before multiplying asset count.
-- Fire may spread across flammable buildings and woodland, with clear causes, warnings, response tools and protection against routine accidental destruction.
+Gather timber/ore, build a three-stage storehouse, craft and equip iron, fight three rival Orcs, dodge, enter hall/forge/store, speak through portraits, rest/eat, assign a timber worker, place palisades, clear firebreaks, test controlled fire, save and reload.
+
+## Next acceptance gates
+
+1. Lock one Orc's identity and foot anchors across directions. Replace weak passing/recovery frames and reconcile walk/attack armor details. Review in motion at actual gameplay scale.
+2. Dedicated pick and axe tool animations, stronger contact reaction and authored enemy hurt/death frames.
+3. Individual armor slots with consistent full-frame clothing registration.
+4. More authored interiors, distinct NPC sprites and schedules, room-specific props and better destruction art.
+5. Huntable creature with tested attack/reward loop; more enemy silhouettes and navigation around construction.
+6. Expand the playable loop toward 15–30 minutes of varied play; current compact camp is smaller.
+7. Only then implement the birth-tribe expedition/invasion and longer sandbox progression.

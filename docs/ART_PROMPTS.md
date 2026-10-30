@@ -13,3 +13,9 @@ Terrain: seamless overhead mossy olive-green grass and muted earth texture only.
 Rejected axe sheet: four directions and four successive full-body two-handed axe-swing poses matching base Orc identity, no tree target. Rejected after inspection because direction and cropping requirements were not met.
 
 Rejected environment approach: one painted complete clearing. Retained only as an earlier visual experiment outside the repository, never used as the current playable map.
+
+## 0.2 reference-led generation
+
+Built-in image generation; no image API fallback. User's uploaded `image(20261029-234521).png` was the style reference. Prompt direction: bold hand-inked contours, broad flat gouache planes, restrained two/three-value shadows, rugged original northern Orcs, massive adult male physiques, readable elevated top-down views. Avoid photoreal microtexture, 3D-rendered surfaces, cute proportions and fine noise.
+
+Architecture: six isolated assets, hall/forge/storehouse above anvil bench/fur bed/timber chest. Props: pine/stump/log above ore boulder/palisade/contained hearth. Portraits: dark-haired hero, silver-bearded smith, red-bearded laborer, beautiful adult female Orc healer with feminine features, small tusks, olive skin, side braids and slate bodice. Character sheets: four directions and four whole-body poses, blue-cloth leather and red-cloth iron kits; separate walk and two-handed axe actions. Sprite facing rows were verified and remapped in atlas metadata, not assumed from prompts. Clipped followthrough cells are not played. Generation cannot yet be treated as a finished animation pipeline.

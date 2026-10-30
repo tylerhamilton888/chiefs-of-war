@@ -19,3 +19,11 @@ Outfit IDs resolve to complete directional frame sets. The current two whole-out
 ## Current boundaries
 
 Terrain editing changes surface material and water collision; it is not elevation sculpting, voxel excavation or fluid simulation. Structures have independent damage but no support graph yet. Grid transitions, fire effects, roof alignment and destruction art are provisional. The current region is a test clearing, not the final narrative village.
+
+## 0.2 camp layer
+
+`camp.gd` coordinates the authored region, room transitions, UI, inventory/progression, simple enemy and worker decisions. It uses the existing authoritative WorldState for environmental objects/fire. `camp_actor.gd` reuses whole-frame actor rendering and adds impact signals at 0.43 seconds into an 0.8-second action, with direction/range validation in the camp. `camp_prop.gd` maps new art and animates tree falls. `building.gd` derives three collision/visual columns from independent wall records. `camp_terrain.gd` draws surface edits without baking in props.
+
+Rooms use collision layer 4; outdoors use layer 1. The player is reparented and masks switch at transitions. Outdoor actors pause indoors; fire state continues while inside, but pauses in modal menus. Saves always restore to an exterior doorway so stale room state cannot trap the player. Current rooms share a layout and services are deliberately simple.
+
+Campaign data extends the v2 world snapshot with camp_version=1, progress, worker cargo/location, player position and enemy health. Physical logs have stable IDs and collection flags. A worker transfers one bundle into cargo then into storage, never paying timber just for elapsed time. Rations and iron are finite until the region is expanded.

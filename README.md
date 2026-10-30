@@ -1,55 +1,50 @@
-# Chiefs of War
+# Chiefs of War — The First Hearth
 
-An original Godot 4 top-down Orc sandbox. **0.1.0 is a world-systems prototype, not the promised 15–30 minute vertical slice.**
-
-This project is independent of The Stellar Holds. No code or art was imported from that game.
+Original top-down Orc sandbox in Godot 4.4.1. **0.2.0 is a small playable core and art trial, not a finished game or a completed narrative vertical slice.**
 
 ## Play
 
-Extract the Windows ZIP and launch `ChiefsOfWar.exe`. Godot does not need to be installed. This build is unsigned. The Windows export was produced successfully; native Windows execution was not available in the development environment. Linux Godot import, live rendering, and automated scene tests were run.
+Extract the Windows ZIP and run `ChiefsOfWar.exe`. No Godot installation needed. Windows export is unsigned; engine testing and rendering were performed on Linux, not native Windows.
 
-For source: import `project.godot` into Godot **4.4.1**, then press F6 on `scenes/hearth.tscn` or F5 to run the project.
+Start in Ashfang Camp. Cut the western pines, collect six timber, and raise the storehouse south of the hearth in three two-timber stages. Enter the forge, make an iron kit from four ore and two timber, then confront three rival Orcs on the southeastern ridge. The journal guides this loop without locking actions behind quest order. Afterward, build palisades or assign Bren to gather timber into the storehouse.
 
-## Included
-
-- Four-direction whole-body Orc movement candidate, with leather / heavy iron outfit switching.
-- Independent persistent trees, logs, rocks, wall segments, roof parts and a contained hearth.
-- Damageable objects: trees become stumps plus collectible timber; wall removal opens a physical gap.
-- Cell-editable terrain with earth firebreaks and water collision.
-- Fire ignition, heat buildup, limited-radius wind-biased spread, fuel consumption, fire damage and charred remains.
-- Contained hearth safety, explicit ignition causes only, spread toggle, free prototype extinguishing with wet protection, warned test disaster, and recovery checkpoint.
-- Versioned world save: objects, terrain, damage, fires, timber, equipment and player position.
+The hall restores health. Enemies drop ore and rations. Defeat returns you to camp without losing gear or materials. This is a finite authored region; trees and enemies do not respawn automatically.
 
 ## Controls
 
-| Key | Action |
+| Input | Action |
 | --- | --- |
-| WASD | Walk |
-| E | Inspect nearby object / collect timber |
-| C | Compare leather and iron whole-body outfit candidates |
-| G | Wet / extinguish nearby objects; cancel pending test disaster |
-| J | Help; pauses simulation while open |
-| L | Advance lighting preview |
-| F1 + arrows | Review direction / animation frames |
-| F3 | Toggle clearly labeled world test tools |
-| F5 | Save world |
-| F6 | Restore checkpoint from before last warned test disaster |
-| Escape | Close help, or save and exit |
+| WASD | Move |
+| Left mouse | Aim and make one committed axe strike |
+| Space | Dodge; brief invulnerability and cooldown |
+| E | Collect logs, build storehouse stages, enter/use buildings, talk to Bren |
+| C | Switch owned leather/iron outfit |
+| 1 | Eat a ration |
+| B | Toggle palisade placement; click clear nearby ground, costs 2 timber |
+| R | Clear nearby ground under cursor into an earth firebreak |
+| G | Douse nearby fuel; cancel pending fire drill |
+| J | Journal and controls |
+| Esc | Pause menu / close dialog / cancel placement |
+| F5 | Save |
+| F6 | Restore optional fire-drill checkpoint |
 
-With F3 enabled: click near an object's base to apply 25 test damage; I ignites the hovered object; B/T/R/O place wall/tree/rock/roof at the cursor; right-click cycles grass/earth/water; P toggles spread; F4 schedules an eight-second warned test ignition and saves a recovery checkpoint. These are development tools, **not finished attacks, construction, or woodcutting actions**. Trees take four test hits; walls take six. E collects the resulting logs.
+Inside buildings, walk away from the south threshold and press E to use the facilities; E near that threshold leaves. Fire spread can be disabled in the pause menu. The optional drill warns for eight seconds and creates a separate checkpoint. Hearths never cause accidental fires. No offline simulation.
 
-Saves live in Godot's `user://` directory, typically `%APPDATA%/Godot/app_userdata/Chiefs of War/` on Windows. `world_v2.json` is the current save; `before_test_disaster.json` is the recovery checkpoint. There is no offline fire progression.
+## Save and source
 
-## Verification
+Autosaves every 30 seconds and on exit. New save: `%APPDATA%/Godot/app_userdata/Chiefs of War/first_hearth_v1.json`. This does not overwrite the older world-foundation save. For a fresh playtest, use the included `Fresh-Camp.bat` (it ignores the prior save on launch; subsequent saving replaces the campaign slot).
 
-```sh
-godot --headless --path . --editor --import --quit
-godot --headless --path . --script tests/foundation_test.gd -- --fresh
-godot --headless --path . --export-release "Windows Desktop"
-```
+Import `project.godot` in Godot 4.4.1 and press F5. `scenes/camp.tscn` is the current game; `scenes/hearth.tscn` preserves the earlier systems harness. The abandoned 3D trial is excluded.
 
-Use a separate `XDG_DATA_HOME` for automated testing on Linux. Tests cover 35 checks including physical wall traversal, water collision changes, persistence, and fire safety. See `docs/QA.md` for limitations.
+## Current limits
 
-## Status
+- Generated illustrated art, not human-authored hand drawings. Character continuity, passing poses, armor details and contact alignment are still candidates. Clipped recovery frames are excluded from playback.
+- Whole-outfit equipment sets; individual armor slots and customization remain future work.
+- Interiors share a small layout. NPCs have portrait conversations, not schedules or relationship simulation.
+- Three rival Orcs use the same base character artwork. Hunting fauna, enemy variety, and the birth-tribe invasion are not implemented.
+- Building sections have independent damage/collision, with temporary sliced exterior loss rather than finished collapse art; no structural support graph.
+- Bren uses local movement, not general navigation around arbitrary user-built mazes.
+- Mining uses the current axe action; a dedicated pick/tool set is pending.
+- Surface edits are firebreaks, not terrain elevation or fluid simulation.
 
-Foundation implemented. Living-Orc art is under review. Gathering/combat/worker loops, individually equipped armor slots, building support/collapse, and the narrative prologue are not finished. See `docs/ROADMAP.md` and the original `docs/MASTER_BRIEF.md`.
+See `docs/QA.md`, `docs/ASSET_PROVENANCE.md`, and `docs/ROADMAP.md`.

@@ -16,3 +16,9 @@ The user's Fantasy Orc Game Art Acceptance Board supplied style reference for th
 No external sound assets are included. Prototype fire shapes and terrain overlays are drawn by project code. The engine's default font is covered by Godot's included notices. Generated artwork is not claimed to be human-hand-drawn, exclusively copyrightable, or independently legally cleared; it uses an illustrated visual treatment and must pass final production review.
 
 Prompt specifications are retained in ART_PROMPTS.md. Original image pixels are retained; atlas regions are selected using metadata, not body-part deformation.
+
+## 0.2 assets
+
+All `assets/camp/*.png` are original project candidates produced with the built-in image-generation tool using the user's October 29 character/style board and subsequent generated character references. They are **AI-generated in a hand-drawn visual style**, not human-drawn commissions. No Warcraft II asset files were imported; its role is general readability/art-direction reference only. Photoreal-looking first-pass portraits and architecture were rejected in favor of the user's inked reference.
+
+`architecture.png`, `props.png`, `portraits.png`, `walk_leather.png`, `walk_iron.png`, `attack_leather.png`, `attack_iron.png`, `floor.png`, and `npcs.png` supply the current art. Atlas metadata preserves original image pixels and selects whole-body regions. Four short WAVs were newly synthesized from decaying oscillators and seeded noise; no external audio recordings were used. Current sprites remain unapproved candidates.

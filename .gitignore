@@ -2,3 +2,5 @@
 builds/
 *.tmp
 .DS_Store
+
+prototypes/
