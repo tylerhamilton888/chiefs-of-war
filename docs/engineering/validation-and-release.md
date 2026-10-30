@@ -53,3 +53,9 @@ Run the packaged `Combat-Practice.bat`, or `godot --path . -- --combat-yard`. Th
 5. Record the immutable source SHA, release URL, ZIP size/digest and run ID in current state/handoff, then bring the accepted source and continuity updates into `warlord` with ancestry preserved.
 
 Verified download is v0.4.1 (a published prerelease with attached assets). A separate v0.4.0 release has no assets as of this audit; it is not a playable delivery. Use the explicit v0.4.1 URL in the README, not GitHub's generic latest-stable shortcut. Preserve historical releases unless the user asks to remove them.
+
+## Clear Windows player package (0.4.2 preparation)
+
+`.github/workflows/windows-launch-release.yml` builds the game, runs `tools/package_windows.py`, tests the extracted artifact on a native Windows runner using `tools/verify_windows_package.ps1`, and publishes only after that gate succeeds. It is scoped to `release/clear-launch-0.4.2`; do not use that branch/tag for future versions.
+
+Player contract: root `ChiefsOfWar.exe` is the only executable, plus `START HERE.txt`; optional practice goes in Extras and technical information/notices in Support. All required game resources are embedded. The optional launcher resolves its game relative to its own directory. Native startup tests use isolated APPDATA, a path with spaces and an unrelated working directory. They do not certify subjective playfeel or interactive graphics on every user's machine.

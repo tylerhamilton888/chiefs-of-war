@@ -23,3 +23,7 @@ Terminal Git push lacks credentials. Use GitHub connector blob/tree/commit/ref o
 ## Repository readiness audit — 2026-10-30
 
 Confirmed default branch is warlord; feature/orc-customization was identical to its head at audit start. Release source is an ancestor of that head, with documentation-only follow-up changes. Release assets and successful CI were verified against GitHub. Original master-brief checksum and all 19 section assignments across eight shards verified. Current scene/script literal resource references resolve. No build executables, archives or .godot cache are tracked. Stale unmerged-combat notes were corrected. See engineering/validation-and-release.md for the proven Actions publication path and the empty historical v0.4.0 release. Gameplay code and published artifacts were not changed by this audit.
+
+## Packaging follow-up in progress
+
+User requested an unmistakable ChiefsOfWar game to open after downloading/extracting. The actual 0.4.1 ZIP was downloaded and its SHA-256/integrity checked: intact, with ChiefsOfWar.exe, but its README still opened with a 0.4.0 heading. Preparing 0.4.2 with one root GUI executable, concise player instructions, Extras/Support separation, and a native Windows packaged-startup gate. Publication is pending; check the new workflow/run before claiming completion. Gameplay code is unchanged.

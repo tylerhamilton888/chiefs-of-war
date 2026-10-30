@@ -1,0 +1,32 @@
+CHIEFS OF WAR
+
+PLAY THE GAME
+1. Right-click the downloaded ZIP and choose Extract All.
+2. Open the extracted folder.
+3. Double-click ChiefsOfWar.exe (Windows may show it as ChiefsOfWar).
+
+That is the game. You do not need Godot, an installer, or a source project.
+Keep the extracted folder somewhere convenient. You can create a desktop
+shortcut to ChiefsOfWar.exe if you like.
+
+YOUR CHARACTER
+A new game opens character creation. An existing game continues your save.
+Press Esc, then Appearance, to change your existing Orc's look.
+Downloading a new build does not erase your campaign.
+
+CONTROLS
+WASD: move       Left mouse: swing axe       Space: dodge
+E: interact     I: inventory                J: journal
+Esc: pause      F5: save                    C: switch owned outfits
+F: earned finisher when alongside a vulnerable raider
+Shift+F: optional goblin cleave
+
+OPTIONAL PRACTICE
+Extras contains Combat Practice.bat. It opens a separate, unsaved practice
+yard. It never loads or changes your campaign. Use ChiefsOfWar.exe for the
+normal game.
+
+Your campaign is stored separately from this download in:
+%APPDATA%\Godot\app_userdata\Chiefs of War\ancestral_hearth_v1.json
+
+Build information and engine notices are in Support.

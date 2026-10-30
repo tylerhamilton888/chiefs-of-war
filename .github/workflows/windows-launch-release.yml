@@ -1,0 +1,67 @@
+name: ChiefsOfWar clear Windows launch
+on:
+  push:
+    branches: [release/clear-launch-0.4.2]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GODOT_SILENCE_ROOT_WARNING: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Godot and Windows template
+        run: |
+          curl -fL --retry 3 https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.4.1-stable_linux.x86_64
+          echo /tmp/godot >> "$GITHUB_PATH"
+          curl -fL --retry 3 https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz -o /tmp/templates.tpz
+          unzip -q /tmp/templates.tpz 'templates/windows_release_x86_64.exe' -d /tmp/templates
+          mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable
+          cp /tmp/templates/templates/windows_release_x86_64.exe ~/.local/share/godot/export_templates/4.4.1.stable/
+      - name: Import and export the standalone game
+        run: |
+          Godot_v4.4.1-stable_linux.x86_64 --headless --editor --import --quit
+          mkdir -p builds/windows
+          Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/ChiefsOfWar.exe
+          Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd
+          XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/ChiefsOfWar.exe --quit-after 180 --audio-driver Dummy -- --fresh
+      - name: Assemble and verify the player ZIP
+        run: python tools/package_windows.py --exe builds/windows/ChiefsOfWar.exe --output builds/player-package --version 0.4.2 --source "$GITHUB_SHA"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ChiefsOfWar-Windows
+          path: builds/player-package/*
+          if-no-files-found: error
+          retention-days: 7
+  windows-startup:
+    needs: package
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ChiefsOfWar-Windows
+          path: dist
+      - name: Launch the extracted game on Windows
+        shell: pwsh
+        run: ./tools/verify_windows_package.ps1 -Archive (Resolve-Path 'dist/ChiefsOfWar-Windows-0.4.2.zip')
+  publish:
+    needs: [package, windows-startup]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ChiefsOfWar-Windows
+          path: dist
+      - name: Publish after the Windows startup gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create v0.4.2 dist/ChiefsOfWar-Windows-0.4.2.zip dist/SHA256SUMS-0.4.2.txt --target "$GITHUB_SHA" --title '0.4.2 — ChiefsOfWar Windows Playtest' --notes-file docs/RELEASE_0_4_2.md --prerelease

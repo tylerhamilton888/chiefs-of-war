@@ -4,3 +4,6 @@ builds/
 .DS_Store
 
 prototypes/
+
+__pycache__/
+*.pyc
