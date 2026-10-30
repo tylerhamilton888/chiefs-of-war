@@ -50,3 +50,7 @@ Early narrow-bodied replacement candidates were rejected and are not used. Four-
 ## Hearth and Steel candidate art
 
 See [engineering/hearth-and-steel.md](engineering/hearth-and-steel.md) for the six new asset paths, reference inputs and final prompt set. Generated with the built-in image tool; inspected in-engine, pending user visual acceptance.
+
+## October 30 art WIP
+
+`assets/overhaul/hunt_workstation.png` and `assets/overhaul/clan_green.png` are original AI-generated illustration candidates created with the built-in image-generation tool. The settlement concept approved by the user and existing clan sprite sheet were used as visual references. The workstation is decorative and its gameplay-scale layout requires review; clan art retains the existing 4×2 identities and idle poses. These are not human-drawn or final user-approved assets.

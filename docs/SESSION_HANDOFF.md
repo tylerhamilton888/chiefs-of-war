@@ -31,3 +31,9 @@ Confirmed default branch is warlord; feature/orc-customization was identical to 
 ## Active 0.5.0 follow-up
 
 User requested main menu/multiple saves, a large building-led art pass, tighter combat including block/parry and better animations, then clarified classic fantasy adult female clothing. Implemented on feature/hearth-menu-and-combat; tests and release preparation are in progress. Read engineering/hearth-and-steel.md for ownership and prompt provenance. Do not mistake 0.4.2 for this new work.
+
+## WIP art overhaul after 0.5.0
+
+Start from the remote `wip/orc-art-scale` branch (based on 0.5.0 commit 485491b), not stale default-branch status. The current pass introduces a candidate hunting-workstation decoration, greener clan NPC poses, and a brighter ground treatment. These are not the complete art overhaul. The workstation is decorative, not an implemented meat-processing interaction. Terrain and NPC candidates are generated illustrations; user acceptance and complete visual review remain pending. Existing hero, movement/combat, enemies, interiors, UI, doorway scale and portraits still require a coherent pass, and home placement/expansion is not implemented. Preserve 0.5.0 save and appearance compatibility. Consult the latest visual direction in state/decisions.md. A grass candidate with dense yellow foliage was rejected during in-engine inspection.
+
+For local graphics in this environment, the Xvfb build cannot create Unix sockets; run Xvfb with `-nolisten unix -listen tcp` and Godot with `DISPLAY=127.0.0.1:95`. An extracted libXfont2 needs `LD_LIBRARY_PATH=/workspace/scratch/5065e2351aee/runtime/xfont/usr/lib/x86_64-linux-gnu`. Isolate XDG_DATA_HOME. Do not infer native Windows or human playfeel from this.

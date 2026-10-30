@@ -24,7 +24,7 @@ func _ready() -> void:
     var hunt_station=Sprite2D.new()
     hunt_station.texture=load("res://assets/overhaul/hunt_workstation.png")
     hunt_station.scale=Vector2.ONE*(190.0/1536.0)
-    hunt_station.position=Vector2(1150,920-1024.0*hunt_station.scale.y*0.5)
+    hunt_station.position=Vector2(900,955-1024.0*hunt_station.scale.y*0.5)
     actors.add_child(hunt_station)
     transition=ColorRect.new();transition.color=Color(0.025,0.02,0.015,0);transition.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);transition.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui_root.add_child(transition)
 
