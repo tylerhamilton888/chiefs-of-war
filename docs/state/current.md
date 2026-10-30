@@ -1,8 +1,8 @@
 # Current implementation state
 
-Updated: 2026-10-30. **0.4.0 reconstruction is in progress; no new verified release yet.**
+Updated: 2026-10-30. Default branch: `warlord` (renamed from `main`). **0.4.0 reconstruction is in progress; no new verified release yet.**
 
-Canonical playable baseline: main `132e4f876b91d88499bab9efd0790c6a86087081`, GitHub release v0.3.2 Clan and Hearth. Working branch: `recovery/axe-and-iron-2026-10-30`; initial recovery checkpoint `1bea3094c6529e4121d5f8201c05064bcf3748b3`. Check actual Git heads for newer checkpoints.
+Canonical playable baseline: warlord `132e4f876b91d88499bab9efd0790c6a86087081`, GitHub release v0.3.2 Clan and Hearth. Working branch: `recovery/axe-and-iron-2026-10-30`; initial recovery checkpoint `1bea3094c6529e4121d5f8201c05064bcf3748b3`. Check actual Git heads for newer checkpoints.
 
 ## Implemented baseline
 
@@ -18,7 +18,7 @@ Historical baseline reports 170 checks and actual-engine review; use QA.md for t
 
 The complete Git clone and asset import now succeed after the user made the repo public. Missing-asset recovery is no longer the active blocker. Fresh reconstruction checks: `opener_test.gd` passed **48 checks, 0 failures, 0 recoveries**; `execution_test.gd` passed **24 checks, 0 failures**. These are mechanics/regression results, not visual acceptance. Engine screenshots were captured; crop/contact/identity review and the remaining regression suites are pending.
 
-The execution implementation and its new tests/assets live on the recovery branch. Main retains the playable 0.3.2 implementation plus continuity documentation; do not assume an execution file exists on main.
+The execution implementation and its new tests/assets live on the recovery branch. The default branch retains the playable 0.3.2 implementation plus continuity documentation; do not assume an execution file exists on warlord.
 
 ## Planned, not delivered
 

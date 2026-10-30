@@ -8,7 +8,7 @@ Resume the interrupted **Game Context Check** execution milestone and deliver a 
 
 ## Checkpoint and environment
 
-- Canonical old main: `132e4f876b91d88499bab9efd0790c6a86087081` / v0.3.2.
+- Canonical old warlord: `132e4f876b91d88499bab9efd0790c6a86087081` / v0.3.2.
 - Initial WIP recovery commit: `1bea3094c6529e4121d5f8201c05064bcf3748b3`, branch `recovery/axe-and-iron-2026-10-30`. Documentation and mechanics-test checkpoint: `9c374043d4a10732507997bb0178aa3fda13f248`. Check current head for later commits.
 - Complete normal checkout: `/workspace/scratch/dcdfb20f8502/chiefs-of-war-complete`.
 - Godot 4.4.1 executable: sibling `runtime/Godot_v4.4.1-stable_linux.x86_64`.
@@ -23,4 +23,4 @@ Documentation: all 19 master-brief sections are preserved in eight design shards
 
 ## Documentation placement
 
-Continuity documentation is also maintained on main so a fresh checkout finds AGENTS.md immediately. Game code, new execution tests and generated finisher assets remain on the recovery branch until validated. Inspect branch ancestry before merging; preserve documentation changes made on main. No new 0.4.0 release is implied by the documentation commit.
+Continuity documentation is also maintained on warlord so a fresh checkout finds AGENTS.md immediately. Game code, new execution tests and generated finisher assets remain on the recovery branch until validated. Inspect branch ancestry before merging; preserve documentation changes made on warlord. No new 0.4.0 release is implied by the documentation commit.

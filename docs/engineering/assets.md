@@ -10,7 +10,7 @@ Read [character/animation requirements](../design/characters-and-animation.md) a
 - `assets/motion/source`: original source candidates, excluded from release exports.
 - `resources/*.json`: atlas rectangles and foot anchors. `camp_actor.gd` and `opener_actor.gd` consume them.
 - `assets/polish`: clan portraits, idle poses and room/village decor.
-- `assets/executions`: recovery-branch finisher/enemy frame candidates, not yet on main. Their mappings currently live in execution scripts; use the actual mappings, not guessed uniform cells.
+- `assets/executions`: recovery-branch finisher/enemy frame candidates, not yet on warlord. Their mappings currently live in execution scripts; use the actual mappings, not guessed uniform cells.
 
 ## Acceptance loop
 
