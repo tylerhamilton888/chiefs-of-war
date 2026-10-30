@@ -583,6 +583,7 @@ func show_creator() -> void:
     button("Randomize look",randomize_appearance,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
     if creator_editing:button("Cancel",cancel_appearance,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
     button("Save appearance" if creator_editing else "Begin at the ancestral hearth",begin_character,actions).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    if not creator_editing: button("Main menu",return_to_menu,actions)
     name_input.grab_focus();apply_look();update_preview()
 func creator_option(parent: Node,title: String,key: String,options: Array,selected: int) -> void:
     var row=HBoxContainer.new();parent.add_child(row)
@@ -803,6 +804,8 @@ func leave_room() -> void:
     camera.reset_smoothing()
 
 func save_game(path: String=OPENER_SAVE) -> bool:
+    path=Slots.resolve(path)
+    if Slots.load_failed: return false
     if not created and not "--test" in OS.get_cmdline_user_args(): return false
     var data=state.snapshot(); data.camp_version=1; data.opener_version=1
     data.progress={"hp":hp,"ore":ore,"meat":meat,"stored":stored,"built":built,"forged":forged,"worker_active":worker_active,"worker_cargo":worker_cargo,"kills":kills,"trees_cut":trees_cut,"collected":collected,"quest":quest,"day":day,"equipment":player.equipment}
@@ -816,6 +819,14 @@ func save_game(path: String=OPENER_SAVE) -> bool:
     file.store_string(JSON.stringify(data)); file.close()
     return DirAccess.rename_absolute(path+".tmp",path)==OK
 func load_game(path: String=OPENER_SAVE) -> bool:
+    path=Slots.resolve(path)
+    var ok=read_campaign(path)
+    if not ok and path==Slots.path() and FileAccess.file_exists(path) and not ready_opener:
+        Slots.load_failed=true
+        get_tree().change_scene_to_file.call_deferred("res://scenes/main_menu.tscn")
+    return ok
+func read_campaign(path: String) -> bool:
+    path=Slots.resolve(path)
     if not FileAccess.file_exists(path): return false
     var data=JSON.parse_string(FileAccess.get_file_as_string(path))
     if not data is Dictionary or data.get("opener_version")!=1 or not data.get("opener") is Dictionary or not data.get("wolves") is Array or data.wolves.size()!=4: return false
@@ -868,9 +879,18 @@ func numeric(value) -> bool:
 func _notification(what: int) -> void:
     if what==NOTIFICATION_WM_CLOSE_REQUEST: quit_game()
 
+func return_to_menu() -> void:
+    if created and not Slots.practice and not "--combat-yard" in OS.get_cmdline_user_args() and not save_game():
+        say("Save failed; staying in game.");return
+    shutting_down=true;held_attack=false;player.cancel_action();pause_actors(true)
+    for child in get_children():
+        if child is AudioStreamPlayer:child.stop();child.stream=null
+    await get_tree().create_timer(0.15).timeout
+    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
 func quit_game() -> void:
     if shutting_down: return
-    if created and not "--combat-yard" in OS.get_cmdline_user_args() and not save_game():
+    if created and not Slots.practice and not "--combat-yard" in OS.get_cmdline_user_args() and not save_game():
         say("Save failed; staying in game.")
         return
     shutting_down=true

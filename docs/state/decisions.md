@@ -19,3 +19,7 @@ Latest explicit user instructions govern. This record distinguishes user directi
 The village/first-expedition slice ends with the pelt return and iron kit; the burning village, chieftain duel and new tribe remain planned. The execution reconstruction adds an optional post-iron-kit encounter rather than pretending to implement that invasion. F/Shift+F and the small side-on range gate are prototype choices, subject to playtesting.
 
 No rigid classes or forced leadership, no vegetable-farming foundation for Orc food, no unannounced catastrophic erasure of player accomplishments. Those requirements already live in the original design shards.
+
+## October 30 playtest direction
+
+User requested an actual main menu, multiple character/save slots, a major art pass matching the favored buildings, and tighter combat with better animation, blocking and parrying. Implementation target: three isolated campaign slots (legacy path remains slot one), warm timber/stone/ivory/crimson illustrated style, RMB directional block with a brief timed parry, and authored whole-body defensive poses. These changes are in progress on feature/hearth-menu-and-combat, not yet in published 0.4.2.

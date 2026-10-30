@@ -16,7 +16,7 @@ var dismember_enabled:=true
 var combat_ready:=false
 var execution_hint: Label
 var selected_raider=null
-var practice_mode:="--combat-yard" in OS.get_cmdline_user_args()
+var practice_mode:=Slots.practice or "--combat-yard" in OS.get_cmdline_user_args()
 const HERO_RECTS=[Rect2(50,0,280,370),Rect2(420,0,275,370),Rect2(760,0,270,370),Rect2(1115,0,335,370),Rect2(1485,0,320,370),Rect2(1905,0,245,370)]
 const HERO_ANCHORS=[174,565,905,1230,1603,2027]
 func _ready() -> void:
@@ -197,6 +197,7 @@ func combat_menu() -> void:
  button("Dismemberment: "+("On" if dismember_enabled else "Off"),func():dismember_enabled=not dismember_enabled;combat_menu(),modal_box)
  button("Return",pause_menu,modal_box);finish_sheet()
 func save_game(path: String=OPENER_SAVE) -> bool:
+ path=Slots.resolve(path)
  if practice_mode:return false
  if not super.save_game(path):return false
  if not combat_ready:return true
@@ -208,6 +209,7 @@ func save_game(path: String=OPENER_SAVE) -> bool:
  file.store_string(JSON.stringify(data));file.close()
  return DirAccess.rename_absolute(path+".tmp",path)==OK
 func load_game(path: String=OPENER_SAVE) -> bool:
+ path=Slots.resolve(path)
  if practice_mode:return false
  if not super.load_game(path):return false
  if combat_ready:

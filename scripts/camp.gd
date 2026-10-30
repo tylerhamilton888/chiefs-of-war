@@ -4,6 +4,7 @@ const State=preload("res://scripts/world_state.gd")
 const Prop=preload("res://scripts/camp_prop.gd")
 const Terrain=preload("res://scripts/camp_terrain.gd")
 const Building=preload("res://scripts/building.gd")
+const Slots=preload("res://scripts/save_slots.gd")
 const SAVE="user://first_hearth_v1.json"
 const DOORS=[Vector2(550,350),Vector2(930,350),Vector2(710,740)]
 const NAMES=["The Ash Hall","Harn's Forge","Timber Store"]
@@ -108,7 +109,7 @@ func _ready() -> void:
     for name in ["wood","metal","hit","step"]:
         var p="res://assets/camp/"+name+".wav"
         if ResourceLoader.exists(p): sounds[name]=load(p)
-    if not "--fresh" in OS.get_cmdline_user_args(): load_game()
+    if not "--fresh" in OS.get_cmdline_user_args() and not Slots.fresh and not Slots.practice: load_game()
     sync_props()
     say("Ashfang Camp. Your axe, your hands, your future. Enter the hall or follow the journal.")
 

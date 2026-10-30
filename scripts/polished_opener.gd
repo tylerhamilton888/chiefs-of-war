@@ -179,10 +179,10 @@ func help_menu() -> void:
     modal_box.add_child(HSeparator.new());modal_box.add_child(label("WASD move  •  Hold LMB axe  •  Space dodge  •  E interact\nI belongings  •  B palisade  •  F5 save\nExplore at your own pace; the journal suggests your next step.",15))
     button("Return to the hearth  [Esc]",close_modal,modal_box);finish_sheet()
 func pause_menu() -> void:
-    begin_sheet("CHIEFS OF WAR","THE ANCESTRAL HEARTH  ·  0.3.2  ·  GAME PAUSED","pause")
+    begin_sheet("CHIEFS OF WAR","THE ANCESTRAL HEARTH  ·  GAME PAUSED","pause")
     modal_box.add_child(label(objective_text,21));modal_box.add_child(label(objective_sub,17))
     var actions=GridContainer.new();actions.columns=2;actions.add_theme_constant_override("h_separation",12);actions.add_theme_constant_override("v_separation",8);modal_box.add_child(actions)
-    for spec in [["Resume  [Esc]",close_modal],["Save progress",manual_save],["Sound: "+("On" if audio_enabled else "Off"),toggle_audio],["Camera impact: "+("On" if accessibility_flash else "Off"),toggle_impact],["Fire & recovery",fire_menu],["Save and quit",quit_game]]:
+    for spec in [["Resume  [Esc]",close_modal],["Save progress",manual_save],["Sound: "+("On" if audio_enabled else "Off"),toggle_audio],["Camera impact: "+("On" if accessibility_flash else "Off"),toggle_impact],["Fire & recovery",fire_menu],["Main menu / characters",return_to_menu],["Save and quit",quit_game]]:
         var b=button(spec[0],spec[1],actions);b.size_flags_horizontal=Control.SIZE_EXPAND_FILL;b.custom_minimum_size.x=370
     modal_box.add_child(label("Autosaves every 30 seconds and at major milestones. No daily deadlines.",14));finish_sheet()
 func dialogue(title: String,index: int,body: String,options: Array) -> void:
