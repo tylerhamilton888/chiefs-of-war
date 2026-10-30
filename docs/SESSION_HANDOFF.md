@@ -14,9 +14,9 @@ Published v0.4.1 — Faces of Ashfang: https://github.com/tylerhamilton888/chief
 
 The requested customization is delivered. Subsequent task: diagnose repeated publication/chat failures and make publication reliable. The reusable `.github/workflows/windows-release.yml`, `release.json`, and `tools/release.py` replace the one-version workflow. See engineering/validation-and-release.md for the authoritative procedure and incident evidence. Publishing is done by GitHub Actions; ordinary `warlord` pushes only build/check. Do not return to the browser upload path or push to the historical release/customization-0.4.1 branch.
 
-Local publication guards pass 14 failure/retry tests. Full GitHub workflow validation is pending for this repair. Do not claim ChatGPT's internal unknown-error root cause is diagnosed; those logs are unavailable. v0.4.1 is the latest verified playable build. The manually published v0.4.0 has no attached assets and has been left intact.
+Publication repair is verified: source `4e070a985b4b14103d03ebe1e8edaa87791e4ae8`, GitHub run `41108614385` succeeded. All 14 publication failure/retry tests passed, as did game regressions, rendered UI, Windows export, packaged smoke and ZIP integrity. The workflow freshly downloaded and verified the existing v0.4.1 release without changing it, and retained build artifact `13003011598` and logs `13003486823`. The new draft/upload failure branches have automated tests; this repair intentionally did not publish another game version. Do not claim ChatGPT's internal unknown-error root cause is diagnosed; those logs are unavailable. v0.4.1 is the latest verified playable build. The manually published v0.4.0 has no attached assets and has been left intact.
 
-After workflow verification, gather the user's appearance/combat/gathering playtest feedback; do not automatically expand game scope.
+Next: gather the user's appearance/combat/gathering playtest feedback; do not automatically expand game scope. On the next requested release, update release.json/project version/notes and use the release runbook.
 
 ## Runtime
 
