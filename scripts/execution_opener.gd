@@ -182,9 +182,14 @@ func pause_actors(paused: bool) -> void:
  for r in raiders:r.active=not paused and room<0 and forged
 func pause_menu() -> void:
  super.pause_menu()
- button("Appearance",edit_appearance,modal_box)
- if practice_mode:button("Reset practice",func():get_tree().reload_current_scene(),modal_box)
- var b=button("Combat & brutality",combat_menu,modal_box);modal_box.move_child(b,modal_box.get_child_count()-1);finish_sheet()
+ var extras=HBoxContainer.new();extras.add_theme_constant_override("separation",8);modal_box.add_child(extras)
+ button("Appearance",edit_appearance,extras).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+ button("Combat & brutality",combat_menu,extras).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+ if practice_mode:
+  button("Reset practice",func():get_tree().reload_current_scene(),extras).size_flags_horizontal=Control.SIZE_EXPAND_FILL
+  for child in modal_box.get_children():
+   if child is Label and child.text.begins_with("Autosaves"):child.text="Unsaved practice. Your campaign is untouched."
+ finish_sheet()
 func combat_menu() -> void:
  begin_sheet("Axe and Iron","OPTIONAL FINISHERS  ·  0.4.0","combat")
  modal_box.add_child(label("Once you have earned the iron kit, raiders threaten the southern borderwood. Wound or stagger them with ordinary attacks. Move alongside a vulnerable enemy, then press F.\n\nFinishers are optional. Space cancels before contact; normal attacks can still kill. Shift+F requests the goblin cleave. Rival Orcs remain intact.",17))

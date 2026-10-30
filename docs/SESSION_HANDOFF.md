@@ -10,7 +10,7 @@ Implemented customization lives in scripts/appearance.gd, orc_palette.gdshader, 
 
 ## Next step at checkpoint
 
-Finish final appearance registration review, rerun customization and relevant opener/combat regressions, export Windows, and publish/download delivery. No new published build is implied by this checkpoint. Native Windows playtesting is unavailable here.
+Appearance registration review and relevant regressions passed (see QA.md). Windows export passed. The explicit release/customization-0.4.1 branch triggers the release workflow; verify CI, published asset and checksum. No new published build is implied by this checkpoint. Native Windows playtesting is unavailable here.
 
 ## Runtime
 

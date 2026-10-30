@@ -10,7 +10,7 @@ Recovered spaced hero/enemy finisher art and gathering transparency fixes are ca
 
 ## Validation and delivery
 
-Customization suite: 74 checks passed in a rendered Linux engine run before final art registration adjustments. Motion regression: 20 passed. Front/left/right/back, both outfits, axe frames and mirrored finisher frames have been rendered for inspection. Final regression/export/publication are still pending at this checkpoint; do not describe it as a published Windows release. Native Windows and human playfeel remain unverified.
+Customization: 73 headless / 74 rendered checks passed. Fresh opener 48, edges 17, motion 20, feel 10 and execution 28 passed; rendered practice isolation/menu passed. Front/left/right/back, both outfits, axe frames and mirrored finisher frames have been rendered for inspection. Windows export succeeded. Release publication is pending its CI gates; check the actual release before claiming delivery. Native Windows and human playfeel remain unverified.
 
 ## Remaining broader scope
 

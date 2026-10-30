@@ -35,3 +35,9 @@ parry/block/heavy attacks and wider sandbox systems remain future work.
 
 Source and exact validation are recorded in BUILD-INFO.txt and repository docs/QA.md.
 Engine: Godot 4.4.1. Original generated illustration candidates; no Warcraft assets.
+
+## Faces of Ashfang — 0.4.1
+
+Create a character with face, hair, beard, mustache, hair color, skin and cloth choices. The left preview supports front/left/right/back, standing/walking/axe swings and leather/iron. Previewing iron does not grant it. Randomize changes your look, not your name or progress.
+
+Existing character: press Esc → Appearance. Save applies the look and saves the campaign; Cancel restores your previous appearance. Old saves retain their original face until edited. Practice appearance changes never save over a campaign.

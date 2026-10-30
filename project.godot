@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Chiefs of War"
-config/version="0.4.0-axe-and-iron"
+config/version="0.4.1-faces-of-ashfang"
 run/main_scene="res://scenes/opener.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
