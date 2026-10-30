@@ -2,6 +2,8 @@
 
 Engine: Godot 4.4.1; GDScript; Windows x86-64 first. Read this map before changing ownership. Historical layer details are retained in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
+This map includes the **recovery branch** implementation. On main/v0.3.2 the scene enters `polished_opener.gd` directly; `execution_opener.gd` and `raider.gd` are unfinished recovery-branch additions.
+
 ## Entry and inheritance
 
 `project.godot` → `scenes/opener.tscn` → `execution_opener.gd` → `polished_opener.gd` → `opener.gd` → `camp.gd`.

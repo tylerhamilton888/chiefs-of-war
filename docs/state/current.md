@@ -14,9 +14,11 @@ Historical baseline reports 170 checks and actual-engine review; use QA.md for t
 
 - Earned optional side-on goblin/rival-Orc finishers and restrained goblin cleave; post-iron-kit raider encounter, options and combat save extension.
 - New generated complete-character animation candidates require crop/contact/identity review, not merely successful import.
-- Original brief split into categorized requirements, root agent routing, architecture/assets/recovery guides, decision/state records.
+- Documentation sharding is complete: categorized requirements, root agent routing, architecture/assets/recovery guides, decision/state records.
 
-The complete Git clone and asset import now succeed after the user made the repo public. Missing-asset recovery is no longer the active blocker. Full opening regression and new execution validation are ongoing.
+The complete Git clone and asset import now succeed after the user made the repo public. Missing-asset recovery is no longer the active blocker. Fresh reconstruction checks: `opener_test.gd` passed **48 checks, 0 failures, 0 recoveries**; `execution_test.gd` passed **24 checks, 0 failures**. These are mechanics/regression results, not visual acceptance. Engine screenshots were captured; crop/contact/identity review and the remaining regression suites are pending.
+
+The execution implementation and its new tests/assets live on the recovery branch. Main retains the playable 0.3.2 implementation plus continuity documentation; do not assume an execution file exists on main.
 
 ## Planned, not delivered
 

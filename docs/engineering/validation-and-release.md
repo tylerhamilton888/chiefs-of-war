@@ -6,6 +6,8 @@ Use Godot **4.4.1**, matching official export templates, and the repository's Wi
 
 Import with `godot --headless --path . --editor --import --quit`. Inspect errors, not only exit status. Use separate temporary `XDG_DATA_HOME` directories for suites so tests never overwrite a player's campaign or each other's files. `-- --fresh --test` starts isolated test behavior. `--fixed-fps 60` makes frame-based suites reproducible and faster; use a display for layout/visual tests.
 
+The execution tests and visual review script currently exist on `recovery/axe-and-iron-2026-10-30`, not the 0.3.2 main implementation.
+
 ## Suites
 
 | Script | Evidence |
