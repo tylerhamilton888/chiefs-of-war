@@ -23,6 +23,9 @@ var animal={"name":"Flint","trust":0,"fed":0.0,"tamed":false,"harness":false,"co
 var camp_region="hearth"
 var packed=false
 var equipment="axe"
+var player_name="Ogre"
+var appearance="copper"
+const APPEARANCES=["copper","dark","gold","silver"]
 func has(id: String) -> bool:return bool(flags.get(id,false))
 func mark(id: String) -> void:flags[id]=true
 func pay(cost: Dictionary) -> bool:
@@ -45,7 +48,7 @@ func deliver(load: Dictionary) -> void:
     if load.is_empty():return
     grant(load.get("yield",{}));mark("transported");load.clear()
 func pack() -> Dictionary:
-    return {"version":1,"region":region,"position":[player_position.x,player_position.y],"hp":hp,"fed":fed,"ferocity":ferocity,"clock":clock,"day":day,"gore":gore,"inventory":inventory,"flags":flags,"encounters":encounters,"objects":objects,"cargo":cargo,"contracts":contracts,"reputation":reputation,"regional":regional,"animal":animal,"camp_region":camp_region,"packed":packed,"equipment":equipment}
+    return {"version":1,"region":region,"position":[player_position.x,player_position.y],"hp":hp,"fed":fed,"ferocity":ferocity,"clock":clock,"day":day,"gore":gore,"inventory":inventory,"flags":flags,"encounters":encounters,"objects":objects,"cargo":cargo,"contracts":contracts,"reputation":reputation,"regional":regional,"animal":animal,"camp_region":camp_region,"packed":packed,"equipment":equipment,"player_name":player_name,"appearance":appearance}
 func save_game() -> bool:
     if unreadable:return false
     var file=FileAccess.open(SAVE+".tmp",FileAccess.WRITE)
@@ -60,6 +63,7 @@ func load_game() -> bool:
     var d: Dictionary=parser.data
     region=d.region;player_position=Vector2(d.position[0],d.position[1]);hp=d.hp;fed=d.fed;ferocity=d.ferocity;clock=d.clock;day=int(d.day);gore=d.gore
     inventory=d.inventory;flags=d.flags;encounters=d.encounters;objects=d.objects;cargo=d.cargo;contracts=d.contracts;reputation=d.reputation;regional=d.regional;animal=d.animal;camp_region=d.camp_region;packed=d.packed;equipment=d.equipment
+    player_name=d.get("player_name","Ogre");appearance=d.get("appearance","copper")
     return true
 func number(v,lo: float,hi: float) -> bool:return (v is float or v is int) and is_finite(float(v)) and v>=lo and v<=hi
 func point(v) -> bool:return v is Array and v.size()==2 and number(v[0],50,2210) and number(v[1],50,1340)
@@ -73,8 +77,10 @@ func valid_cargo(v) -> bool:
 func valid(d) -> bool:
     if not d is Dictionary:return false
     for key in pack():
-        if not d.has(key):return false
+        if not d.has(key) and key not in ["player_name","appearance"]:return false
     if d.version!=1 or not d.region in REGIONS or not d.camp_region in REGIONS or not point(d.position):return false
+    if not d.get("player_name","Ogre") is String or d.get("player_name","Ogre").strip_edges().is_empty() or d.get("player_name","Ogre").length()>24:return false
+    if not d.get("appearance","copper") in APPEARANCES:return false
     if not d.equipment in ["axe","maul"] or not d.packed is bool or not d.gore is bool:return false
     if not number(d.hp,0,180) or not number(d.fed,0,300) or not number(d.ferocity,0,100) or not number(d.clock,0,100000000) or not number(d.day,1,100000):return false
     for key in ["inventory","flags","encounters","objects","contracts","reputation","regional","animal"]:

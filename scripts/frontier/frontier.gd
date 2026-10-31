@@ -30,11 +30,17 @@ var defeat_lock=false
 var feedback_clock=0.0
 var shake=0.0
 var route_labels: Array=[]
+var creator_name: LineEdit
+var creator_style: OptionButton
+var creator_preview: TextureRect
+var creator_hint: Label
+const STYLE_NAMES=["Copper beard", "Dark beard", "Golden beard", "Silver beard"]
 func _ready() -> void:
     get_tree().auto_accept_quit=false
     for key in {"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}:
         if not InputMap.has_action(key):
             InputMap.add_action(key);var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
+    var first_visit=not FileAccess.file_exists(FrontierState.SAVE)
     state=FrontierState.new();var loaded=state.load_game();contracts=preload("res://scripts/frontier/contracts.gd").new(state)
     cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"))
     seed_world();build_world();build_ui()
@@ -42,6 +48,7 @@ func _ready() -> void:
     if not "--test" in OS.get_cmdline_user_args():ambient.play()
     say("Your axe, two meals and a hearth. A whole trunk lies west of camp. Shoulder it and bring it to the wagon.")
     if not loaded:say("The frontier save is unreadable and has been preserved. This visit cannot overwrite it.")
+    if first_visit and (not "--test" in OS.get_cmdline_user_args() or "--creator-first-test" in OS.get_cmdline_user_args()) and not "--startup-smoke" in OS.get_cmdline_user_args():open_creator(true)
     if "--startup-smoke" in OS.get_cmdline_user_args():get_tree().create_timer(2.0).timeout.connect(quit_game)
 func sound(kind: String) -> void:
     if not "--test" in OS.get_cmdline_user_args():play_sound(kind)
@@ -161,7 +168,7 @@ func objective_text() -> String:
     return "HUNT · FIGHT · FEAST · PROSPER · ROAM · Rest for another expedition; your regional decisions endure."
 func _process(delta: float) -> void:
     if leaving:return
-    hud.text="%s   HP %d / 180   Guard %d   Ferocity %d   Meals %d   %s"%[TITLES[state.region],player.hp,player.guard,state.ferocity,state.inventory.meals,"Nourished %ds"%int(state.fed) if state.fed>0 else "Appetite sharp"]
+    hud.text="%s · %s   HP %d / 180   Guard %d   Ferocity %d   Meals %d   %s"%[state.player_name,TITLES[state.region],player.hp,player.guard,state.ferocity,state.inventory.meals,"Nourished %ds"%int(state.fed) if state.fed>0 else "Appetite sharp"]
     objective.text=objective_text()
     if modal.visible:return
     state.clock+=delta;state.fed=maxf(0,state.fed-delta);state.animal.fed=maxf(0,state.animal.fed-delta);state.hp=player.hp
@@ -427,7 +434,7 @@ func overpower(feed: bool, swallow: bool=false) -> bool:
     var stance=target_foe.position-Vector2(sign*76,0)
     if not has_line(player.position,stance) or not has_line(stance,target_foe.position):return false
     state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind=("swallow" if swallow else "feed") if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.sprite.hide();player.sprite.hide()
-    execution_sprite=Sprite2D.new();world.add_child(execution_sprite);execution_sprite.position=player.position
+    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material;world.add_child(execution_sprite);execution_sprite.position=player.position
     return true
 func begin_clinch(foe) -> bool:
     if execution_busy or foe.hp<=0 or player.hp<=0 or not state.cargo.is_empty():return false
@@ -435,7 +442,7 @@ func begin_clinch(foe) -> bool:
     var at=foe.position-Vector2(sign*110,0)
     if not has_line(player.position,at):return false
     player.position=at;execution_direction=Vector2(sign,0);execution_kind="clinch";execution_target=foe;execution_clock=0;execution_busy=true;execution_contact=false;clinch_result=0;player.sprite.hide();foe.sprite.hide()
-    execution_sprite=Sprite2D.new();execution_sprite.position=player.position;world.add_child(execution_sprite)
+    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material;execution_sprite.position=player.position;world.add_child(execution_sprite)
     say("Hold your weight. F once when the ring turns gold.");return true
 func clinch_input() -> void:
     if not execution_busy or execution_kind!="clinch" or clinch_result!=0:return
@@ -497,10 +504,46 @@ func simple_menu(title: String,copy: String) -> VBoxContainer:
     var scroll=ScrollContainer.new();scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;box.add_child(scroll)
     var col=VBoxContainer.new();col.size_flags_horizontal=Control.SIZE_EXPAND_FILL;col.add_theme_constant_override("separation",10);scroll.add_child(col)
     col.add_child(helper.words(title,27));var label=helper.words(copy,18);label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.custom_minimum_size.x=1000;col.add_child(label);return col
+func open_creator(first_visit: bool=false) -> void:
+    if execution_busy or player.mode!="idle":return
+    var title="CREATE YOUR OGRE" if first_visit else "YOUR OGRE"
+    var col=simple_menu(title,"Choose a name and a beard color. These are palette styles applied to the existing illustrated Ogre and his action frames.")
+    var row=HBoxContainer.new();row.add_theme_constant_override("separation",28);col.add_child(row)
+    creator_preview=TextureRect.new();creator_preview.custom_minimum_size=Vector2(220,220)
+    creator_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;creator_preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    var image=AtlasTexture.new();image.atlas=player.sprite.texture;image.region=player.sprite.region_rect
+    creator_preview.texture=image;row.add_child(creator_preview)
+    var options=VBoxContainer.new();options.size_flags_horizontal=Control.SIZE_EXPAND_FILL;options.add_theme_constant_override("separation",12);row.add_child(options)
+    options.add_child(helper.words("YOUR NAME",18))
+    creator_name=LineEdit.new();creator_name.max_length=24;creator_name.text=state.player_name;creator_name.placeholder_text="Name your Ogre";creator_name.custom_minimum_size=Vector2(400,42);options.add_child(creator_name)
+    options.add_child(helper.words("BEARD COLOR",18))
+    creator_style=OptionButton.new();creator_style.custom_minimum_size=Vector2(400,44)
+    for label in STYLE_NAMES:creator_style.add_item(label)
+    creator_style.select(FrontierState.APPEARANCES.find(state.appearance));options.add_child(creator_style)
+    creator_style.item_selected.connect(update_creator_preview)
+    creator_hint=helper.words("",16);options.add_child(creator_hint)
+    update_creator_preview(creator_style.selected)
+    helper.action("Begin the journey" if first_visit else "Save changes",commit_creator,col)
+    helper.action("Use the current look" if first_visit else "Cancel",close_modal,col)
+func update_creator_preview(index: int) -> void:
+    var material=ShaderMaterial.new();material.shader=load("res://shaders/ogre_palette.gdshader");material.set_shader_parameter("palette",index)
+    creator_preview.material=material
+    creator_hint.text="The beard and some red accents change color; your body and poses remain the same."
+func commit_creator() -> void:
+    var chosen=creator_name.text.strip_edges()
+    if chosen.is_empty():creator_hint.text="Give your Ogre a name to continue.";return
+    var old_name=state.player_name;var old_style=state.appearance
+    state.player_name=chosen;state.appearance=FrontierState.APPEARANCES[creator_style.selected]
+    player.apply_appearance(state.appearance)
+    if not save_progress():
+        state.player_name=old_name;state.appearance=old_style;player.apply_appearance(old_style)
+        creator_hint.text="Could not save these changes; your previous save is preserved.";return
+    close_modal();say("%s sets out from the wandering hearth."%state.player_name)
 func pause_menu() -> void:
     var col=simple_menu("BY THE WANDERING HEARTH","Sundered Frontier · Day %d\nYour frontier, narrative chapter and earlier campaigns keep separate saves."%state.day)
     helper.action("Return to the road",close_modal,col)
     helper.action("Journal, routes and contracts",journal,col)
+    helper.action("Change your Ogre’s name and look",func():open_creator(false),col)
     helper.action("Blood effects: "+("full" if state.gore else "restrained"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)

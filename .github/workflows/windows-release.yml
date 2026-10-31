@@ -66,9 +66,10 @@ jobs:
           for suite in customization_test opener_test opener_edges motion_test feel_test execution_test defense_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --fresh --test
           done
-          for suite in save_slots_test ogre_hearth_test chapter_test frontier_brutality_test; do
+          for suite in save_slots_test ogre_hearth_test chapter_test frontier_brutality_test frontier_creator_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
+          check_godot frontier_first_start env XDG_DATA_HOME="$RUNNER_TEMP/frontier_first_start" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script tests/frontier_first_start_test.gd -- --test --creator-first-test
           check_godot menu_flow_test env XDG_DATA_HOME="$RUNNER_TEMP/menu_flow_test" Godot_v4.4.1-stable_linux.x86_64 --headless --max-fps 60 --script tests/menu_flow_test.gd
           check_godot practice env XDG_DATA_HOME="$RUNNER_TEMP/practice" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script tests/practice_test.gd -- --fresh --test --combat-yard
       - name: Render creator and practice menus
@@ -83,6 +84,7 @@ jobs:
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-ogre" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_hearth_visual.gd -- --test 2>&1 | tee builds/logs/render-ogre.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-chapter" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/chapter_visual.gd -- --test 2>&1 | tee builds/logs/render-chapter.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-frontier" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/frontier_visual.gd -- --test 2>&1 | tee builds/logs/render-frontier.log
+          CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-frontier-creator" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/frontier_creator_visual.gd -- --test 2>&1 | tee builds/logs/render-frontier-creator.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/render-*.log; then exit 1; fi
       - name: Export and package Windows
         if: steps.release.outputs.complete != 'true'
@@ -103,6 +105,7 @@ jobs:
           cp "$RUNNER_TEMP/review/chapter-crossing.png" builds/chapter-crossing.png
           cp "$RUNNER_TEMP/review/chapter-host.png" builds/chapter-host.png
           cp "$RUNNER_TEMP"/review/frontier-*.png builds/
+          cp "$RUNNER_TEMP"/review/creator-*.png builds/
           python3 tools/package_windows.py --exe builds/windows/HearthAndHunger.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
       - name: Preserve build before publication
         if: steps.release.outputs.complete != 'true'
@@ -121,6 +124,7 @@ jobs:
             builds/chapter-crossing.png
             builds/chapter-host.png
             builds/frontier-*.png
+            builds/creator-*.png
       - name: Preserve diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -129,6 +133,30 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
           path: builds/logs/
+  creator-preview:
+    if: github.ref_name == 'feature/hearth-and-hunger'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render creator and action previews
+        run: |
+          curl -fL --connect-timeout 30 --max-time 300 --retry 3 https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.4.1-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          /tmp/godot/Godot_v4.4.1-stable_linux.x86_64 --headless --editor --import --quit > /tmp/creator-import.log 2>&1
+          mkdir -p /tmp/creator-review
+          CHIEFS_REVIEW_DIR=/tmp/creator-review XDG_DATA_HOME=/tmp/creator-render xvfb-run -a /tmp/godot/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/frontier_creator_visual.gd -- --test > /tmp/creator-render.log 2>&1
+          if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' /tmp/creator-import.log /tmp/creator-render.log; then cat /tmp/creator-import.log /tmp/creator-render.log; exit 1; fi
+          cp /usr/bin/xkbcomp /tmp/creator-review/xkbcomp
+          cp -L /usr/lib/x86_64-linux-gnu/libxkbfile.so.1 /tmp/creator-review/libxkbfile.so.1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: creator-review-${{ github.sha }}
+          path: /tmp/creator-review/
+          retention-days: 7
   windows-startup:
     needs: validate-and-release
     if: needs.validate-and-release.outputs.complete != 'true'

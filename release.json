@@ -1,7 +1,7 @@
 {
-  "version": "0.8.0",
-  "title": "Hearth and Hunger 0.8.0 \u2014 Sundered Frontier",
-  "notes": "docs/RELEASE_0_8_0.md",
+  "version": "0.8.1",
+  "title": "Hearth and Hunger 0.8.1 \u2014 Choose Your Ogre",
+  "notes": "docs/RELEASE_0_8_1.md",
   "prerelease": true,
   "package_layout": "clear-launch",
   "archive_prefix": "HearthAndHunger",

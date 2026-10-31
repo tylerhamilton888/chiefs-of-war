@@ -20,6 +20,12 @@ var combat_idle=0.0
 var combo=0
 func _ready() -> void:
     super._ready();maximum=180;hp=game.state.hp;height=170;weapon=game.state.equipment
+    apply_appearance(game.state.appearance)
+func apply_appearance(style: String) -> void:
+    var material=ShaderMaterial.new()
+    material.shader=load("res://shaders/ogre_palette.gdshader")
+    material.set_shader_parameter("palette",["copper","dark","gold","silver"].find(style))
+    sprite.material=material
 func combat_weapon() -> String:
     return "log" if carrying() and game.state.cargo.kind=="log" else weapon
 func stats(kind: String) -> Dictionary:return weapons[combat_weapon()][kind]

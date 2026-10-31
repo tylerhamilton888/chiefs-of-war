@@ -1,3 +1,11 @@
+# Ogre creator — work in progress
+
+The user requested a player character creator with a few styles. The new Sundered Frontier creator asks for a name and offers four beard-color presets on the existing complete-body illustrated animation frames. First visit opens it; existing saves keep their progress and may open it via Esc → Change your Ogre’s name and look. Old frontier saves without appearance keys migrate to the original look; Chapter One has a separate protagonist/save. This is palette customization, not independently authored facial or hairstyle shapes. See tests/frontier_creator_test.gd and tests/frontier_first_start_test.gd. The saved character’s palette is shared with the paired execution sprite; inspect all presets, including finishing moves, and check if this unintentionally recolors other actors.
+
+Local first-start and 18 creator checks pass. Rendered visual review, full release workflow and a new Windows release are pending; do not claim 0.8.1 is published. Prior 0.8.0 remains the current published playtest.
+
+---
+
 # Hearth and Hunger 0.8.0 — Sundered Frontier playtest, published and verified
 
 Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.0

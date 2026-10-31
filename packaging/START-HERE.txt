@@ -4,6 +4,10 @@ HEARTH AND HUNGER — SUNDERED FRONTIER PLAYTEST
 2. Open the extracted folder and double-click HearthAndHunger.exe.
 3. Choose "Hunt · Fight · Feast — Sundered Frontier" on the title screen.
 
+Name your Ogre and choose one of four beard colors on a new frontier save.
+For an existing frontier, press Esc and choose “Change your Ogre’s name and look.”
+The color selection uses the same illustrated body and hairstyle across animations.
+
 You are an Ogre with a wandering hearth. Fight, hunt, carry heavy loads, care
 for Flint and take contracts. This is an early playtest; balance and animation
 will benefit from your feedback.
