@@ -1,5 +1,6 @@
 extends "res://scripts/raider.gd"
 const Atlas=preload("res://scripts/frontier/atlas.gd")
+var swallowed=false
 var role="knife"
 var hit_pause=0.0
 var throw_time=0.0
@@ -26,7 +27,7 @@ func receive_hit(amount: float,direction: Vector2) -> void:
 func launch(direction: Vector2) -> void:
     held=false;throw_time=0.52;recoil=direction*680;state="thrown";thrown_hits.clear();formation=false
 func _physics_process(delta: float) -> void:
-    if not active:return
+    if not active or swallowed:return
     if hit_pause>0:hit_pause=maxf(0,hit_pause-delta);return
     if held:return
     if hp<=0:super._physics_process(delta);return

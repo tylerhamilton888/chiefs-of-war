@@ -27,7 +27,7 @@ func receive_hit(amount: float,direction: Vector2) -> void:
     if hp<=0:return
     var frontal=locked_direction.dot(-direction)>0.55
     if frontal and armor>0 and stage!="stunned":
-        if game.contact_kind=="heavy" and game.player.weapon=="maul":armor-=1;game.say("Stone plates cracked. One more heavy maul blow breaks the brow.")
+        if game.contact_kind=="heavy" and game.player.combat_weapon()=="maul":armor-=1;game.say("Stone plates cracked. One more heavy maul blow breaks the brow.")
         amount*=0.25
     elif stage=="stunned":amount*=1.65
     else:amount*=1.2

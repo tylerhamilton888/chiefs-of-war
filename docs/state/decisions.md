@@ -1,3 +1,7 @@
+## October 31 — adult Ogre feeding and the log weapon
+
+The user requested more brutal eating: Ogres bite limbs off and can swallow goblins whole. The Ogre should also wield the log as a weapon. This supersedes earlier restraint as the default artistic direction; the existing optional restrained setting remains. In Sundered Frontier, an earned G finisher bites and Shift+G swallows a staggered or critically wounded goblin; both cost Ferocity. A carried whole trunk functions as a heavy, long-reaching improvised weapon without losing its cargo identity. Original AI-generated whole-body sprite art and source sheets are retained under assets/frontier; this is not a claim of human-drawn art. Gameplay and animation remain subject to visual and player testing.
+
 ## October 31 — The Ogre Experience
 
 The user explicitly prioritizes physicality, responsive combat, hunting, food, a useful animal, mobile home and consequential mercenary work over more social/dynasty/narrative expansion. Implement focused playable milestones in the existing repository; preserve Chapter One. See `docs/design/ogre-experience.md`. The immediate acceptance includes a goblin band, Ogre champion, great-beast hunt, restored trade pass and controlled corrupt bargain. No universal morality meter; no claim of continent simulation. Hand-drawn-style complete-body actions remain mandatory, and elders of both sexes remain physically formidable.

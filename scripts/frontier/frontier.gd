@@ -149,7 +149,7 @@ func build_trade_traffic() -> void:
 func build_ui() -> void:
     super.build_ui()
     var controls=objective.get_parent().get_child(2)
-    controls.text="WASD move   LMB cut   R / Shift+LMB heavy   RMB parry   Space dodge   F throw / clinch   G feed   E interact   Q meal   J journal"
+    controls.text="WASD move   LMB cut   R / Shift+LMB heavy   RMB parry   Space dodge   F throw / clinch   G bite / Shift+G swallow   E interact   Q meal   J journal"
 func objective_text() -> String:
     if execution_busy and execution_kind=="clinch":return "CLINCH · F once when the ring turns gold · Timing beats mashing"
     if not state.has("transported"):return "SHOULDER THE LOAD · E at the trunk west of camp → carry it to the wagon → E to unload"
@@ -199,7 +199,7 @@ func _unhandled_input(event: InputEvent) -> void:
             KEY_R:player.request("heavy",get_global_mouse_position()-player.position)
             KEY_SPACE:player.request("dodge",Input.get_vector("move_left","move_right","move_up","move_down"))
             KEY_F:overpower(false)
-            KEY_G:overpower(true)
+            KEY_G:overpower(true, event.shift_pressed)
             KEY_E:
                 if player.mode=="idle" and not nearest.is_empty():interact(nearest)
             KEY_Q:eat_meal()
@@ -278,7 +278,7 @@ func lift_cargo(id: String) -> bool:
     var kind=obj.data.kind
     return player.start_action("lift" if kind=="log" else "harvest",0.8,func():
         if not is_instance_valid(obj) or obj.data.taken:return
-        state.cargo={"id":id,"kind":kind,"yield":obj.data.yield.duplicate()};obj.data.taken=true;obj.refresh();sound("gather");say("Weight in your hands. Carry it to your wagon or load Flint. X sets it down.");save_progress(),0.7)
+        state.cargo={"id":id,"kind":kind,"yield":obj.data.yield.duplicate()};obj.data.taken=true;obj.refresh();sound("gather");say("Weight in your hands. Swing this trunk with your attack buttons, carry it to your wagon, or load Flint. X sets it down.");save_progress(),0.7)
 func drop_cargo() -> bool:
     if state.cargo.is_empty() or player.mode!="idle" or execution_busy:return false
     var at=player.position+player.direction()*75
@@ -342,6 +342,7 @@ func player_contact(kind: String,spec: Dictionary) -> void:
         var radius=52 if foe is GreatBeast else 28
         if off.length()<=spec.reach+radius and player.locked.dot(off.normalized())>0.12 and has_line(player.position,foe.position):
             foe.receive_hit(amount,off.normalized());impact(foe.position);connected=true
+            if foe is SmallFoe and foe.hp>0:foe.recoil=off.normalized()*spec.push
             if "hit_pause" in foe:foe.hit_pause=0.065 if kind=="heavy" else 0.035
     for id in objects:
         var obj=objects[id];var off=obj.position-player.position
@@ -404,7 +405,7 @@ func recover_defeat() -> void:
     if execution_busy:finish_execution(false)
     if not state.cargo.is_empty():player.mode="idle";drop_cargo()
     save_progress();state.hp=120;state.ferocity=0;state.region=state.camp_region;state.player_position=Vector2(1060,1140);state.packed=false;rebuild();save_progress();say("You limp home. Your dropped load remains where you fell. Eat, prepare, and return.");defeat_lock=false
-func overpower(feed: bool) -> bool:
+func overpower(feed: bool, swallow: bool=false) -> bool:
     if player.mode!="idle" or execution_busy or not state.cargo.is_empty():return false
     var best=125.0;var target_foe=null
     for foe in enemies:
@@ -423,7 +424,7 @@ func overpower(feed: bool) -> bool:
     var sign=1 if target_foe.position.x>=player.position.x else -1
     var stance=target_foe.position-Vector2(sign*76,0)
     if not has_line(player.position,stance) or not has_line(stance,target_foe.position):return false
-    state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind="feed" if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.sprite.hide();player.sprite.hide()
+    state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind=("swallow" if swallow else "feed") if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.sprite.hide();player.sprite.hide()
     execution_sprite=Sprite2D.new();world.add_child(execution_sprite);execution_sprite.position=player.position
     return true
 func begin_clinch(foe) -> bool:
@@ -453,7 +454,11 @@ func execution_tick(delta: float) -> void:
         prompt.modulate=Color("ffd37c") if gold else Color.WHITE
         if execution_clock>1.65:finish_execution(true)
     else:
-        var frame=mini(3,int(execution_clock/0.20));Atlas.pose(execution_sprite,"overpower",frame+(4 if execution_kind=="feed" else 0),170,mirror)
+        var frame=mini(3,int(execution_clock/0.20))
+        var feeding=execution_kind in ["feed","swallow"]
+        var art="devour" if feeding and state.gore and FileAccess.file_exists("res://resources/frontier/devour.json") else "overpower"
+        var row=4 if execution_kind=="swallow" and art=="devour" else 0 if art=="devour" else 4 if feeding else 0
+        Atlas.pose(execution_sprite,art,frame+row,170,mirror)
         if execution_kind=="throw" and execution_clock>=0.60 and not execution_contact:
             execution_contact=true;execution_target.position=player.position+execution_direction*105;execution_target.sprite.show();execution_target.launch(execution_direction);sound("hit");shake=5;state.mark("thrown")
         if execution_clock>=0.82:finish_execution(true)
@@ -467,11 +472,14 @@ func finish_execution(resolve: bool) -> void:
         if foe is SmallFoe:foe.held=false
         if resolve:
             contact_kind="heavy"
-            if kind=="feed":
-                foe.die(false);player.hp=minf(180,player.hp+38);state.ferocity=minf(100,state.ferocity+15);state.mark("battle_fed");sound("hit")
+            if kind in ["feed","swallow"]:
+                if kind=="swallow":foe.swallowed=true
+                foe.die(false)
+                if kind=="swallow":foe.hide()
+                player.hp=minf(180,player.hp+38);state.ferocity=minf(100,state.ferocity+15);state.mark("battle_fed");sound("hit")
                 for other in enemies:
                     if other is SmallFoe and other!=foe and other.hp>0 and other.position.distance_to(foe.position)<300:other.fear=1.1
-                say("A short, savage mouthful. +38 health; nearby goblins recoil.")
+                say(("You swallow the goblin whole." if kind=="swallow" else "You bite off an arm and feast.")+" +38 health; nearby goblins recoil.")
             elif kind=="clinch":
                 if clinch_result==1:
                     foe.parried();foe.receive_hit(85,execution_direction);state.ferocity=minf(100,state.ferocity+20);state.mark("clinch_won");say("You turned an elder's weight against him. Now strike.")
@@ -494,7 +502,7 @@ func pause_menu() -> void:
 func belongings() -> void:
     var text=""
     for item in state.inventory:text+="%s %d    "%[item.capitalize(),state.inventory[item]]
-    text+="\n\n%s · Nourishment adds 6 damage and guard recovery.\nCut: %.2fs windup / %d reach. Heavy: %.2fs windup / %d reach.\nF throws a staggered goblin (15 Ferocity); G feeds (25). Attacks that miss grant no Ferocity.\nT makes a heavy snare from 2 timber + 1 hide. X sets carried loads down."%[player.weapons[player.weapon].name,player.stats("light").windup,player.stats("light").reach,player.stats("heavy").windup,player.stats("heavy").reach]
+    text+="\n\n%s · Nourishment adds 6 damage and guard recovery.\nCut: %.2fs windup / %d reach. Heavy: %.2fs windup / %d reach.\nF throws a staggered goblin (15 Ferocity); G bites or Shift+G swallows one whole (25). Attacks that miss grant no Ferocity.\nT makes a heavy snare from 2 timber + 1 hide. X sets carried loads down."%[player.weapons[player.combat_weapon()].name,player.stats("light").windup,player.stats("light").reach,player.stats("heavy").windup,player.stats("heavy").reach]
     var col=simple_menu("BELONGINGS & EQUIPMENT",text)
     if state.has("maul"):
         helper.action("Equip "+("stonebreaker maul" if player.weapon=="axe" else "hunting axe"),func():player.weapon="maul" if player.weapon=="axe" else "axe";state.equipment=player.weapon;player.mode="idle";player.weapon_pose(0);save_progress();belongings(),col)

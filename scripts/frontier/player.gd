@@ -20,7 +20,9 @@ var combat_idle=0.0
 var combo=0
 func _ready() -> void:
     super._ready();maximum=180;hp=game.state.hp;height=170;weapon=game.state.equipment
-func stats(kind: String) -> Dictionary:return weapons[weapon][kind]
+func combat_weapon() -> String:
+    return "log" if carrying() and game.state.cargo.kind=="log" else weapon
+func stats(kind: String) -> Dictionary:return weapons[combat_weapon()][kind]
 func carrying() -> bool:return not game.state.cargo.is_empty()
 func can_cancel() -> bool:
     if mode not in ["light","heavy"]:return mode=="idle"
@@ -28,7 +30,7 @@ func can_cancel() -> bool:
     return elapsed<0.08 or elapsed>=spec.windup+spec.active+(0.06 if mode=="light" else 0.12)
 func request(kind: String,toward: Vector2) -> bool:
     if not enabled or hp<=0:return false
-    if kind in ["light","heavy","dodge"] and carrying():game.say("Set the load down with X before fighting.");return false
+    if kind in ["light","heavy","dodge"] and carrying() and game.state.cargo.kind!="log":game.say("Set the spoils down with X before fighting.");return false
     if mode=="idle" or (kind in ["dodge","block"] and can_cancel()):return begin(kind,toward)
     if mode in ["light","heavy","dodge","stun"]:
         buffered=kind;buffer_left=0.24;buffer_aim=toward;return true
@@ -72,7 +74,12 @@ func receive_hit(amount: float,source_direction: Vector2) -> void:
     if hp<=0:felled.emit(self)
 func full_pose(id: String,index: int,mirror: bool=false) -> void:Atlas.pose(sprite,id,index,height,mirror)
 func weapon_pose(index: int) -> void:
-    if weapon=="maul" and FileAccess.file_exists("res://resources/frontier/player_maul.json"):
+    if combat_weapon()=="log":
+        var row=0 if facing==0 else 2 if facing==3 else 1
+        var has_attack_art=FileAccess.file_exists("res://resources/frontier/log_attack.json")
+        var pose_index=[3,0,2,3][index] if has_attack_art else index
+        full_pose("log_attack" if has_attack_art else "carry_log",row*4+pose_index,facing==1)
+    elif weapon=="maul" and FileAccess.file_exists("res://resources/frontier/player_maul.json"):
         var row=0 if facing==0 else 2 if facing==3 else 1
         full_pose("player_maul",row*4+index,facing==1)
     else:action_pose(index)

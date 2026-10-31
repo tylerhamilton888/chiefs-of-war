@@ -29,7 +29,7 @@ Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. The l
 - Original rugged illustrated 2D art, square-aligned elevated environments. Warcraft II is a readability reference, never an asset source. Do not revisit the rejected 3D direction.
 - Male Orcs are imposing adult hulks, with enormous shoulders, arms, hands and jaws. No lanky, chibi or anime replacements. Initial player scope is male Orcs; feminine but recognizably Orc female NPCs are important characters. Female player art is not a current milestone.
 - Complete coherent illustrated animation frames; no disconnected body parts, floating tools or skeletal deformation substitutes. Be honest that generated illustration candidates are not human-drawn or automatically accepted final art.
-- Responsive melee, Space dodge, optional earned short finishers. Normal attacks remain effective. Restrained stylized brutality, not excessive gore.
+- Responsive melee, Space dodge, optional earned short finishers. Normal attacks remain effective. The latest Ogre direction explicitly calls for adult brutality, including biting off limbs and swallowing small goblins whole; retain the adjustable restrained setting.
 - Carnivorous Orc food economy, physical labor, useful autonomous workers, and freedom to remain a hunter/craftsman rather than being forced into leadership.
 - The invasion, chieftain duel and new-tribe adoption are the intended later prologue, not already delivered by the current hunting opener.
 - Preserve existing saves. Do not silently use a development test or fresh-game launcher against the user's campaign slot.

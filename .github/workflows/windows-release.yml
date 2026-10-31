@@ -66,7 +66,7 @@ jobs:
           for suite in customization_test opener_test opener_edges motion_test feel_test execution_test defense_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --fresh --test
           done
-          for suite in save_slots_test ogre_hearth_test chapter_test; do
+          for suite in save_slots_test ogre_hearth_test chapter_test frontier_brutality_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
           check_godot menu_flow_test env XDG_DATA_HOME="$RUNNER_TEMP/menu_flow_test" Godot_v4.4.1-stable_linux.x86_64 --headless --max-fps 60 --script tests/menu_flow_test.gd
