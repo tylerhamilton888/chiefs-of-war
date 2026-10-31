@@ -1,3 +1,15 @@
+# Active pivot — Hearth and Hunger 0.6.0
+
+The user explicitly pivots this same game to nomadic Ogres while retaining OUR established bright illustrated game style. See design/hearth-and-hunger.md, engineering/ogre-pivot.md and source/HEARTH_AND_HUNGER_DIRECTIVE.txt (relative to docs). Old Orc design requirements remain relevant to preserved legacy content, not the new species.
+
+Verified remote archive: archive/chiefs-before-hearth-and-hunger at ebcbd9ed032c51516f089e4954c17f1f5fe08ceb. New work is on feature/hearth-and-hunger. Existing campaigns, appearance, combat and slots remain. New Ogre scene reuses terrain/props/UI/audio and adds a distinct actor, campsite, finite timber/provision collection, cooking and separate validated save. This is an initial playable pivot; Ogre combat, modular equipment, traveling/deploying the camp, beasts and family mechanics are NOT delivered. Do not claim the full overhaul or milestone 1 polish is complete.
+
+0.6.0 source/release verification is in progress. Read actual GitHub run/release state before claiming publication. New executable: HearthAndHunger.exe. Save directory remains godot/app_userdata/Chiefs of War; new file wandering_hearth_v1.json leaves prior slots intact. Runtime in this workspace: /tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64; display helper /tmp/hearth-runtime/render.py. Recheck that scratch helpers exist.
+
+---
+
+## Historical handoff below (superseded where inconsistent)
+
 # Session handoff
 
 Read AGENTS.md, docs/state/current.md, then only the relevant design/engineering shard.

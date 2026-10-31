@@ -1,0 +1,963 @@
+# HEARTH AND HUNGER
+## Complete Project Pivot & Development Directive
+### Godot 4 | Existing GitHub Repository | 2D Top-Down Fantasy Sandbox
+
+You are continuing development of our existing Godot 4 game, formerly known as **Chiefs of War**.
+
+We are making a major creative pivot.
+
+The new working title is:
+
+# HEARTH AND HUNGER
+*A Nomadic Ogre Sandbox RPG*
+
+This is a fundamental transformation of our game's identity, characters, worldbuilding, and progression systems.
+
+However, it is **not permission to carelessly abandon or destroy the work already completed**.
+
+Inspect our existing Godot project and GitHub repository, identify reusable systems, preserve our development history, and adapt the game to this new vision.
+
+Our objectives are to create a commercially viable, genuinely enjoyable game with exceptional moment-to-moment gameplay, a distinctive identity, and meaningful long-term progression.
+
+**Do actual implementation work. Do not stop at writing design documents or producing concept art.**
+
+---
+
+# 1. THE CENTRAL FANTASY
+
+Hearth and Hunger is a 2D top-down, hand-drawn fantasy sandbox in which the player lives as an enormous, immensely powerful Ogre belonging to a diminished, once-dominant civilization.
+
+Our game combines:
+
+- Satisfying gathering, building, crafting, and daily life.
+- Tight, responsive action RPG combat.
+- Brutal physical strength and battlefield dominance.
+- Hunting and consuming enormous fantasy creatures.
+- Taming, breeding, training, and riding great beasts.
+- Establishing and upgrading a traveling household.
+- Building a growing clan of followers and family members.
+- Mercenary contracts, raiding, conquest, and diplomacy.
+- Relationships, traditions, religion, and dynastic legacy.
+- A freely explorable and reactive fantasy world.
+
+Our original description, **"Stardew Valley for the Boys,"** remains useful, but our distinctive identity has evolved.
+
+We are building a game where a player can be an Ogre hunter, mercenary, craftsman, beastmaster, husband, father, patriarch, chieftain, or conqueror.
+
+These are not restrictive classes.
+
+The player remains an individual person who participates directly in the world.
+
+**The game should be enjoyable whether the player controls one Ogre with a favorite hunting beast or a legendary patriarch commanding a traveling civilization.**
+
+The goal is a compelling "one more day" gameplay loop in which personal accomplishments produce permanent and visible changes.
+
+---
+
+# 2. THE DEFINING MECHANIC: THE WANDERING HEARTH
+
+Our civilization is fundamentally nomadic.
+
+Unlike traditional settlement-building games, the player's home and community should be capable of traveling alongside him.
+
+The player might begin with a crude sled or wagon and a small collection of possessions.
+
+Eventually, he could command a vast traveling household containing:
+
+- Great beast-drawn wagons.
+- Family members and retainers.
+- Ogre warriors and hunters.
+- Cooks, craftsmen, and laborers.
+- Lesser servants and thralls.
+- Portable workshops.
+- Animal breeding facilities.
+- Storage wagons.
+- Sacred religious objects.
+- Hunting trophies.
+- Enormous cooking fires and feast halls.
+
+The caravan must eventually exist physically within the game world.
+
+The player should be able to walk among its inhabitants and interact with its activities.
+
+## Deploying camp
+
+When the caravan stops, the player can establish a temporary settlement.
+
+Wagons are parked, shelters erected, cooking stations prepared, beasts secured, and workshops made available.
+
+The player can place or customize structures and arrange the camp according to his preferences.
+
+Eventually, saved camp layouts and autonomous labor should make deployment efficient.
+
+## Breaking camp
+
+When the player decides to move, the clan packs up.
+
+Do not require the player to manually dismantle every object.
+
+Packing and deployment should become satisfying visual processes supported by automation.
+
+The caravan can then travel to new hunting grounds, settlements, mercenary contracts, or unexplored regions.
+
+**The player should feel like he is traveling with his civilization rather than abandoning his home whenever he goes adventuring.**
+
+## Permanent holdings
+
+Players may also establish permanent settlements.
+
+They might appoint wives, adult sons, captains, or trusted retainers to oversee these holdings.
+
+Permanent settlements can provide food, equipment, trade, recruits, tribute, and breeding grounds.
+
+However, the player should not become trapped in administrative menus.
+
+**The player is a roaming Ogre first and a ruler second.**
+
+Growing political power should increase freedom and opportunity rather than administrative busywork.
+
+---
+
+# 3. OGRES — PHYSICAL AND CULTURAL IDENTITY
+
+Our playable people are now **Ogres, not Orcs**.
+
+This distinction is extremely important.
+
+Do not simply recolor the existing Orc models or scale them up.
+
+Ogres should feel like an entirely different species.
+
+## Male Ogre anatomy
+
+Use the immense strongman physique of Thor from God of War Ragnarök as a general anatomical reference, without copying the character's design.
+
+The ideal male Ogre has:
+
+- Tremendous height and physical mass.
+- Immensely broad shoulders.
+- Powerful arms and hands.
+- Thick neck and barrel chest.
+- Strong, heavy torso.
+- Substantial but proportionate legs.
+- Powerful jaws and prominent brow ridges.
+- Structured, broad noses.
+- Distinctive lower tusks or protruding canine teeth.
+- Nonhuman proportions that remain physically believable.
+
+Do not make every male Ogre excessively obese.
+
+The standard playable Ogre should look like an enormous, powerful heavyweight strongman.
+
+Some Ogres may be heavier, others more muscular or rugged, but none should look like an ordinary human.
+
+## Female Ogre anatomy
+
+Female Ogres should be unmistakably members of the same species.
+
+However, preserve traditionally feminine attractiveness.
+
+Our female design direction emphasizes:
+
+- Beautiful, expressive faces.
+- Feminine features.
+- Voluptuous but believable proportions.
+- Strong bodies without excessive masculine musculature.
+- Broader Ogreish facial structure.
+- Modest but recognizable tusks.
+- Thick, beautiful hair.
+- Nordic-inspired braids and ornaments.
+- Strong hips, legs, and shoulders appropriate to their size.
+
+Do not make all female Ogres resemble bodybuilders.
+
+They should be imposing, physically capable, and visually attractive while remaining recognizably nonhuman.
+
+The current plan is **male-only playable characters for the initial release**, with female Ogres serving as important NPCs.
+
+## Culture
+
+Ogres are fiercely patriarchal, traditional, proud, and devoted to their own people.
+
+Their values emphasize:
+
+**Strength. Blood. Honor. Tradition. Hunger.**
+
+They consider themselves naturally superior to smaller peoples because they generally are physically superior.
+
+They are loyal to their households, clans, and traditions, while often remaining indifferent to the welfare of outsiders.
+
+Some lesser peoples serve them willingly, others through necessity or coercion.
+
+Ogres are capable of affection, loyalty, family life, humor, and generosity, but their culture should remain strange and savage by ordinary human standards.
+
+Avoid presenting them as universally evil villains or secretly modern moralizing heroes.
+
+Allow individuals to vary substantially.
+
+---
+
+# 4. THE FALLEN OGRE CIVILIZATION
+
+Ogres were once the dominant people across large parts of the world.
+
+Their ancient power rested upon their physical strength, hunting traditions, mighty beasts, and enormous wandering clans.
+
+Something caused their civilization to decline.
+
+Potential factors include:
+
+- Catastrophic environmental changes.
+- The disappearance of enormous migratory herds.
+- Civil wars and tribal division.
+- Loss of ancestral breeding knowledge.
+- Encroachment by more numerous peoples.
+- A mysterious ancient catastrophe.
+
+Relatively few Ogres remain.
+
+However, they are still individually among the world's strongest intelligent inhabitants.
+
+A single Ogre is a formidable combatant.
+
+Ten Ogres constitute a serious military force.
+
+Twenty trained Ogres are enough to threaten a substantial settlement.
+
+Their enemies must rely upon numbers, discipline, technology, traps, or exceptional monsters.
+
+This disparity is a major part of the gameplay identity.
+
+The player may seek to restore his people's former supremacy, but that ambition is optional.
+
+He may instead pursue wealth, adventure, family life, or mercenary service.
+
+---
+
+# 5. COMBAT — OUR HIGHEST GAMEPLAY PRIORITY
+
+Combat must become one of Hearth and Hunger's greatest attractions.
+
+Take inspiration from the fluidity, impact, and multi-enemy combat satisfaction of Shadow of War, while building a completely original system suited to top-down 2D gameplay.
+
+**Do not produce a slow, clumsy combat system simply because Ogres are enormous.**
+
+Ogres should feel devastatingly powerful but responsive.
+
+Their physical mass should influence how they attack, defend, grapple, and interact with enemies.
+
+## Combat fundamentals
+
+Implement and refine:
+
+- Precise movement and facing.
+- Responsive light and heavy attacks.
+- Directional melee attacks.
+- Proper blocking.
+- Perfect parries and counterattacks.
+- Dodge rolls or powerful evasive steps.
+- Attack chaining and combos.
+- Guard breaks.
+- Staggering and knockback.
+- Interruptions and recovery.
+- Reliable hitboxes.
+- Clear attack telegraphs.
+- Skillful positioning.
+- Distinctive weapon behaviors.
+- Appropriate audio and visual impact feedback.
+
+Controls should initially support WASD movement, mouse aiming, mouse attacks and defense, Space for dodging, and configurable interaction keys.
+
+Provide input buffering and carefully tuned cancel windows.
+
+The player should feel in control during combat.
+
+## The Ogre power fantasy
+
+This is critical.
+
+**Against ordinary opponents, the player should usually be the most physically dangerous creature on the battlefield.**
+
+An Ogre should not exchange weak, inconsequential blows with individual goblins.
+
+He should be capable of knocking smaller enemies aside, smashing their defenses, and overpowering them.
+
+However, smaller enemies become dangerous through numbers, tactics, positioning, ranged attacks, and specialized equipment.
+
+A group of disciplined spearmen should be much more dangerous than a single spearman.
+
+A pack of goblins should attempt to surround, harass, distract, and exhaust the player.
+
+Large monsters and rival Ogres should create more direct physical challenges.
+
+## Creative combat mechanics
+
+Explore the following original combat ideas.
+
+### Mighty Blows
+
+Powerful attacks that can knock lesser enemies backward, interrupt their actions, break weak shields, and damage destructible obstacles.
+
+### Grappling and Throwing
+
+Allow Ogres to seize smaller enemies, throw them aside, slam them down, or use them to disrupt nearby foes.
+
+These attacks must use proper hand-drawn animation frames and accurate collision behavior.
+
+Large enemies should resist or be immune to inappropriate grappling techniques.
+
+### Battlefield Objects
+
+Allow the player to interact physically with certain environmental objects.
+
+Examples:
+
+- Break wooden barricades.
+- Smash flimsy doors.
+- Kick smaller enemies into obstacles.
+- Lift or throw appropriately sized objects.
+- Charge through light cover.
+- Use oversized improvised weapons.
+
+Do not make the environment universally destructible at the cost of performance or scope.
+
+Prioritize a few highly satisfying interactions.
+
+### Overpower and Counter
+
+A properly timed parry or guard break can create an opportunity for a devastating counterattack.
+
+The counter should feel like a powerful Ogre exploiting an enemy's mistake.
+
+### Ferocity
+
+Experiment with a momentum mechanic that rewards skilled aggression.
+
+Successful attacks, counters, parries, and other accomplishments may build combat momentum.
+
+This can unlock powerful attacks, brief bursts of strength, or special finishing moves.
+
+Avoid allowing endless button-mashing to generate the same rewards as skilled play.
+
+---
+
+# 6. EATING AND FEEDING AS COMBAT MECHANICS
+
+Eating is a major part of Ogre biology and culture.
+
+It must become central to gameplay.
+
+## Battle Feeding
+
+Introduce contextual feeding finishers.
+
+An Ogre may overpower a staggered or critically wounded enemy and perform a brief, brutal feeding animation.
+
+Potential rewards include:
+
+- Recovering health.
+- Restoring Ferocity.
+- Temporary strength or resistance bonuses.
+- Intimidating nearby enemies.
+- Gaining special benefits from unusual creatures.
+
+These should be quick, responsive, and integrated into combat.
+
+Use stylized animation rather than excessive graphic detail.
+
+## Executions
+
+Support contextual brutal finishers following guard breaks, staggers, critical strikes, or successful counters.
+
+Occasional stylized dismemberment of smaller opponents is appropriate.
+
+Executions should communicate tremendous physical power without becoming gratuitous or repetitive.
+
+Different weapons should eventually have distinctive finishers.
+
+Do not interrupt combat with lengthy unskippable cinematic sequences.
+
+Feeding finishers must be an option, not something required for every enemy.
+
+## Eating and preparation
+
+Food consumed outside combat should also matter.
+
+Meat from different creatures can provide useful bonuses.
+
+Examples:
+
+- Endurance improvements.
+- Recovery benefits.
+- Temporary resistance to stagger.
+- Strength bonuses.
+- Special effects associated with magical or monstrous creatures.
+
+Avoid an oppressive survival hunger meter.
+
+A well-fed Ogre should be meaningfully rewarded, but ordinary activities should remain enjoyable without constant eating interruptions.
+
+---
+
+# 7. ENEMY DESIGN AND COMBAT ENCOUNTERS
+
+Our enemies must be mechanically and visually distinct.
+
+## Goblins
+
+Small, individually weak, cunning, and numerous.
+
+They use ranged weapons, traps, ambushes, and coordinated attacks.
+
+They should be vulnerable to the player's tremendous strength.
+
+## Orcs
+
+Powerful tribal fighters who are generally smaller than Ogres.
+
+They use shields, axes, spears, and organized warbands.
+
+Experienced Orc champions may present serious challenges through superior technique and equipment.
+
+## Humans and other smaller civilizations
+
+Humans generally cannot match Ogre physical strength.
+
+Their advantages include disciplined formations, ranged weapons, fortifications, cavalry, and superior numbers.
+
+## Rival Ogres
+
+Rival Ogres are among the most dangerous humanoid opponents.
+
+Their fights emphasize timing, strength, grappling, heavy blows, and tactical positioning.
+
+Ogre duels should be especially memorable.
+
+## Trolls and giants
+
+Larger or unusually powerful creatures with distinct anatomy and combat patterns.
+
+## Fantasy megafauna
+
+Enormous beasts that require skill, preparation, and sometimes coordinated hunting parties.
+
+These encounters should involve distinctive attack patterns, weaknesses, and movement.
+
+## Three required combat quality tests
+
+Develop and polish combat around:
+
+**A. One Ogre against several goblins.**
+
+Tests crowd combat, overpowering smaller opponents, and responsiveness.
+
+**B. Ogre versus Ogre champion.**
+
+Tests dueling, blocking, parrying, counters, and precise timing.
+
+**C. Ogre versus enormous monster.**
+
+Tests boss mechanics, positioning, evasion, and large-target combat.
+
+These three encounters must become genuinely enjoyable before expanding into a large enemy roster.
+
+---
+
+# 8. HAND-DRAWN ANIMATION — NON-NEGOTIABLE
+
+Our game uses original, hand-drawn, frame-by-frame 2D character animations.
+
+No awkward skeletal deformation in place of proper full-body animation.
+
+No floating axes or disconnected hands.
+
+No lazy paper-doll character movement.
+
+Every supported action should use coherent illustrated poses with appropriate timing.
+
+Characters must maintain consistent anatomy, hair, equipment, and appearance across animation frames.
+
+Required foundational animations include:
+
+- Idle.
+- Walk.
+- Run.
+- Turn.
+- Light attack.
+- Heavy attack.
+- Block.
+- Parry.
+- Dodge.
+- Stagger.
+- Knockback.
+- Death.
+- Woodcutting.
+- Mining.
+- Carrying.
+- Construction.
+- Eating.
+- Feeding finishers.
+- Grappling.
+
+Do not attempt to finish the entire animation library simultaneously.
+
+Start with a small number of complete, polished actions.
+
+**A properly illustrated Ogre hitting one goblin convincingly is better than twenty unfinished combat abilities.**
+
+The player must remain recognizably the same individual throughout every animation.
+
+---
+
+# 9. HUNTING, GREAT BEASTS, AND ANIMAL HUSBANDRY
+
+Animal husbandry is another foundational system.
+
+Ogres have developed intimate relationships with enormous, dangerous beasts.
+
+These creatures support transportation, combat, hunting, construction, and the mobility of their civilization.
+
+## Great beast roles
+
+Develop original creatures suitable for:
+
+- Pulling enormous caravan wagons.
+- Carrying heavy equipment.
+- Mounted transportation.
+- Hunting alongside Ogres.
+- Breaching fortifications.
+- Clearing obstacles.
+- Traversing difficult terrain.
+- Providing useful materials.
+
+Some creatures may consume unusual resources such as mineral-rich stone or vegetation rather than meat.
+
+This should create interesting symbiotic relationships.
+
+For example, a mineral-feeding beast could clear rubble or break certain fortifications while consuming useful material.
+
+Avoid reproducing Warhammer's Stonehorn design or other proprietary creatures.
+
+## Taming
+
+Develop the foundation for animals that can be encountered, tamed, trained, and bonded with.
+
+Animals should have individual identities, strengths, and temperaments.
+
+## Breeding
+
+Eventually support selective breeding for traits such as:
+
+- Physical strength.
+- Endurance.
+- Movement speed.
+- Temperament.
+- Carrying capacity.
+- Combat suitability.
+
+Breeding should provide meaningful long-term progression without becoming an excessively complicated genetic simulator.
+
+## Mounted combat
+
+Plan for mounted combat as an important future feature.
+
+The player should eventually be able to ride appropriate beasts, fight from them, and participate in monster hunts or military campaigns.
+
+Do not implement elaborate mounted combat before the underlying on-foot combat and animation systems are excellent.
+
+---
+
+# 10. THE HUNTING AND PROSPERITY LOOP
+
+Our hunting system should be more involved than killing an enemy and receiving an item.
+
+The player should eventually be able to:
+
+1. Find tracks or evidence of an animal.
+2. Locate or stalk prey.
+3. Engage it in combat.
+4. Defeat or capture it.
+5. Harvest meat, hides, bones, horns, and other resources.
+6. Transport valuable materials home.
+7. Process food and crafting resources.
+8. Use those resources to strengthen the household.
+
+An enormous beast should provide a meaningful quantity of food and valuable materials.
+
+Hunting accomplishments should influence reputation and opportunities.
+
+A legendary hunt could result in a clan feast, impressive trophies, new equipment, and increased standing.
+
+**Hunting, eating, crafting, clan prosperity, and combat progression should reinforce one another.**
+
+---
+
+# 11. FEASTS, FAMILY, AND THE GREAT HEARTH
+
+The domestic side of the game should be satisfying, warm, and culturally distinct.
+
+Our Ogres are capable of strong affection and loyalty toward their own people.
+
+Their relationships are not necessarily gentle, but they are meaningful.
+
+The player may eventually establish a household with spouses, children, relatives, and retainers.
+
+Family members should have personalities and useful roles.
+
+## Feasting
+
+Feasts are important cultural and religious events.
+
+They may celebrate:
+
+- Successful hunts.
+- Victories.
+- Marriages.
+- Births.
+- Seasonal events.
+- Diplomatic gatherings.
+- Clan achievements.
+
+The player should be able to contribute food and resources to a feast.
+
+Feasts may improve relationships, morale, reputation, and clan cohesion.
+
+A great feast should be visually impressive.
+
+The prosperity of the household should be obvious from the amount and quality of food available.
+
+## Dynastic progression
+
+Eventually support inheritance, family relationships, and the possibility of appointing descendants to positions of responsibility.
+
+A powerful Ogre patriarch might establish multiple households and bloodlines.
+
+Family development must not become mandatory for players who prefer a wandering adventurer lifestyle.
+
+---
+
+# 12. RELIGION — THE GODS OF THE FIRST HEARTH
+
+Our Ogre religion is inspired by ancient Norse mythology.
+
+The Ogres worship beings broadly analogous to the Æsir and related mythological figures, but preserve different names, stories, and cultural interpretations.
+
+Provisional deities include:
+
+- **Rauth:** Thunder, physical strength, protection, and victory.
+- **Sava:** Hearths, families, abundance, and household prosperity.
+- **Veydr:** Wisdom, journeys, leadership, and sacrifice.
+- **Karn:** Oaths, courage, and sworn obligations.
+- **Skelda:** Hunting, winter, wilderness, and endurance.
+- **Velk:** Trickery, audacity, disorder, and opportunity.
+
+These are working names.
+
+Religion should be represented through meaningful physical practices:
+
+- Offerings at the hearth.
+- Clan feasts.
+- Ancestral shrines.
+- Religious banners.
+- Sacred wagons.
+- Oath ceremonies.
+- Hunting rituals.
+- Seasonal observances.
+
+The central sacred hearth should travel with the clan.
+
+**Religion must feel integrated into the ordinary lives of Ogres, not simply represented by a passive statistics menu.**
+
+Players may be devout, skeptical, or indifferent.
+
+The actual existence and intervention of the gods may remain mysterious.
+
+---
+
+# 13. MERCENARY WORK, CONQUEST, AND THE LIVING WORLD
+
+Ogres are individually among the strongest peoples in the world.
+
+Other civilizations hire them precisely because they are exceptionally dangerous.
+
+Mercenary contracts should eventually include:
+
+- Monster hunting.
+- Caravan protection.
+- Military campaigns.
+- Siege assaults.
+- Frontier defense.
+- Bandit suppression.
+- Dangerous expeditions.
+
+Employers may pay with money, meat, livestock, equipment, property rights, or access to territory.
+
+The player can develop a reputation for reliability, brutality, greed, honor, or treachery according to his actions.
+
+## Territorial control
+
+The player can eventually conquer or acquire permanent holdings and delegate them to trusted NPCs.
+
+Do not force the player to sit in menus administering these holdings.
+
+Appointed governors should manage ordinary affairs according to broad instructions.
+
+They may send tribute, recruit warriors, develop industries, or maintain breeding herds.
+
+Personal relationships and loyalties should matter.
+
+## NPC simulation
+
+Important NPCs should have persistent identities, skills, relationships, ambitions, and memories.
+
+The world should continue functioning while the player travels.
+
+Develop an original event-driven social simulation rather than copying another game's proprietary NPC hierarchy system.
+
+---
+
+# 14. THE OPENING — A NEW OGRE LIFE
+
+Adapt our established narrative opening to the Ogre setting.
+
+The player begins as a young Ogre belonging to a relatively small nomadic clan.
+
+He learns gathering, hunting, crafting, and combat while participating in ordinary clan life.
+
+He meets a handful of memorable characters.
+
+He joins an expedition against dangerous wildlife or a hostile group.
+
+When he returns, he discovers his clan has been attacked by a larger, stronger Ogre host.
+
+He fights to defend his people.
+
+The invading chieftain notices his courage and challenges him.
+
+The player is defeated by the much more experienced chieftain.
+
+Instead of killing him, the conqueror recognizes his potential and offers him a future within his traveling clan.
+
+The player may eventually:
+
+- Become loyal to the new clan.
+- Serve as a hunter or mercenary.
+- Become a respected warrior.
+- Establish a household.
+- Challenge the chieftain.
+- Seek revenge.
+- Leave and form his own clan.
+- Attempt to restore the old Ogre civilization.
+
+The intended defeat should not involve dishonest combat rules or disregard valid player actions. Accommodate exceptional outcomes coherently.
+
+**Do not prioritize building the full narrative prologue until the gameplay systems are enjoyable.**
+
+---
+
+# 15. ART DIRECTION
+
+Our visual target is a colorful, hand-drawn, three-quarter top-down 2D game.
+
+Use the previously approved illustrated Ogre campsite reference as our closest gameplay-art direction.
+
+The world should be vivid, readable, textured only where necessary, and stylistically cohesive.
+
+Our cultural inspiration is Nordic, Germanic, and Celtic, adapted to a nomadic Ogre civilization.
+
+## Visual requirements
+
+- Clearly illustrated character sprites.
+- Strong silhouettes.
+- Adult, correctly proportioned characters.
+- Attractive environments.
+- Readable terrain and buildings.
+- Natural environmental variation.
+- Hand-sewn, imperfect clan banners.
+- Huge beast-drawn wagons.
+- Portable halls and shelters.
+- Carved timber, fur, bone, hide, and heavy iron.
+- Believable interactions between characters and equipment.
+
+Avoid:
+
+- Photorealistic or CGI rendering.
+- Overly noisy AI-looking detail.
+- Disney-like softness.
+- Anime aesthetics.
+- Chibi proportions.
+- Floating weapons or objects.
+- Repetitive decorative symbols.
+- Factory-perfect banners.
+- Copying Warcraft or Warhammer heraldry.
+- Permanent stone towns as the default Ogre settlement.
+
+**Nomadism should be immediately recognizable from the environment.**
+
+Ogre homes should ordinarily look capable of being packed up and transported.
+
+Permanent strongholds may exist, but they are not the visual foundation of the civilization.
+
+Use original, commercially usable assets and document their provenance.
+
+If the approved images aren't available to this Work session, request the reference files or proceed with a narrowly scoped visual test based on this written direction.
+
+---
+
+# 16. IMPLEMENTATION ORDER
+
+We need to avoid producing a vast collection of unfinished systems.
+
+Work through focused milestones.
+
+## Milestone 0 — Safe Project Pivot
+
+Inspect the existing Chiefs of War GitHub repository.
+
+Create a verified backup checkpoint or archival branch before modifying the project.
+
+Preserve reusable systems such as movement, combat, inventory, saving, and interactions.
+
+Update the game title and documentation to Hearth and Hunger.
+
+Retain repository history.
+
+If renaming the remote repository is supported and safe, migrate it appropriately; otherwise keep the existing repository name temporarily while updating the project identity.
+
+Do not destroy working systems or claim changes are published until the remote repository has been verified.
+
+## Milestone 1 — The Living Ogre
+
+Create an excellent playable male Ogre model.
+
+Implement responsive movement and consistent hand-drawn directional animations.
+
+Create a small attractive wilderness environment.
+
+The model must look and move convincingly at actual gameplay zoom.
+
+## Milestone 2 — The Ogre's Strength
+
+Build the first excellent melee combat encounter.
+
+Implement meaningful impact, light/heavy attacks, blocks, parries, dodges, enemy reactions, and one contextual finisher.
+
+Focus on satisfying gameplay rather than ability count.
+
+## Milestone 3 — Hunt and Feed
+
+Implement one memorable huntable creature.
+
+Allow the player to harvest meat and materials, prepare food, and receive useful benefits.
+
+Introduce a basic feeding finisher.
+
+## Milestone 4 — The First Traveling Hearth
+
+Implement one usable caravan wagon, one temporary camp, a cooking hearth, storage, and camp deployment.
+
+The player can gather resources, upgrade the camp, and move to a new location.
+
+## Milestone 5 — The First Beast Companion
+
+Implement one properly animated animal companion capable of following the player, responding to commands, and performing one useful transportation or hunting task.
+
+## Milestone 6 — The First Clan
+
+Add a few memorable NPCs, useful autonomous labor, and a meaningful local progression system.
+
+The player should begin feeling that he belongs to a living traveling community.
+
+After these milestones, expand into creature breeding, mounted combat, mercenary contracts, larger clan systems, and the narrative opening.
+
+---
+
+# 17. TESTING AND DELIVERY
+
+All implementation must be tested in Godot 4.
+
+Verify:
+
+- The game imports and launches.
+- Input and movement feel responsive.
+- Characters and weapons animate correctly.
+- Combat hit detection is reliable.
+- The player regains control properly after finishers.
+- Enemies behave consistently.
+- Gathering and hunting provide satisfying feedback.
+- Resources can be collected and used.
+- Camp systems function correctly.
+- Save/load preserves meaningful progress.
+- Performance is appropriate for ordinary gameplay.
+- Art quality matches the intended direction.
+
+Commit meaningful changes regularly.
+
+Provide playable builds when possible, preferably Windows builds that are easy to download, unzip, and launch.
+
+Verify GitHub pushes, tags, and releases before claiming success.
+
+Do not rely solely on a potentially failing automated publication workflow; diagnose failures and use a supported alternative when necessary.
+
+Maintain clear documentation and checkpoints so future development sessions can resume without repeatedly reconstructing the project's architecture or design history.
+
+---
+
+# 18. YOUR CREATIVE FREEDOM
+
+I want you to approach this as a game designer, not merely a programmer executing a checklist.
+
+**Be inventive, particularly with combat, hunting, eating, beast handling, and the traveling civilization.**
+
+If you discover an original mechanic that makes these activities more enjoyable, experiment with it.
+
+Examples might include:
+
+- An Ogre throwing a goblin into another enemy.
+- Grappling a lesser warrior and using him to disrupt a formation.
+- A hunting beast coordinating an attack with its Ogre master.
+- An Ogre using overwhelming strength to break through an obstacle.
+- A well-timed feeding execution restoring combat momentum.
+- Coordinated attacks against the vulnerable parts of a giant monster.
+- A warbeast physically breaching a fortified gate.
+- A favorite animal learning new commands as its bond with the player develops.
+- A great hunt providing enough meat to host a feast that attracts new followers.
+- A wandering clan gaining increasingly impressive wagons and mobile workshops as it prospers.
+
+These are examples to explore, not mandates to implement everything immediately.
+
+Find the enjoyable interactions and build outward from them.
+
+Do not sacrifice quality for speed or sheer quantity.
+
+A handful of exceptionally satisfying mechanics is much more valuable than a large number of incomplete ones.
+
+---
+
+# FINAL CREATIVE MANDATE
+
+**Hearth and Hunger is about being an enormous, powerful Ogre in a savage world and gradually building a life, household, and legacy through your own actions.**
+
+The player begins with little.
+
+He may become a hunter, craftsman, beastmaster, mercenary, patriarch, chieftain, or conqueror.
+
+He should enjoy personally chopping timber, hunting dangerous beasts, fighting enemies, cooking great meals, raising animals, and spending time among his people.
+
+His growing clan should become physically more impressive.
+
+His accomplishments should matter.
+
+His people should remember him.
+
+His home should travel alongside him.
+
+And when he eventually commands a great wandering host, the player should still be free to pick up his axe and go hunting.
+
+**Make it fun to be one Ogre before trying to simulate an entire Ogre civilization.**
+
+Begin by auditing the existing project, safely preserving its history, and implementing the new Ogre-centered gameplay direction.
+
+Create real, playable, testable progress and publish verified changes to GitHub.
+
+Build a game that players want to return to for just one more day.

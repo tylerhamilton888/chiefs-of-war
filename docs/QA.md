@@ -1,3 +1,13 @@
+# Hearth and Hunger 0.6.0 local pivot checks
+
+Godot 4.4.1 Linux. Each suite used isolated XDG_DATA_HOME, never user saves. New ogre_hearth_test: 36 checks, 0 failures. Legacy customization, opener (48 checks), edges (17), motion, feel (10), execution (28), defense including 48 poses, practice isolation, save slots and menu-flow suites passed. 17 publication/package boundary tests passed, including new package names while retaining legacy validation. An initial local wrapper incorrectly gave --fresh to the save/menu suites; those invocations were discarded and rerun with the repository's intended flags. Do not count initial failures as regressions or conceal the incorrect invocation.
+
+Rendered title, campsite, all 16 pose/direction combinations and pause menu in Godot OpenGL. Corrected neighboring atlas fragments with UV boundaries, aligned frame feet using measured alpha bounds, and adjusted camera framing. No script/runtime errors on final render. A four-frame generated walk remains a user-review candidate, not a claim of final authored-animation quality or enjoyable playfeel. The first scene has one Ogre, static camp structures, timber/provisions and cooking. No new Ogre attacks, eating animation, movement of the caravan or NPC simulation.
+
+Windows export and native CI verification are tracked in the release run; until it succeeds, do not claim the release delivered.
+
+---
+
 # 0.3.1 motion revision
 
 147 checks: the existing 127 gameplay checks plus 20 motion/import checks for both outfits. Motion checks cover texture import, idle grounding, movement, stop, dodge cadence, attack facing and recovery. Functional tests alone initially missed invalid idle texture imports; the rendering review and dedicated motion test caught them, and both idle atlases were regenerated and reimported.

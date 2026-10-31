@@ -66,7 +66,7 @@ jobs:
           for suite in customization_test opener_test opener_edges motion_test feel_test execution_test defense_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --fresh --test
           done
-          for suite in save_slots_test; do
+          for suite in save_slots_test ogre_hearth_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
           check_godot menu_flow_test env XDG_DATA_HOME="$RUNNER_TEMP/menu_flow_test" Godot_v4.4.1-stable_linux.x86_64 --headless --max-fps 60 --script tests/menu_flow_test.gd
@@ -80,6 +80,7 @@ jobs:
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/customization_test.gd -- --fresh --test 2>&1 | tee builds/logs/render-creator.log
           XDG_DATA_HOME="$RUNNER_TEMP/render-practice" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/practice_test.gd -- --fresh --test --combat-yard 2>&1 | tee builds/logs/render-practice.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-hearth" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/hearth_visual.gd -- --test 2>&1 | tee builds/logs/render-hearth.log
+          CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-ogre" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_hearth_visual.gd -- --test 2>&1 | tee builds/logs/render-ogre.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/render-*.log; then exit 1; fi
       - name: Export and package Windows
         if: steps.release.outputs.complete != 'true'
@@ -87,13 +88,14 @@ jobs:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
           mkdir -p builds/windows
-          Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/ChiefsOfWar.exe 2>&1 | tee builds/logs/export.log
-          XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/ChiefsOfWar.exe --quit-after 120 -- --test --combat-yard 2>&1 | tee builds/logs/pack-smoke.log
+          Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/HearthAndHunger.exe 2>&1 | tee builds/logs/export.log
+          XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/HearthAndHunger.exe --quit-after 120 -- --test --combat-yard 2>&1 | tee builds/logs/pack-smoke.log
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd 2>&1 | tee builds/logs/notices.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/*.log; then exit 1; fi
           cp "$RUNNER_TEMP/review/creator.png" builds/creator.png
-          cp "$RUNNER_TEMP/review/hearth-menu.png" builds/main-menu.png
-          python3 tools/package_windows.py --exe builds/windows/ChiefsOfWar.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
+          cp "$RUNNER_TEMP/review/ogre-title.png" builds/main-menu.png
+          cp "$RUNNER_TEMP/review/ogre-hearth.png" builds/ogre-hearth.png
+          python3 tools/package_windows.py --exe builds/windows/HearthAndHunger.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
       - name: Preserve build before publication
         if: steps.release.outputs.complete != 'true'
         uses: actions/upload-artifact@v4
@@ -107,6 +109,7 @@ jobs:
             builds/SHA256SUMS-*.txt
             builds/creator.png
             builds/main-menu.png
+            builds/ogre-hearth.png
       - name: Preserve diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -128,7 +131,7 @@ jobs:
           path: dist
       - name: Verify native Windows launch and clean exit
         shell: pwsh
-        run: ./tools/verify_windows_package.ps1 -Archive (Resolve-Path 'dist/ChiefsOfWar-Windows-${{ needs.validate-and-release.outputs.version }}.zip')
+        run: ./tools/verify_windows_package.ps1 -Archive (Resolve-Path 'dist/HearthAndHunger-Windows-${{ needs.validate-and-release.outputs.version }}.zip') -GameExecutable 'HearthAndHunger.exe'
   publish:
     needs: [validate-and-release, windows-startup]
     if: needs.validate-and-release.outputs.publish == 'true' && needs.validate-and-release.outputs.complete != 'true'

@@ -62,3 +62,12 @@ See [engineering/hearth-and-steel.md](engineering/hearth-and-steel.md) for the s
 `assets/overhaul/clan_portraits.png` and `assets/overhaul/wolf.png` are generated edits made with the built-in image generator, using the project's own original portrait and wolf atlases and the approved settlement/clan concepts as references. Portrait identities and 2x2 registration are retained, and wolf poses are intended to retain the existing 4x2 atlas layout. Candidates require human approval; these are not human-drawn art.
 
 `assets/motion/source/overhaul/` holds six original AI-generated rest/stride/strike atlas edits in leather and iron, using existing motion atlases and the accepted settlement concept as references. They are unintegrated candidates, not final or human-drawn sprites; their changed dimensions and shifted pose registration require detailed review and rework.
+
+## Hearth and Hunger 0.6.0 pivot
+
+New originals generated with the built-in imagegen tool on October 30, 2026:
+- assets/ogre/hearthlord_motion.png: red-bearded, tawny heavyweight male Ogre; complete-body idle/movement atlas. Source exec-5cfa7a9a-9abf-4a31-b2db-907fba378f19.png. West and alternate front/rear contact frames mirror complete poses at runtime; no skeletal deformation.
+- assets/ogre/traveling_camp.png: covered wagon, canvas shelter, cauldron hearth and provisions. Source exec-4dbd48a7-4a3e-4486-aa39-9ab7029b7c42.png. Transparent sprite sheet; runtime UV boundaries exclude neighboring atlas items.
+- assets/ogre/menu_camp.png: nomadic-camp title background. Source exec-76d58066-260e-4012-8d8d-132e4d6b47ca.png.
+
+Style references are our existing architecture_aligned.png and menu_hearth.png. User-supplied Ogre/caravan sheets supplied anatomy/cultural ideas only. No Warcraft/Warhammer assets or heraldry were imported. These are AI-generated illustration candidates, not human-drawn art or a claim of guaranteed exclusivity. Existing engine notices remain packaged. Prompt record: docs/OGRE_ART_PROMPTS.md.

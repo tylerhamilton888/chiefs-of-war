@@ -57,6 +57,19 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "incomplete"):
             release.validate_files(self.directory, data, self.sha)
 
+    def test_pivot_package_keeps_old_release_format_compatible(self):
+        data = {**self.data, 'version': '0.6.0', 'package_layout': 'clear-launch', 'archive_prefix': 'HearthAndHunger', 'executable': 'HearthAndHunger.exe'}
+        archive, checksum = release.names(data)
+        self.assertTrue(archive.startswith('HearthAndHunger-Windows-'))
+        with zipfile.ZipFile(self.directory / archive, 'w') as package:
+            for name in ['HearthAndHunger.exe', 'START HERE.txt', 'Extras/Combat Practice.bat', 'Support/THIRD_PARTY_NOTICES.txt']:
+                package.writestr(name, 'fixture')
+            package.writestr('Support/BUILD.txt', f'Source commit: {self.sha}\n')
+        digest = hashlib.sha256((self.directory / archive).read_bytes()).hexdigest()
+        (self.directory / checksum).write_text(f'{digest}  {archive}\n')
+        self.assertEqual(len(release.validate_files(self.directory, data, self.sha)), 2)
+        self.assertEqual(len(release.validate_files(self.directory, self.data, self.sha)), 3)
+
     def test_corrupt_archive_rejected(self):
         (self.directory / release.names(self.data)[0]).write_bytes(b"truncated")
         with self.assertRaisesRegex(ValueError, "checksum"):

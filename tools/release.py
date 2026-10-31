@@ -38,7 +38,7 @@ def manifest():
 
 def names(data):
     if data.get("package_layout") == "clear-launch":
-        return (f"ChiefsOfWar-Windows-{data['version']}.zip", f"SHA256SUMS-{data['version']}.txt")
+        return (f"{data.get('archive_prefix', 'ChiefsOfWar')}-Windows-{data['version']}.zip", f"SHA256SUMS-{data['version']}.txt")
     return (f"Chiefs-of-War-{data['version']}-Windows.zip", f"SHA256SUMS-{data['version']}.txt", "creator.png")
 
 
@@ -68,7 +68,7 @@ def validate_files(directory, data, sha):
         required = {"ChiefsOfWar.exe", "README.txt", "Combat-Practice.bat", "BUILD.txt", "THIRD_PARTY_NOTICES.txt"}
         build_name = "BUILD.txt"
         if data.get("package_layout") == "clear-launch":
-            required = {"ChiefsOfWar.exe", "START HERE.txt", "Extras/Combat Practice.bat", "Support/BUILD.txt", "Support/THIRD_PARTY_NOTICES.txt"}
+            required = {data.get("executable", "ChiefsOfWar.exe"), "START HERE.txt", "Extras/Combat Practice.bat", "Support/BUILD.txt", "Support/THIRD_PARTY_NOTICES.txt"}
             build_name = "Support/BUILD.txt"
         if not required.issubset(package.namelist()) or package.testzip():
             raise ValueError("Windows ZIP is incomplete/corrupt")

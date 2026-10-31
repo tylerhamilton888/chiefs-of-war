@@ -1,8 +1,8 @@
-param([Parameter(Mandatory=$true)][string]$Archive)
+param([Parameter(Mandatory=$true)][string]$Archive, [string]$GameExecutable = 'ChiefsOfWar.exe')
 $ErrorActionPreference = 'Stop'
 $root = Join-Path $env:RUNNER_TEMP 'Chiefs of War extracted playtest'
 Expand-Archive -LiteralPath $Archive -DestinationPath $root -Force
-$exe = Join-Path $root 'ChiefsOfWar.exe'
+$exe = Join-Path $root $GameExecutable
 if (!(Test-Path -LiteralPath $exe)) { throw 'The extracted game executable is missing.' }
 $executables = @(Get-ChildItem -LiteralPath $root -Recurse -Filter '*.exe')
 if ($executables.Count -ne 1) { throw 'The player package must contain exactly one game executable.' }
@@ -30,5 +30,6 @@ New-Item -ItemType Directory -Force -Path $saveDir | Out-Null
 $save = Join-Path $saveDir 'ancestral_hearth_v1.json'
 [System.IO.File]::WriteAllText($save, 'campaign sentinel - do not overwrite')
 Invoke-GameSmoke 'optional-practice' @('--combat-yard')
+Invoke-GameSmoke 'ogre-hearth' @('--ogre-hearth')
 if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'Practice modified the campaign sentinel.' }
 Write-Host 'WINDOWS PACKAGE VERIFIED: normal entry, practice entry, campaign isolation, path with spaces, external working directory.'

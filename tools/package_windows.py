@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse
 import hashlib
+import json
 import re
 import struct
 import zipfile
@@ -21,24 +22,27 @@ def package(exe: Path, output: Path, version: str, source: str) -> Path:
     if struct.unpack_from('<H', binary, pe + 24 + 68)[0] != 2:
         raise ValueError('Expected a GUI game executable, not a console launcher')
     project = Path(__file__).resolve().parents[1]
+    settings = json.loads((project / 'release.json').read_text())
+    game_exe = settings.get('executable', 'ChiefsOfWar.exe')
+    prefix = settings.get('archive_prefix', 'ChiefsOfWar')
     notices = project / 'builds/windows/THIRD_PARTY_NOTICES.txt'
     output.mkdir(parents=True, exist_ok=True)
-    archive = output / f'ChiefsOfWar-Windows-{version}.zip'
+    archive = output / f'{prefix}-Windows-{version}.zip'
     readme = (project / 'packaging/START-HERE.txt').read_text(encoding='utf-8')
-    practice = '@echo off\r\ncd /d "%~dp0.."\r\nstart "" "ChiefsOfWar.exe" --combat-yard\r\n'
-    build = f'Chiefs of War {version}\nSource commit: {source}\nEngine: Godot 4.4.1\nPlatform: Windows x86-64\n'
+    practice = f'@echo off\r\ncd /d "%~dp0.."\r\nstart "" "{game_exe}" --combat-yard\r\n'
+    build = f"{settings.get('game_name', 'Chiefs of War')} {version}\nSource commit: {source}\nEngine: Godot 4.4.1\nPlatform: Windows x86-64\n"
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        z.writestr('ChiefsOfWar.exe', binary)
+        z.writestr(game_exe, binary)
         z.writestr('START HERE.txt', readme.replace('\n', '\r\n'))
         z.writestr('Extras/Combat Practice.bat', practice)
         z.writestr('Support/BUILD.txt', build)
         z.write(notices, 'Support/THIRD_PARTY_NOTICES.txt')
-    expected = {'ChiefsOfWar.exe', 'START HERE.txt', 'Extras/Combat Practice.bat',
+    expected = {game_exe, 'START HERE.txt', 'Extras/Combat Practice.bat',
                 'Support/BUILD.txt', 'Support/THIRD_PARTY_NOTICES.txt'}
     with zipfile.ZipFile(archive) as z:
         if set(z.namelist()) != expected or z.testzip() is not None:
             raise ValueError('Distribution layout or ZIP integrity failed')
-        if z.read('ChiefsOfWar.exe') != binary:
+        if z.read(game_exe) != binary:
             raise ValueError('Archived game differs from the exported executable')
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     (output / f'SHA256SUMS-{version}.txt').write_text(f'{digest}  {archive.name}\n')

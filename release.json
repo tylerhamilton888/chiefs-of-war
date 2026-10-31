@@ -1,7 +1,10 @@
 {
-  "version": "0.5.0",
-  "title": "0.5.0 \u2014 Hearth and Steel",
-  "notes": "docs/RELEASE_0_5_0.md",
+  "version": "0.6.0",
+  "title": "Hearth and Hunger 0.6.0 \u2014 First Ogre Hearth",
+  "notes": "docs/RELEASE_0_6_0.md",
   "prerelease": true,
-  "package_layout": "clear-launch"
+  "package_layout": "clear-launch",
+  "archive_prefix": "HearthAndHunger",
+  "executable": "HearthAndHunger.exe",
+  "game_name": "Hearth and Hunger"
 }

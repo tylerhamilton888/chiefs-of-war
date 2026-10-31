@@ -1,3 +1,11 @@
+# Latest governing decision — October 30, 2026
+
+Hearth and Hunger is the new identity of this existing game. Playable people are distinct Ogres, not recolored Orcs. Preserve history, old campaigns and reusable systems. Follow the explicit staged milestones in design/hearth-and-hunger.md and source/HEARTH_AND_HUNGER_DIRECTIVE.txt.
+
+The user explicitly clarified: retain the art style **we have had**; new concept boards are **ideas to translate into that style**. The current chunky, bright, outlined 2D gameplay treatment remains the visual standard. The first new implementation is a separately saved Ogre/camp prototype while legacy campaigns remain available.
+
+---
+
 # Settled decisions
 
 Latest explicit user instructions govern. This record distinguishes user direction from implementation choices; it is not a list of new restrictions.

@@ -1,6 +1,6 @@
-# Chiefs of War — agent entry point
+# Hearth and Hunger — agent entry point
 
-Continue this existing Godot 4.4.1 / GDScript game. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
+Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. New work follows docs/design/hearth-and-hunger.md and the complete preserved pivot directive. The older Orc requirements below describe legacy campaigns; the explicit Ogre pivot supersedes them for new content. Retain our established illustrated style; attached concept sheets supply ideas only. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
 
 ## Start a session
 
