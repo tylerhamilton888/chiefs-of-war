@@ -434,7 +434,7 @@ func overpower(feed: bool, swallow: bool=false) -> bool:
     var stance=target_foe.position-Vector2(sign*76,0)
     if not has_line(player.position,stance) or not has_line(stance,target_foe.position):return false
     state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind=("swallow" if swallow else "feed") if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.sprite.hide();player.sprite.hide()
-    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material;world.add_child(execution_sprite);execution_sprite.position=player.position
+    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material.duplicate();world.add_child(execution_sprite);execution_sprite.position=player.position
     return true
 func begin_clinch(foe) -> bool:
     if execution_busy or foe.hp<=0 or player.hp<=0 or not state.cargo.is_empty():return false
@@ -442,13 +442,21 @@ func begin_clinch(foe) -> bool:
     var at=foe.position-Vector2(sign*110,0)
     if not has_line(player.position,at):return false
     player.position=at;execution_direction=Vector2(sign,0);execution_kind="clinch";execution_target=foe;execution_clock=0;execution_busy=true;execution_contact=false;clinch_result=0;player.sprite.hide();foe.sprite.hide()
-    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material;execution_sprite.position=player.position;world.add_child(execution_sprite)
+    execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material.duplicate();execution_sprite.position=player.position;world.add_child(execution_sprite)
     say("Hold your weight. F once when the ring turns gold.");return true
 func clinch_input() -> void:
     if not execution_busy or execution_kind!="clinch" or clinch_result!=0:return
     clinch_result=1 if execution_clock>=0.82 and execution_clock<=1.14 else -1
     sound("block" if clinch_result==1 else "hit")
 func execution_pose(id: String,index: int,mirror: bool) -> void:
+    # The paired art is a single illustration: target the Ogre's head on the
+    # devour sheet so crimson blood and goblin clothes keep their own colors.
+    var region=Vector4.ZERO
+    if id=="devour":
+        var heads=[Rect2(135,135,225,180),Rect2(775,135,225,185),Rect2(1370,135,235,175),Rect2(2040,135,220,180),Rect2(135,730,225,190),Rect2(745,745,240,155),Rect2(1380,730,210,160),Rect2(2040,730,260,200)]
+        var h: Rect2=heads[clampi(index,0,7)]
+        region=Vector4(h.position.x/2560.0,h.position.y/1200.0,h.end.x/2560.0,h.end.y/1200.0)
+    execution_sprite.material.set_shader_parameter("hair_region",region)
     Atlas.pose(execution_sprite,id,index,170,mirror)
     execution_sprite.position+=player.position
 func execution_tick(delta: float) -> void:
@@ -507,7 +515,7 @@ func simple_menu(title: String,copy: String) -> VBoxContainer:
 func open_creator(first_visit: bool=false) -> void:
     if execution_busy or player.mode!="idle":return
     var title="CREATE YOUR OGRE" if first_visit else "YOUR OGRE"
-    var col=simple_menu(title,"Choose a name and a beard color. These are palette styles applied to the existing illustrated Ogre and his action frames.")
+    var col=simple_menu(title,"Give your Ogre a name and choose the color of his hair and beard.")
     var row=HBoxContainer.new();row.add_theme_constant_override("separation",28);col.add_child(row)
     creator_preview=TextureRect.new();creator_preview.custom_minimum_size=Vector2(220,220)
     creator_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;creator_preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -528,7 +536,7 @@ func open_creator(first_visit: bool=false) -> void:
 func update_creator_preview(index: int) -> void:
     var material=ShaderMaterial.new();material.shader=load("res://shaders/ogre_palette.gdshader");material.set_shader_parameter("palette",index)
     creator_preview.material=material
-    creator_hint.text="The beard and some red accents change color; your body and poses remain the same."
+    creator_hint.text="Your chosen look carries into combat and work."
 func commit_creator() -> void:
     var chosen=creator_name.text.strip_edges()
     if chosen.is_empty():creator_hint.text="Give your Ogre a name to continue.";return

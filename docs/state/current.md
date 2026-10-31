@@ -2,7 +2,7 @@
 
 The user requested a player character creator with a few styles. The new Sundered Frontier creator asks for a name and offers four beard-color presets on the existing complete-body illustrated animation frames. First visit opens it; existing saves keep their progress and may open it via Esc → Change your Ogre’s name and look. Old frontier saves without appearance keys migrate to the original look; Chapter One has a separate protagonist/save. This is palette customization, not independently authored facial or hairstyle shapes. See tests/frontier_creator_test.gd and tests/frontier_first_start_test.gd. The saved character’s palette is shared with the paired execution sprite; inspect all presets, including finishing moves, and check if this unintentionally recolors other actors.
 
-Local first-start and 18 creator checks pass. Rendered visual review, full release workflow and a new Windows release are pending; do not claim 0.8.1 is published. Prior 0.8.0 remains the current published playtest.
+Local first-start and 19 creator checks pass. Actual Godot renders of all four presets and selected log/feeding actions were inspected; full release workflow and a new Windows release are pending; do not claim 0.8.1 is published. Prior 0.8.0 remains the current published playtest.
 
 ---
 

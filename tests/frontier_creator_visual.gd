@@ -22,4 +22,8 @@ func run() -> void:
     game.add_small("creator_goblin",game.player.position+Vector2(75,0),"knife",0)
     var foe=game.enemies.back();foe.active=false;foe.vulnerable=2;game.state.ferocity=100
     game.overpower(true,true);game.execution_tick(0.23);await shot("dark-swallow")
-    game.finish_execution(false);game.prepare_exit();game.queue_free();await frames(3);quit()
+    game.finish_execution(false)
+    for style in ["gold","silver"]:
+        game.player.apply_appearance(style);foe.vulnerable=2;game.state.ferocity=100
+        game.overpower(true,true);game.execution_tick(0.23);await shot(style+"-swallow");game.finish_execution(false)
+    game.prepare_exit();game.queue_free();await frames(3);quit()

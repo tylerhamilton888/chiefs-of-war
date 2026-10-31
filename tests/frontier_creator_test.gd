@@ -43,7 +43,9 @@ func run() -> void:
     game.add_small("appearance_foe",game.player.position+Vector2(75,0),"knife",0)
     var foe=game.enemies.back();foe.active=false;foe.vulnerable=2
     check(game.overpower(true),"feeding finisher starts")
-    check(game.execution_sprite.material==game.player.sprite.material,"paired animation carries selected look")
+    check(game.execution_sprite.material!=game.player.sprite.material and game.execution_sprite.material.get_shader_parameter("palette")==2,"paired animation carries an independent copy of selected look")
+    game.execution_tick(0.23)
+    check(game.execution_sprite.material.get_shader_parameter("hair_region")!=Vector4.ZERO,"paired art targets the Ogre’s head")
     game.finish_execution(false)
     game.player.weapon_pose(1);check(game.player.sprite.material.get_shader_parameter("palette")==2,"combat keeps chosen palette")
     print("FRONTIER CREATOR: %d checks, %d failures"%[checks,failures])
