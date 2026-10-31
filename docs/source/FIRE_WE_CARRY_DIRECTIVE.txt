@@ -1,0 +1,1019 @@
+# HEARTH AND HUNGER
+## Chapter One: The Fire We Carry
+### Complete Narrative, Character, World & Cutscene Development Directive
+
+**Engine:** Godot 4  
+**Language:** GDScript  
+**Project:** Hearth and Hunger (formerly Chiefs of War)  
+**Repository:** Existing GitHub repository  
+**Objective:** Implement a polished, playable opening chapter introducing the player's life as an Ogre, his family, the fall of his clan, and his first steps toward independence.
+
+---
+
+# 1. PRIMARY ASSIGNMENT
+
+Continue developing our existing Godot 4 game, *Hearth and Hunger*.
+
+We are establishing the definitive narrative framework for the opening chapter, its major characters, locations, relationships, introductory quests, and in-game cinematics.
+
+**This is an implementation directive, not merely a request for additional design documentation.**
+
+Audit the existing project before making changes. Preserve working systems, establish a safe Git checkpoint, and integrate the following narrative into actual gameplay.
+
+Do not needlessly recreate functional mechanics or replace existing artwork without reason.
+
+Our objective is an entertaining, coherent opening that introduces:
+
+- Satisfying physical gathering, crafting, and construction.
+- Responsive, brutal action combat.
+- Hunting, harvesting, eating, and feasting.
+- Ogre biology, culture, religion, and family life.
+- Animal husbandry and great beasts.
+- The nomadic traveling-camp system.
+- Memorable characters and persistent relationships.
+- Early courtship opportunities.
+- Mercenary work and the wider world.
+- The freedom to establish a personal household.
+
+**The player is an individual Ogre living in a functioning world, not merely a character progressing through a scripted story.**
+
+The opening should give him a meaningful past without prescribing his future.
+
+---
+
+# 2. CANONICAL OGRE BIOLOGY — NON-NEGOTIABLE
+
+**Ogres do not weaken as they age.**
+
+This supersedes every previous description implying that older Ogres become frail, feeble, physically diminished, or less capable because of aging.
+
+Ogres continue growing throughout their lives.
+
+Growth is rapid during childhood and adolescence, slows substantially after adulthood, and continues at diminishing rates through maturity and elderhood.
+
+An Ogre who survives several centuries may be significantly larger, stronger, and more formidable than an ordinary adult.
+
+This applies to males and females.
+
+Older Ogres may possess scars, injuries, missing limbs, or other limitations resulting from their experiences, but age itself does not cause physical decline.
+
+### Cultural implications
+
+Elders are often among the strongest and most feared members of a clan.
+
+Ancient patriarchs can be extraordinarily difficult to challenge. Ancient matriarchs may be immense, physically powerful individuals possessing centuries of experience.
+
+Succession is rarely a simple matter of waiting for an old chieftain to become weak.
+
+Ambitious younger Ogres may need to establish their own households, earn independent prestige, or confront genuinely superior opponents.
+
+**The oldest Ogre in a room may also be the most dangerous.**
+
+Apply these principles to character artwork, NPC statistics, dialogue, combat, narrative events, and future aging systems.
+
+Do not make age a universal guarantee of victory: natural variation, training, injury, equipment, and experience still matter.
+
+---
+
+# 3. CHARACTER ART DIRECTION
+
+Use our established hand-drawn, colorful, stylized fantasy-game aesthetic.
+
+The artistic influences are classic fantasy illustrations and Northern European material culture, adapted into an original Ogre civilization.
+
+The strongman proportions of Thor from *God of War Ragnarök* are useful as an anatomical reference for males, while Sif provides inspiration for feminine beauty, hairstyles, and dignified presentation.
+
+Do not copy either character.
+
+### Male Ogres
+
+Male Ogres generally possess immense shoulders, deep barrel chests, thick necks, powerful arms, enormous hands, muscular legs, strong brows, exaggerated jaws, structured noses, and distinctive lower tusks.
+
+They should resemble extraordinary heavyweight strongmen rather than conventional bodybuilders.
+
+Do not make every Ogre excessively fat.
+
+Body composition varies naturally.
+
+### Female Ogres
+
+Female Ogres should be recognizably members of the same species while retaining distinctly feminine, traditionally attractive features.
+
+They may be statuesque, voluptuous, elegant, athletic, mature, or imposing.
+
+They have strong Ogreish cheekbones and jaws, defined noses, smaller but recognizable tusks, substantial feminine physiques, and beautiful hair often styled with Nordic-inspired braids and ornaments.
+
+Avoid making every woman excessively muscular or merely a smaller male.
+
+Older female Ogres continue growing more formidable.
+
+### Individual identity
+
+**Every important Ogre must be recognizable by silhouette, face, posture, clothing, hairstyle, and equipment.**
+
+Do not generate generic Ogre bodies with different hair colors.
+
+Each named character requires consistent designs for:
+
+- Full-body gameplay artwork.
+- Four directional sprites.
+- Dialogue portraits.
+- Expressions.
+- Special illustrated cutscenes.
+- Equipment and animation states.
+
+Characters must retain recognizable features across all appearances.
+
+---
+
+# 4. THE STARTER REGION — EMBERHIDE VALE
+
+Create a coherent, interconnected starter region consisting of wilderness, temporary encampments, hunting grounds, ruins, and neighboring settlements.
+
+Avoid a giant overworld map with an oversized player icon.
+
+Use connected gameplay regions, with seamless movement where practical and sensible transitions where necessary.
+
+### Geographic layout
+
+The general relationship of locations should be:
+
+- **Emberhide Crossing:** The player's original clan camp, near the river.
+- **Northern Pines:** Forest extending north and west, with valuable timber and hunting trails.
+- **Wolfscar Hollow:** Dangerous rocky hunting grounds beyond the northern forest.
+- **Goblin Cairn:** A raider camp farther east among stony hills and ruined structures.
+- **Sundered Pass:** Mountain route leading toward the wider world.
+- **Stonebelly Host:** Larger traveling Ogre camp encountered after the attack.
+- **Blackstone Trade Post:** Fortified settlement belonging to smaller peoples, accessible through the pass.
+
+The player should feel as though he is traveling through a real landscape rather than teleporting between unrelated scenes.
+
+### Emberhide Crossing
+
+A modest nomadic Ogre settlement beside a river, protected by pine-covered hills.
+
+Include family wagons, hide tents, a sacred hearth wagon, cooking area, portable forge, beast pen, stockpiles, temporary shelters, and smaller servants' tents.
+
+It must look movable.
+
+### Northern Pines
+
+Supports gathering, woodcutting, tracking, hunting, exploration, and encounters with ordinary wildlife.
+
+### Wolfscar Hollow
+
+Contains the first serious predator encounter.
+
+Use terrain, animal behavior, and evidence of the beast's presence to establish atmosphere before combat begins.
+
+### Goblin Cairn
+
+A makeshift goblin encampment that introduces smaller intelligent enemies, group combat, and the wider conflict between peoples.
+
+### Sundered Pass
+
+A dangerous mountain crossing prone to landslides.
+
+Contains mineral deposits, ancient Ogre remains, and the first introduction to mineral-feeding beasts.
+
+### Stonebelly Host
+
+A large and impressive traveling Ogre household.
+
+This must look like a **larger caravan civilization**, not a permanent stone town.
+
+Include beast-drawn wagons, enormous portable structures, skilled workers, household areas, guards, servants, thralls, cooking fires, and Hrothgar's central hearth.
+
+### Blackstone Trade Post
+
+A fortified settlement populated primarily by smaller peoples.
+
+Introduces trade, foreign politics, mercenary contracts, and the value that other civilizations place upon Ogre strength.
+
+---
+
+# 5. THE CORE CAST
+
+Every character below must have an individually developed appearance, personality, manner of speaking, occupation, and relationship to the wider world.
+
+The characters should have recognizable habits, routines, and independent concerns.
+
+These descriptions are proposed canonical baselines, subject to subsequent approval.
+
+## BRAMM EMBERHIDE
+### The Player's Father
+
+**Life stage:** Mature adult Ogre.
+
+**Appearance:** Bramm is an enormously broad, powerful Ogre with a thick, heavily muscled torso and modest body fat. His strength comes from decades of hunting and hauling enormous carcasses.
+
+He has warm gray-brown skin, heavy brows, deep amber eyes, and a particularly substantial lower jaw with two thick outward-curving tusks.
+
+His long dark auburn hair is tied back with plain leather cord.
+
+His beard is thick, dark, and streaked with copper-colored strands. He possesses a magnificent mustache that partially conceals his upper lip.
+
+A long scar crosses his left shoulder.
+
+He wears a sleeveless wool tunic, thick leather belt, fur-lined boots, and weathered hide mantle.
+
+His preferred weapon is a tremendous hunting axe with a plain, well-maintained iron head.
+
+**Silhouette:** Massive shoulders, heavy arms, long beard, practical hunting clothes, and a large axe.
+
+**Personality:** Gruff, demanding, practical, proud, and fiercely loyal.
+
+Bramm believes young Ogres must earn their supper.
+
+His affection is expressed through instruction, teasing, harsh encouragement, and pride in his son's achievements.
+
+He has little patience for complaints but would willingly risk his life for his household.
+
+**Narrative role:** Introduces physical labor, gathering, hunting, and combat.
+
+The player should come to understand Bramm through shared activities rather than long exposition.
+
+---
+
+## SVALA EMBERHIDE
+### The Player's Mother
+
+**Life stage:** Mature adult Ogre.
+
+**Appearance:** Svala is a tall, powerfully built, traditionally beautiful Ogre woman with pale ochre skin and a broad but distinctly feminine face.
+
+She possesses prominent cheekbones, expressive gray-green eyes, a strong nose, full lips, and two short lower tusks.
+
+Her long golden-brown hair is arranged in thick braids woven with bronze rings and family ornaments.
+
+She has a substantial mature feminine figure and a commanding physical presence.
+
+She wears a deep-blue wool dress, wide leather belt, heavy boots, and fur-trimmed cloak.
+
+An iron torc bearing the Emberhide household mark identifies her standing.
+
+**Silhouette:** Tall, broad-hipped, stately, with elaborate braids and distinctive jewelry.
+
+**Personality:** Sharp-witted, proud, practical, and fiercely protective.
+
+Svala is deeply devoted to household prosperity, kinship, and the traditions of the sacred hearth.
+
+She can be warmer than Bramm, but she also expects her son to become formidable.
+
+She has a dry sense of humor and occasionally makes sport of boastful warriors.
+
+**Narrative role:** Introduces cooking, eating, feasts, religious offerings, household customs, and social relationships.
+
+---
+
+## GORUND EMBERHIDE
+### Chieftain of the Birth Clan
+
+**Life stage:** Ancient elder Ogre.
+
+**Appearance:** Gorund is among the largest Ogres of the Emberhide Clan.
+
+His extraordinary age has made him immensely formidable.
+
+He towers over ordinary adults, with a massive chest, thick neck, huge forearms, and powerful legs.
+
+His skin is dark stone-gray, leathery, and marked with old scars.
+
+His pale blue eyes are deep-set beneath a tremendous brow.
+
+His lower tusks are thick and worn.
+
+An enormous silver-white beard hangs in two heavy braids secured with iron rings.
+
+His long white hair is tied back during travel.
+
+He wears a black-bear mantle, weathered bronze torc, and layered leather garments.
+
+His ancestral axe has a broad iron head and a timber shaft polished smooth by generations of handling.
+
+**Silhouette:** Monumental gray-skinned elder with white braided beard, black fur mantle, and tremendous axe.
+
+**Personality:** Proud, stubborn, dignified, conservative, and difficult to intimidate.
+
+Gorund sincerely believes Emberhide's ancestral hunting rights must be defended.
+
+He is not a foolish or weak leader, but his pride may lead him into dangerous conflict.
+
+**Narrative role:** Represents the player's ancestral clan and its traditions.
+
+His defeat must demonstrate the danger posed by Hrothgar, not imply physical decline due to age.
+
+---
+
+## DORRIK EMBERHIDE
+### The Player's Childhood Companion
+
+**Life stage:** Young adult Ogre.
+
+**Appearance:** Dorrik is a large, exceptionally muscular young Ogre whose physique is still developing.
+
+He has reddish-brown skin, a broad face, a slightly crooked nose broken in an earlier hunting accident, and relatively short lower tusks.
+
+His hair is sandy blond, cut unevenly at the shoulders, with one thick braid falling along the right side.
+
+He wears a short, untidy blond beard and a thick mustache.
+
+His clothing is somewhat mismatched: a patched red tunic, worn leather shoulder guard, heavy boots, and a wolfskin belt.
+
+He favors a large club or crude two-handed hammer.
+
+**Silhouette:** Thick-set young warrior with unruly blond hair, crooked nose, and oversized hammer.
+
+**Personality:** Boastful, humorous, reckless, competitive, and deeply loyal.
+
+Dorrik is convinced that he and the player are destined for greatness.
+
+He frequently proposes ridiculous contests of strength.
+
+Despite his boasting, he can become genuinely frightened when faced with something far stronger than himself.
+
+How he responds to that fear should become part of his character.
+
+**Narrative role:** Companion during introductory activities.
+
+May accompany the player on the first hunt.
+
+His fate during the clan attack is influenced by player actions.
+
+If he survives, he becomes a persistent friend, rival, or potential follower.
+
+---
+
+## HROTHGAR STONEBELLY
+### The Conquering Chieftain
+
+**Life stage:** Ancient Ogre, considerably older than the ordinary adults of the Stonebelly Host.
+
+**Appearance:** Hrothgar is a monstrous physical specimen even among Ogres.
+
+He is taller and significantly more massive than the player, with immense shoulders, a deep torso, thick waist, and legs capable of supporting his tremendous bulk.
+
+He is not shapeless or comically obese. He has the powerful physique of an extraordinarily massive veteran strongman.
+
+His skin is dark ochre with a weathered, ruddy complexion.
+
+He has a huge angular jaw, prominent lower tusks, deep-set dark eyes, a broad high-bridged nose, and a distinctive scar splitting one eyebrow.
+
+His hair is dark red, streaked with iron gray, and pulled back into heavy braids.
+
+He possesses a magnificent, enormous red beard divided into several thick plaits with iron rings.
+
+He wears a black fur mantle over heavy leather, simple iron armor, and an immense ancestral torc.
+
+His preferred weapon is a brutally large iron maul.
+
+**Silhouette:** A walking mountain with enormous red beard, black fur mantle, and monumental iron maul.
+
+**Personality:** Charismatic, proud, ruthless, practical, confident, and occasionally surprisingly jovial.
+
+Hrothgar believes power establishes authority.
+
+He respects courage, strength, usefulness, and loyalty.
+
+He has little inherent concern for smaller peoples, but he is not needlessly wasteful.
+
+He may spare capable enemies and recruit them into his household.
+
+He regards the destruction of Emberhide as an ordinary consequence of Gorund's refusal to submit.
+
+He does not understand why the player should expect an apology.
+
+**Narrative role:** Main opening antagonist, later potential patron, ally, rival, or enemy.
+
+He must remain a functioning, persistent character in the world.
+
+Do not reduce him to a scripted tutorial boss who disappears afterward.
+
+---
+
+## THYRA STONEBELLY
+### Senior Matriarch of the Stonebelly Host
+
+**Life stage:** Elder female Ogre.
+
+**Appearance:** Thyra is an exceptionally large Ogre woman whose age has added tremendous stature and physical presence.
+
+She has warm gray-olive skin, a strong feminine jaw, broad cheekbones, pale green eyes, a prominent nose, and short but thick lower tusks.
+
+Her long silver-blond hair is braided into a heavy crown, with additional braids falling over her shoulders.
+
+She has a substantial, mature, feminine physique, standing broader and taller than younger women.
+
+She wears dark green wool, a broad fur mantle, and an ornate but practical iron-and-bronze necklace.
+
+Her fingers carry several heavy ancestral rings.
+
+**Silhouette:** Towering silver-haired matriarch in dark green and gray fur, crowned with thick braids.
+
+**Personality:** Proud, perceptive, politically capable, possessive of her household, and difficult to deceive.
+
+She is not particularly concerned with the suffering of outsiders but believes maintaining a prosperous household requires discipline and good judgment.
+
+She can be more calculating than Hrothgar.
+
+**Narrative role:** Introduces the internal politics of the Stonebelly household.
+
+She may judge the player according to his conduct, usefulness, and loyalty.
+
+Provides opportunities to explore household management, clan traditions, and social advancement.
+
+---
+
+# 6. EARLY ROMANCE PROSPECTS
+
+We want romance, marriage, family formation, and eventually dynastic progression to be meaningful systems.
+
+Ogre society is patriarchal, and powerful lords may maintain multiple wives as expressions of wealth, status, political influence, and dynastic ambition.
+
+However, every potential spouse must be an individual adult character with her own personality, expectations, loyalties, and preferences.
+
+Courtship should be developed through relationships, shared accomplishments, meaningful gifts, and cultural customs.
+
+**Romance is optional. The player must not be forced into any relationship.**
+
+## ASTRID EMBERHIDE
+### The Familiar Hearth
+
+**Life stage:** Young adult female Ogre.
+
+**Appearance:** Astrid is a striking young Ogre woman with a traditionally feminine, voluptuous figure and a somewhat softer, more approachable face than the older matriarchs.
+
+She has warm bronze-olive skin, high cheekbones, a rounded but clearly Ogreish jaw, a strong nose, and two small upward-curving lower tusks.
+
+Her eyes are a vivid hazel.
+
+Her long chestnut hair is usually braided loosely over one shoulder, with several escaped strands framing her face.
+
+She wears a rust-red wool dress, sturdy belt, practical boots, and a cream-colored fur mantle inherited from her family.
+
+A small bone pendant depicts the Emberhide hearth symbol.
+
+**Silhouette:** Long chestnut braid, warm red clothing, broad feminine figure, and distinctive hearth pendant.
+
+**Personality:** Warm, outspoken, playful, proud, and fiercely attached to Emberhide traditions.
+
+She has known the player for years.
+
+She enjoys teasing him about his accomplishments and shortcomings.
+
+She values family, feasting, strong households, and preserving ancestral customs.
+
+She can be surprisingly stubborn and is not automatically willing to abandon her heritage.
+
+**Relationship theme:** Continuity with the player's birth clan.
+
+Potential activities include helping surviving clansmen, recovering ancestral possessions, participating in feasts, and rebuilding the Emberhide household.
+
+Astrid must survive the initial catastrophe, although her circumstances may change.
+
+She is not automatically the player's romantic partner.
+
+---
+
+## RUNA FROSTMANE
+### The Beastkeeper
+
+**Life stage:** Young adult female Ogre.
+
+**Appearance:** Runa is a tall, attractive Ogre woman with a strong but distinctly feminine, athletic-curvy figure.
+
+Her skin is pale granite with subtle warm undertones.
+
+She has striking blue-gray eyes, strong cheekbones, a defined nose, a broad but feminine jaw, and short ivory-colored lower tusks.
+
+Her thick dark-blond hair is arranged into practical hunting braids with strips of pale leather and small bone ornaments.
+
+She wears fitted but sturdy leather working garments, a blue-gray fur-lined cloak, heavy boots, and a broad utility belt.
+
+She carries a hooked beast-handling staff and a short hunting axe.
+
+Her forearms show scars from working with difficult animals.
+
+**Silhouette:** Pale skin, blond hunting braids, blue-gray cloak, and beast-handling equipment.
+
+**Personality:** Confident, spirited, competitive, capable, and frequently amused by inexperienced hunters.
+
+Runa has tremendous affection for the great beasts she raises.
+
+She may be impatient with careless handlers and has little interest in empty boasting.
+
+She respects actual competence.
+
+**Relationship theme:** Hunting, animal husbandry, and the wandering lifestyle.
+
+Potential activities include taming beasts, preparing feed, constructing harnesses, hunting alongside trained animals, and helping raise young creatures.
+
+Introduce her after the player joins Hrothgar's host.
+
+---
+
+## EYDIS IRONBRAID
+### The Craftswoman
+
+**Life stage:** Mature adult female Ogre.
+
+**Appearance:** Eydis is a beautiful, statuesque Ogre woman with warm gray-brown skin and a substantial feminine figure.
+
+She has dark green eyes, pronounced but elegant cheekbones, a strong straight nose, and a slightly squared Ogreish jaw.
+
+Her lower tusks are short and symmetrical.
+
+Her long black hair is interwoven with copper-colored cords, forming two thick braids that fall over her chest.
+
+She wears a dark burgundy wool dress beneath a heavy leather smithing apron, with rolled sleeves and practical iron jewelry.
+
+Her hands are large and visibly strong from years of craftsmanship.
+
+**Silhouette:** Black copper-bound braids, burgundy clothing, smithing apron, and strong elegant posture.
+
+**Personality:** Ambitious, perceptive, commercially minded, dryly humorous, and independently proud.
+
+Eydis values competence, reliable bargains, fine workmanship, and material prosperity.
+
+She is interested in creating a successful household and enterprise, not merely attaching herself to the strongest warrior.
+
+**Relationship theme:** Craftsmanship, enterprise, and prosperity.
+
+Potential activities include smithing commissions, acquiring unusual materials, building caravan equipment, trading, and establishing workshops.
+
+Introduce her through the Stonebelly Host or Blackstone Trade Post.
+
+---
+
+# 7. RELATIONSHIP SYSTEM REQUIREMENTS
+
+The introductory relationship system should support:
+
+- Acquaintance.
+- Friendship.
+- Admiration.
+- Rivalry.
+- Loyalty.
+- Romantic interest.
+- Courtship eligibility.
+
+Important events should influence relationships.
+
+Do not make every romance progress through identical gifts.
+
+Each character should have different interests and expectations.
+
+Provide at least one meaningful follow-up interaction or activity for each romantic prospect.
+
+Eventually support courtship, betrothal, marriage, multiple households, children, inheritance, and dynasty formation.
+
+Do not attempt to implement the entire generational simulation in the opening milestone.
+
+The initial focus is establishing memorable adult characters who respond to player actions.
+
+---
+
+# 8. NARRATIVE QUESTLINE
+
+## Quest 1 — An Ogre Earns His Supper
+
+**Quest giver:** Bramm Emberhide.
+
+The player begins in the functioning Emberhide camp.
+
+Bramm sends him to collect timber, help transport resources, and repair a wagon.
+
+Teach movement, interaction, gathering, carrying, and construction.
+
+The materials gathered must contribute to actual world objects.
+
+Introduce Dorrik, who may challenge the player to a friendly contest of strength or woodcutting.
+
+## Quest 2 — The First Portion
+
+**Quest giver:** Svala Emberhide.
+
+The player helps prepare food and maintain the sacred traveling hearth.
+
+Introduce cooking, eating, food bonuses, and an offering to Sava.
+
+Establish the importance of provision, family, and religion.
+
+Allow the player to meet Astrid.
+
+## Quest 3 — Blood in the Pines
+
+**Quest giver:** Bramm or another experienced hunter.
+
+The player accompanies a hunting party into the Northern Pines.
+
+They follow signs of a dangerous predator toward Wolfscar Hollow.
+
+Introduce tracking, positioning, blocking, parrying, dodging, and attacking.
+
+The hunt should culminate in a properly designed combat encounter.
+
+After victory, harvest meat, hides, and trophies.
+
+## Quest 4 — The Last Feast of Emberhide
+
+The player returns to camp with the spoils.
+
+A feast is prepared.
+
+The player can speak with Bramm, Svala, Gorund, Dorrik, Astrid, and other clansmen.
+
+During the feast, scouts report that Hrothgar Stonebelly has demanded hunting rights and submission.
+
+Gorund has refused.
+
+The player experiences the tension but is not yet required to take political action.
+
+Give players time to pursue optional activities before the next major event.
+
+## Quest 5 — Smoke Over the River
+
+The player returns from an expedition or other activity and sees smoke rising from Emberhide Crossing.
+
+Hrothgar's host is attacking.
+
+This is an actual playable battle.
+
+The player fights raiders, protects familiar characters, and attempts to save members of the clan.
+
+His actions should affect which characters survive or escape where practical.
+
+The outcome is not a victory for Emberhide, but the player's resistance must matter.
+
+## Quest 6 — The Stronger Hand
+
+Hrothgar enters the battle and recognizes the player's courage.
+
+He challenges the player to single combat.
+
+The encounter must use genuine combat rules.
+
+Hrothgar is overwhelmingly experienced and powerful.
+
+The intended story is that the player loses, but exceptional performance must be acknowledged.
+
+Do not secretly ignore valid attacks.
+
+If the player achieves an unexpected victory, resolve it through a coherent alternate narrative outcome rather than breaking the game.
+
+Following defeat, Hrothgar spares the player and offers him a place in his traveling host.
+
+## Quest 7 — A New Fire
+
+The player arrives at Stonebelly Host.
+
+Introduce the greater scale and wealth of a successful Ogre clan.
+
+Show the differences in architecture, household organization, beasts, labor, and military power.
+
+Introduce Thyra Stonebelly and Runa Frostmane.
+
+The player may initially contribute through hunting, craftsmanship, labor, or martial service.
+
+These are opportunities, not permanent class restrictions.
+
+## Quest 8 — The Sundered Road
+
+A landslide has blocked a major caravan route.
+
+The player helps clear the obstruction and discovers a mineral-feeding creature.
+
+Introduce one useful large-beast interaction.
+
+A young beast may potentially be tamed or befriended.
+
+Use this quest to demonstrate that the clan travels physically through the world.
+
+## Quest 9 — Meat for Iron
+
+A foreign settlement offers a mercenary contract against goblin raiders or a dangerous monster.
+
+Introduce payment, bargaining, spoils, and reputation.
+
+The player experiences how smaller civilizations view Ogre warriors.
+
+Introduce Eydis Ironbraid.
+
+## Quest 10 — A Hearth of Your Own
+
+The player has earned sufficient resources or standing to establish a personal wagon or household area.
+
+He receives or purchases a suitable wagon, acquires basic supplies, and establishes his own hearth.
+
+Hrothgar acknowledges the accomplishment.
+
+The introductory narrative concludes.
+
+The player may now continue living within the Stonebelly Host, pursue independent travel, establish relationships, develop an enterprise, or begin building toward his own clan.
+
+**This is the transition into the open sandbox.**
+
+---
+
+# 9. CINEMATICS — BUILT INSIDE GODOT
+
+We want actual in-game cinematics, supported by special illustrated frames for major events.
+
+Do not simply replace gameplay with external video files.
+
+Build reusable cinematic functionality supporting:
+
+- Camera positioning and movement.
+- Character movement.
+- Animation playback.
+- Dialogue.
+- Sound effects.
+- Illustrated cutscene frames.
+- Controlled transitions.
+- Narrative flags.
+- Dialogue choices.
+- Saving and resuming.
+
+## Type A — In-world cinematics
+
+Use actual gameplay characters, environments, animations, and camera framing.
+
+Examples include hunting parties departing, the clan preparing to travel, warriors entering camp, and the arrival of Hrothgar's host.
+
+## Type B — Special illustrated frames
+
+Use original hand-drawn artwork for particularly important moments.
+
+The artwork must match our game aesthetic and character designs.
+
+### Required major cinematic concepts
+
+**The Burning Hearth**
+
+A wide illustrated view of the burning Emberhide encampment.
+
+Wagons are overturned, shelters burn, and Stonebelly warriors occupy the crossing.
+
+**The Fall of Gorund**
+
+Hrothgar reveals that Gorund has been defeated.
+
+Consider a brutal illustration in which he holds aloft the fallen chieftain's head, or displays evidence of a victor's feast made from the defeated chief.
+
+The purpose is to establish the terrifying brutality of Ogre politics.
+
+Use strong composition, memorable expressions, and restrained stylized violence rather than gratuitous anatomical gore.
+
+The final treatment should accommodate adjustable gore settings.
+
+**The Challenge**
+
+Hrothgar towers over the young player, his immense maul in hand.
+
+His expression suggests both intimidation and genuine interest in the younger Ogre.
+
+**The Mercy**
+
+The player lies defeated.
+
+Hrothgar's weapon strikes the ground beside him, sparing his life.
+
+**The Wandering Host**
+
+A panoramic illustration of Stonebelly's tremendous caravan crossing the northern wilderness.
+
+Show Ogre scale through enormous wagons, great beasts, servants, and the contrast with the surrounding landscape.
+
+**The First Independent Hearth**
+
+The player lights a new fire beside his own wagon.
+
+This should be a quiet, satisfying moment.
+
+He has lost his father's hearth but has earned the right to establish his own.
+
+---
+
+# 10. PORTRAITS AND WRITTEN DIALOGUE
+
+Create a polished dialogue presentation system.
+
+Dialogue should appear in a readable interface toward the bottom of the screen.
+
+Include:
+
+- Character name.
+- Illustrated portrait.
+- Written dialogue.
+- Dialogue choices.
+- Appropriate text reveal behavior.
+- Clear advance controls.
+- Persistent quest and relationship state.
+- Support for portraits with multiple expressions.
+
+Important characters should have unique portraits.
+
+Their portrait artwork must match their actual in-game features.
+
+For example, Gorund must consistently possess his dark skin, silver-white braids, distinctive tusks, and black fur.
+
+Hrothgar must retain his enormous red beard, dark fur mantle, broad jaw, and imposing features.
+
+Support expressions such as neutral, amused, proud, angry, threatening, surprised, and grieving where appropriate.
+
+Do not generate dozens of generic interchangeable portraits.
+
+Prioritize consistency and recognizability.
+
+---
+
+# 11. NPC ROUTINES AND SOCIAL LIFE
+
+Characters must behave as members of a living nomadic society.
+
+Bramm should hunt, maintain equipment, and participate in household activities.
+
+Svala should oversee cooking and important domestic functions.
+
+Gorund should interact with clan members, oversee decisions, and participate in ceremonies.
+
+Dorrik should work, train, wander, boast, and occasionally interact with the player.
+
+Astrid should have responsibilities and social connections beyond waiting for romantic dialogue.
+
+Runa should actually work with the beasts.
+
+Eydis should operate a functioning workshop or trade activity.
+
+NPCs must not simply stand permanently behind floating quest markers.
+
+Keep a manageable cast and use lightweight routines that can operate reliably in Godot.
+
+Important characters should eventually remember meaningful player interactions.
+
+Avoid excessive simulation complexity before the fundamentals work.
+
+---
+
+# 12. NARRATIVE QUALITY STANDARDS
+
+Our Ogres must not speak or behave like ordinary modern humans in fantasy costumes.
+
+Their culture is founded upon physical strength, hunger, kinship, tradition, and pragmatic self-interest.
+
+Their affection can be fierce and demanding.
+
+Their cruelty can be casual.
+
+Their humor can be coarse and boastful.
+
+Their oaths can be deeply important.
+
+Different individuals should interpret these principles differently.
+
+Avoid making all Ogres speak in identical crude sentences.
+
+Bramm is blunt and practical.
+
+Svala is sharp and controlled.
+
+Gorund is proud and ceremonial.
+
+Dorrik is boastful and excitable.
+
+Hrothgar is confident, charismatic, and occasionally unsettlingly jovial.
+
+Thyra is calculating and authoritative.
+
+Astrid is familiar and playful.
+
+Runa is competitive and direct.
+
+Eydis is commercially minded and dryly humorous.
+
+Give dialogue personality without becoming excessively verbose.
+
+---
+
+# 13. GAMEPLAY INTEGRATION
+
+Narrative scenes must support rather than undermine our core gameplay.
+
+Combat should remain responsive and properly animated.
+
+The initial hunt should involve genuine tracking and fighting.
+
+Gathering tasks should contribute to actual construction or resources.
+
+Cooking should provide usable food.
+
+The caravan should physically function.
+
+Characters should have meaningful interactions.
+
+Players should experience at least one example of each important system before the opening ends.
+
+Do not mask unfinished mechanics with cutscenes.
+
+**A good narrative cannot compensate for an unresponsive or unpleasant gameplay loop.**
+
+---
+
+# 14. IMPLEMENTATION PRIORITIES
+
+Work in stages.
+
+### Milestone A — Narrative Foundation
+
+Audit the repository.
+
+Establish the starter-region layout.
+
+Implement the dialogue system and portrait framework.
+
+Create initial character data and reference documentation.
+
+### Milestone B — Emberhide Life
+
+Implement the original camp, Bramm, Svala, Gorund, Dorrik, and Astrid.
+
+Create initial work, cooking, hunting, and social activities.
+
+### Milestone C — The Fall
+
+Implement the attack sequence, playable defense, Hrothgar encounter, defeat resolution, and key illustrated cinematic moments.
+
+### Milestone D — Stonebelly Host
+
+Implement the larger nomadic settlement, its principal characters, and introductory tasks.
+
+### Milestone E — Wandering Hearth
+
+Implement the pass expedition, basic beast interaction, caravan movement, introductory mercenary contract, and first personal wagon.
+
+### Milestone F — Open-Ended Progression
+
+Expand relationship activities, independent work, household improvements, contracts, and opportunities beyond the introductory quests.
+
+Do not declare these milestones complete without testing their actual gameplay behavior.
+
+---
+
+# 15. ACCEPTANCE CRITERIA AND DELIVERY
+
+Before considering the opening chapter complete, verify that:
+
+1. The Godot project imports and launches correctly.
+2. The player can move and interact reliably.
+3. Named NPCs have distinct, consistent artwork.
+4. Dialogue portraits match character models.
+5. Dialogue choices work and persist.
+6. Quest progression is reliable.
+7. Hunting and combat are genuinely functional.
+8. Resources can be collected and used.
+9. Cinematics play properly.
+10. Cutscene skipping does not corrupt game state.
+11. Relevant NPCs survive, die, or change state according to supported narrative outcomes.
+12. Romance introductions work without forcing relationships.
+13. The Stonebelly Host feels significantly larger and more powerful than Emberhide Crossing.
+14. The caravan and camps look nomadic.
+15. All older Ogres remain physically formidable.
+16. The transition into sandbox gameplay functions.
+17. Save/load maintains progression and relationships.
+18. GitHub commits and any published builds are verified.
+
+Provide actual playable progress, not just plans.
+
+Maintain clear documentation and commit changes to the existing repository.
+
+If a feature cannot yet meet our quality standard, report its limitations and continue refining rather than passing it off as finished.
+
+---
+
+# FINAL CREATIVE VISION
+
+*Hearth and Hunger* begins with a young Ogre living under his father's hearth.
+
+He learns to work, hunt, fight, eat, and belong.
+
+He experiences the strength and traditions of his people.
+
+Then his world is violently transformed.
+
+His clan falls. A stronger chieftain defeats him. He is offered a new life.
+
+The player must decide what happens next.
+
+He may become a loyal warrior, wealthy craftsman, great hunter, renowned beastmaster, respected husband and father, mercenary lord, or conquering patriarch.
+
+He may preserve the Emberhide traditions, embrace Stonebelly customs, or establish something entirely new.
+
+**The opening must establish a memorable past without locking the player into a predetermined future.**
+
+Our character cast, cinematics, and relationships should give the game emotional substance.
+
+Our gathering, combat, hunting, eating, and caravan systems should make the actual experience enjoyable.
+
+And above all, the player should eventually look upon his own traveling hearth and feel that he has earned something worth protecting.
+
+**Build this as playable Godot content, preserve our existing work, and verify progress through actual testing and GitHub commits.**

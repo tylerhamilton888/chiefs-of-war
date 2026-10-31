@@ -1,0 +1,770 @@
+{
+  "bramm_work": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "A fine pair of shoulders. Let us find out whether they carry anything. Six lengths of sound timber. Our rear axle will not mend itself.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will mend the wagon.",
+        "work"
+      ],
+      [
+        "Show me how to fight.",
+        "train"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_idle": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "Check your edge. Check your footing. Then check whether your mother has noticed you standing idle.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_hunt": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "Bark torn above my shoulder. Blood on the needles. Something in Wolfscar Hollow has grown bold. Read its trail before you offer it your throat.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Dorrik can come with me.",
+        "hunt"
+      ],
+      [
+        "I will read the trail.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_feast": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "You brought meat home. Your mother is pretending not to be pleased. I shall pretend the same. Eat.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_survived": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "You came back for me. I will not spend the rest of my years thanking you. I will spend them making certain that choice was worth the trouble.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "svala_food": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "Two cuts of meat, one length for the fire. Eat a portion yourself, then set one aside for Sava. We do not ask the hearth to keep us while feeding it nothing.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will tend the pot.",
+        "close"
+      ],
+      [
+        "Remind me of the controls.",
+        "train"
+      ]
+    ],
+    "art": -1
+  },
+  "svala_idle": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "Hungry? Of course you are. The interesting question is what you have brought me.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "svala_after": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "Ash is poor building timber. We carry the living, the names, and the fire. Astrid kept the ember-pot. Do not let anyone call that a small thing.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "gorund_idle": {
+    "lines": [
+      {
+        "speaker": "gorund",
+        "text": "These pines fed our grandsires. My axe has marked their bounds for two hundred winters. Let another chief come measure them against me.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "gorund_feast": {
+    "lines": [
+      {
+        "speaker": "gorund",
+        "text": "Stonebelly asks for the crossing, the northern hunt, and our bowed heads. He may have the answer carried to him: Emberhide kneels only to lift its dead.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will take the northern trail after the feast.",
+        "ready"
+      ],
+      [
+        "There are people I wish to speak with first.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "dorrik_contest": {
+    "lines": [
+      {
+        "speaker": "dorrik",
+        "text": "Six lengths? I could carry a tree. Roots and all. Fetch six before that axle is mended and I owe you supper. Unless you intend to let your father carry you too.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "You owe me a meal if I do.",
+        "contest"
+      ],
+      [
+        "Another time.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "dorrik_after": {
+    "lines": [
+      {
+        "speaker": "dorrik",
+        "text": "I had a much finer boast prepared. Then the wolf looked at me. I am keeping the boast for something smaller.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "dorrik_idle": {
+    "lines": [
+      {
+        "speaker": "dorrik",
+        "text": "If anyone asks, the heavy end was mine.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "astrid_idle": {
+    "lines": [
+      {
+        "speaker": "astrid",
+        "text": "Your father has you hauling timber? Good. I have been hauling pots since dawn. When you become a mighty lord, remember which work made supper appear.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "astrid_memory": {
+    "lines": [
+      {
+        "speaker": "astrid",
+        "text": "Mother kept our little hearth pendant in the family coffer. I carried the living embers instead. The coffer is still at the Crossing. Bring it home, if home is to mean anything.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will recover it.",
+        "pendant"
+      ],
+      [
+        "Tell me another time.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "astrid_return": {
+    "lines": [
+      {
+        "speaker": "astrid",
+        "text": "You even kept the broken clasp. Good. I can mend a clasp. Some things should not be replaced simply because the road became hard.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "astrid_court": {
+    "lines": [
+      {
+        "speaker": "astrid",
+        "text": "You remembered what mattered to me. That earns a place beside my fire. Whether it earns anything more is something we could discover.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I would court you, Astrid.",
+        "court_astrid"
+      ],
+      [
+        "Your friendship is enough for me.",
+        "friend_astrid"
+      ]
+    ],
+    "art": -1
+  },
+  "feast": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "First the hunters. Then those who worked. Dorrik, invent a third category and you can eat it.",
+        "expression": "amused"
+      },
+      {
+        "speaker": "bramm",
+        "text": "Let the boy have the shoulder. He brought it back with his own hands.",
+        "expression": "proud"
+      },
+      {
+        "speaker": "astrid",
+        "text": "A hunter at last. I shall have to find a new insult.",
+        "expression": "amused"
+      },
+      {
+        "speaker": "gorund",
+        "text": "A rider brought Stonebelly's demand. Let him smell our feast while he waits for my answer.",
+        "expression": "angry"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "burning": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "Smoke over the river. That is our canvas. Bramm is by the west wagon; Dorrik held the eastern path. I have Astrid. Go!",
+        "expression": "angry"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": 0
+  },
+  "challenge": {
+    "lines": [
+      {
+        "speaker": "hrothgar",
+        "text": "Gorund would not yield his hunting rights. A great chief. A great mistake. This torc is all the answer his household will receive.",
+        "expression": "threatening"
+      },
+      {
+        "speaker": "hrothgar",
+        "text": "And you. Still standing, still swinging. Come, then. Show me what his hearth raised.",
+        "expression": "amused"
+      }
+    ],
+    "choices": [
+      [
+        "Face him.",
+        "duel"
+      ]
+    ],
+    "art": 2
+  },
+  "mercy": {
+    "lines": [
+      {
+        "speaker": "hrothgar",
+        "text": "Enough. A lesser creature would have begged before the second blow.",
+        "expression": "proud"
+      },
+      {
+        "speaker": "hrothgar",
+        "text": "I have broken your chief, not your usefulness. Bring your living kin. Eat at my fire. Earn the next thing you call your own.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will carry our fire onward.",
+        "join"
+      ]
+    ],
+    "art": 3
+  },
+  "victory": {
+    "lines": [
+      {
+        "speaker": "hrothgar",
+        "text": "Ha! Blood in my beard, my knees in the mud. I will remember that. So will every witness here.",
+        "expression": "surprised"
+      },
+      {
+        "speaker": "hrothgar",
+        "text": "Your chief is dead and my host holds the crossing. But your strength has bought terms. Bring your kin as my guests, and no man shall call you spoil.",
+        "expression": "proud"
+      }
+    ],
+    "choices": [
+      [
+        "My kin come under my protection.",
+        "join"
+      ]
+    ],
+    "art": 2
+  },
+  "host_arrival": {
+    "lines": [
+      {
+        "speaker": "thyra",
+        "text": "Count the wagons before you speak of a great household. Each mouth is a promise someone must keep.",
+        "expression": "neutral"
+      },
+      {
+        "speaker": "thyra",
+        "text": "Your people have places by the southern fires. Find me when you have looked about. We will discuss what your hands can earn.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": 4
+  },
+  "hrothgar_idle": {
+    "lines": [
+      {
+        "speaker": "hrothgar",
+        "text": "A wolf takes a valley because it can hold it. A chief must also feed everyone who follows him into it. Do something useful today. Surprise me.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "hrothgar_home": {
+    "lines": [
+      {
+        "speaker": "hrothgar",
+        "text": "A wagon, a fire, stores enough to refuse a bad bargain. Now you begin to understand power. Keep earning it.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "thyra_welcome": {
+    "lines": [
+      {
+        "speaker": "thyra",
+        "text": "Hunt, hammer iron, carry timber, take paid blows. I care little which. I care that your supper costs my household less than your work brings it.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will find work with Runa.",
+        "thyra"
+      ],
+      [
+        "I would look about first.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "thyra_idle": {
+    "lines": [
+      {
+        "speaker": "thyra",
+        "text": "A household can survive an enemy. Wasteful friends are another matter.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "runa_road": {
+    "lines": [
+      {
+        "speaker": "runa",
+        "text": "The Sundered Pass is choked with stone. Three falls across the road. Break them down; keep the ore. Something young and hungry has been licking the exposed seam.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I will clear the road.",
+        "road"
+      ],
+      [
+        "I will return when ready.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "runa_harness": {
+    "lines": [
+      {
+        "speaker": "runa",
+        "text": "That stone-eater will pull half a hillside if the traces fit. Two hides, two sound lengths. Make a harness that does not bite its shoulders.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Make the harness: 2 hides, 2 timber.",
+        "harness"
+      ],
+      [
+        "Not yet.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "runa_done": {
+    "lines": [
+      {
+        "speaker": "runa",
+        "text": "See? It leans into the traces instead of fighting them. You watched the beast. Most men only watch themselves. I like that.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "runa_court": {
+    "lines": [
+      {
+        "speaker": "runa",
+        "text": "Walk with me after the beasts are settled. You can tell me whether that competent pair of hands belongs to a man I should know better.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I would court you.",
+        "court_runa"
+      ],
+      [
+        "I would be your friend.",
+        "friend_runa"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_contract": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Blackstone wants three goblin raiders removed from the Cairn. Thirty coin. They asked for a smaller price. I suggested a smaller warrior.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Thirty coin is fair.",
+        "contract"
+      ],
+      [
+        "Forty. I will add two cuts of meat.",
+        "bargain"
+      ],
+      [
+        "I will consider it.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_wait": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Three raiders at Goblin Cairn. A bargain is not a song: it needs an ending before I pay for it.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_collect": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "The watchmen saw the Cairn empty. I trust frightened watchmen more than confident hunters. Shall we settle?",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Settle our agreed contract.",
+        "payment"
+      ]
+    ],
+    "art": -1
+  },
+  "paid": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Coin as promised. If you want a household, I can put a wagon beneath it. Eight timber, two hides, twenty-five coin. A fair beginning, with room to grow.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_wagon": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Eight timber, two hides, twenty-five coin. The wagon has a stout axle and room for a sleeping platform. The household you put inside is your affair.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Build my wagon.",
+        "wagon"
+      ],
+      [
+        "I need more supplies.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_forge": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Three ore and two timber. Help me finish a commission and I will hone that hunting axe properly. A sharp edge is cheaper than a dead customer.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Complete the forge commission.",
+        "forge"
+      ],
+      [
+        "Not yet.",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_done": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "A clean edge and an honest day's work. Your axe will bite deeper now. I could do business with someone who finishes what he begins.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "eydis_court": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "You kept your bargain. You have work worth doing. If you wish to speak of a future together, bring the same care to that conversation.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I would court you.",
+        "court_eydis"
+      ],
+      [
+        "Let us remain friends and partners in work.",
+        "friend_eydis"
+      ]
+    ],
+    "art": -1
+  },
+  "own_hearth": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "A small fire. That is how they all begin. Feed it. Make room for those you choose.",
+        "expression": "proud"
+      },
+      {
+        "speaker": "hrothgar",
+        "text": "Your hearth, young Emberhide. Stay with my host or take the road. What you build next is yours to answer for.",
+        "expression": "proud"
+      }
+    ],
+    "choices": [
+      [
+        "Back to the road",
+        "close"
+      ]
+    ],
+    "art": 5
+  },
+  "trade": {
+    "lines": [
+      {
+        "speaker": "eydis",
+        "text": "Meat for the pot, hides for the purse. Blackstone measures everything twice when an Ogre is watching.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "Buy 4 meat \u00b7 2 coin",
+        "buy_food"
+      ],
+      [
+        "Sell a hide \u00b7 6 coin",
+        "sell_hide"
+      ],
+      [
+        "Leave the stall",
+        "close"
+      ]
+    ],
+    "art": -1
+  }
+}

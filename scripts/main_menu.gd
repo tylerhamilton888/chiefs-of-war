@@ -6,6 +6,8 @@ func _ready() -> void:
     get_tree().auto_accept_quit=true
     var first_boot=not Slots.booted
     Slots.booted=true
+    if first_boot and "--chapter-one" in OS.get_cmdline_user_args():
+        get_tree().change_scene_to_file.call_deferred("res://scenes/fire_we_carry.tscn");return
     if first_boot and "--ogre-hearth" in OS.get_cmdline_user_args():
         get_tree().change_scene_to_file.call_deferred("res://scenes/wandering_hearth.tscn");return
     if first_boot and ("--combat-yard" in OS.get_cmdline_user_args() or "--fresh" in OS.get_cmdline_user_args()):
@@ -33,8 +35,8 @@ func build() -> void:
     content=VBoxContainer.new();content.add_theme_constant_override("separation",10);panel.add_child(content)
     var title=words("HEARTH AND HUNGER",40);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(title)
     var sub=words("A NOMADIC OGRE SANDBOX",16,"b99a66");sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(sub)
-    action("Enter the wandering hearth",ogre_hearth,content)
-    content.add_child(words("First Ogre prototype • movement, camp and provisions",15,"b5ac98"))
+    action("The Fire We Carry · Chapter One",func():get_tree().change_scene_to_file("res://scenes/fire_we_carry.tscn"),content)
+    content.add_child(words("Family, the fall of Emberhide, and a hearth of your own",15,"b5ac98"))
     content.add_child(HSeparator.new())
     var current=Slots.info(Slots.selected)
     var resume=action("Continue • "+current.name if not current.empty else "Continue • no character yet",func():launch(Slots.selected,false),content);resume.disabled=current.empty or not current.valid
@@ -49,7 +51,7 @@ func build() -> void:
     status=words("Each character has its own world, progress and checkpoints.",15,"b5ac98");content.add_child(status)
     if Slots.load_failed:status.text="That save could not be loaded. It has been preserved; choose another slot."
     var extras=HBoxContainer.new();extras.add_theme_constant_override("separation",12);content.add_child(extras)
-    for spec in [["Practice",practice],["Controls",controls],["Quit",func():get_tree().quit()]]:
+    for spec in [["First Ogre visit",ogre_hearth],["Practice",practice],["Controls",controls],["Quit",func():get_tree().quit()]]:
         var b=action(spec[0],spec[1],extras);b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
     content.get_child(2).grab_focus()
 func ogre_hearth() -> void:

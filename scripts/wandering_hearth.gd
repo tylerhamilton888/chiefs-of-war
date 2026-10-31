@@ -20,7 +20,7 @@ var supplies: Array=[]
 var nearest: Dictionary={}
 var save_clock=0.0
 var leaving=false
-var sound: AudioStreamPlayer
+var sfx: AudioStreamPlayer
 var ambient: AudioStreamPlayer
 var helper=Menu.new()
 func _ready() -> void:
@@ -33,7 +33,7 @@ func _ready() -> void:
     var loaded=state.load_game()
     build_world()
     build_ui()
-    sound=AudioStreamPlayer.new();sound.volume_db=-17;add_child(sound)
+    sfx=AudioStreamPlayer.new();sfx.volume_db=-17;add_child(sfx)
     ambient=AudioStreamPlayer.new();ambient.stream=load("res://assets/opener/ambient.wav");ambient.volume_db=-24;add_child(ambient)
     if not "--test" in OS.get_cmdline_user_args():ambient.play()
     say("Follow the trail for fallen timber. Bring supplies back to your hearth." if loaded else "Your Ogre save could not be read. It has been preserved; this visit will not overwrite it.")
@@ -137,7 +137,7 @@ func interact(entry: Dictionary) -> void:
     if not save_progress():say("Your action worked, but saving failed. Your previous save is preserved.")
 func play_sound(kind: String) -> void:
     var path="res://assets/opener/"+kind+".wav"
-    if ResourceLoader.exists(path):sound.stream=load(path);sound.play()
+    if ResourceLoader.exists(path):sfx.stream=load(path);sfx.play()
 func say(text: String) -> void:notice.text=text
 func show_panel(title: String,body: String) -> VBoxContainer:
     for child in modal.get_children():modal.remove_child(child);child.queue_free()
