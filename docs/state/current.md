@@ -1,8 +1,8 @@
-# Hearth and Hunger 0.8.7 — Clan feast refinement, release pending
+# Hearth and Hunger 0.8.7 — Clan feast refinement, published and verified
 
 The user selected the earlier clan feast design and asked for the women to be more attractive. The feast loading image has been refined with softer feminine features while retaining broad Ogre facial anatomy, strong physiques, the clan, goblin spit and unharmed companion. The rest of the game's artwork still uses the 0.8.6 designs; this change does not replace all character art. Some visible teeth still resemble small lower tusks. Combat, saves and gameplay are unchanged.
 
-Local validation: Godot 4.4.1 import and loading transition test passed; reviewed the feast loading screen in the OpenGL renderer. Windows release publication and native Windows checks are pending. See `docs/LOADING_ART_PROMPTS.md`.
+Local validation: Godot 4.4.1 import and loading transition test passed; reviewed the feast loading screen in the OpenGL renderer. Windows release and native launch verified: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.7 . Exact release source 5116aeb34a8dd1d4cc0b8f4166f479271474b80c; successful run 41233977938. ZIP size 210733376 bytes; SHA-256 692fbce51db06cb26cd31290bbc5b6f2568aa921a5d569be44c2e4fc7d8a2e73. The workflow verified the downloaded assets and checksum. The user’s playtest remains pending. See `docs/LOADING_ART_PROMPTS.md`.
 
 ---
 
