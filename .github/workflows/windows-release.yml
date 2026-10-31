@@ -11,7 +11,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: chiefs-windows-release
+  group: hearth-windows-${{ github.ref }}
   cancel-in-progress: false
 defaults:
   run:
@@ -59,7 +59,7 @@ jobs:
           check_godot() {
             local log="builds/logs/$1.log"
             shift
-            "$@" 2>&1 | tee "$log"
+            timeout 300s "$@" 2>&1 | tee "$log"
             if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' "$log"; then return 1; fi
           }
           check_godot import Godot_v4.4.1-stable_linux.x86_64 --headless --editor --import --quit
