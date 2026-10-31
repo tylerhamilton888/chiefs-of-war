@@ -1,29 +1,24 @@
-HEARTH AND HUNGER — FIRST OGRE HEARTH
+HEARTH AND HUNGER — THE FIRE WE CARRY
 
-PLAY
-1. Right-click the ZIP and choose Extract All.
-2. Open the extracted folder.
-3. Double-click HearthAndHunger.exe.
-No Godot installation is needed.
+1. Use Windows "Extract All" on the downloaded ZIP.
+2. Open the extracted folder and double-click HearthAndHunger.exe.
+3. Choose "The Fire We Carry · Chapter One".
 
-Choose Enter the wandering hearth for the new Ogre prototype.
-WASD moves. E interacts. F5 saves. Esc opens the menu.
-Collect fallen timber, take meat from your provisions, and cook at the hearth.
-Your Ogre progress resumes on your next visit.
+Start as a young Ogre at your family's traveling hearth. Work, hunt and feast;
+face the fall of Emberhide; earn a place in the Stonebelly Host and eventually
+a wagon and hearth of your own.
 
-This first playable pivot contains movement, a campsite, collecting and cooking.
-Ogre combat, equipping armor/weapons, wagon travel and family systems are pending.
+WASD: move    E: interact    LMB: attack toward cursor
+RMB: hold to block toward cursor; press just before impact to parry
+Space: dodge    Q: eat meal    J: journal/routes    I: belongings
+F5: save    Esc: pause
+Dialogue: Space/Enter reveals and advances; Esc skips to final choices.
+Household: pack at your wagon, travel, then B settles in a safe region.
 
-EARLIER CHARACTERS
-Earlier campaigns keeps your existing Chiefs of War slots, creator and combat.
-Its controls: WASD move, LMB axe, RMB block/parry, Space dodge, E interact,
-I belongings, J journal, F earned finisher, F5 save, Esc pause.
-Extras/Combat Practice.bat opens the earlier unsaved combat yard.
+Chapter One autosaves independently. Earlier campaigns and the first Ogre
+visit remain available from the title; they are never overwritten by this chapter.
+The optional combat practice launcher is in Extras. It uses the original campaign.
+Build/source information and engine notices are in Support.
 
-YOUR SAVES
-The rename preserves the original save folder:
-%APPDATA%\Godot\app_userdata\Chiefs of War\
-Old campaign: ancestral_hearth_v1.json (slot one), with separate slots two/three.
-New Ogre prototype: wandering_hearth_v1.json.
-Downloading this build does not erase your existing characters.
-Build information and engine notices are in Support.
+This is the first playable Chapter One release. Expanded equipment, marriage,
+children and a full dynasty simulation are later milestones.

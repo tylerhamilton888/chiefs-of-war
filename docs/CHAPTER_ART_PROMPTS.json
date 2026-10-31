@@ -1,0 +1,83 @@
+{
+  "tool": "built-in image_gen; no CLI fallback; generated illustrations, not human-drawn art",
+  "input": "User attachment FIRE_WE_CARRY_DIRECTIVE.txt plus established game sprite reference assets/ogre/hearthlord_motion.png. Concept sheets are design ideas, not a rendering-style replacement.",
+  "npc_reference": "assets/ogre/hearthlord_motion.png",
+  "npc_atlas_prompt": "Original bright illustrated 2D game Hearth and Hunger production atlas. Crisp dark warm outlines, chunky readable forms, selective flat painted shading; upright massive adult tusked Ogres, not green Orcs. For each character below generate a separate exact four-column, three-row transparent sheet, twelve fully connected figures with generous gutters, no text, shadows, grids or detached gear. Row 1 south/front, row 2 east/right profile, row 3 north/back. Columns relaxed upright idle, left-foot-forward walk, passing walk, right-foot-forward walk. Identical anatomy, face, outfit and hair across views, full boots visible. Reference supplies rendering style only; each named character must be distinct. Female Ogres retain traditionally feminine proportions and individual silhouettes.",
+  "character_specs": [
+    [
+      "bramm",
+      "Mature father Bramm: warm gray brown skin, dark auburn tied hair, thick copper black beard, magnificent mustache, amber eyes, huge jaw and outward tusks, scar left shoulder, sleeveless muted wool tunic, weathered brown hide mantle, thick belt, fur boots, plain big hunting axe carried in his right hand. Powerful deep-chested upright strongman, modest belly."
+    ],
+    [
+      "svala",
+      "Mature mother Svala: pale ochre skin, gray green eyes, broad traditionally beautiful feminine Ogre face, prominent nose and cheekbones, short tusks, golden brown thick braids with bronze rings, deep blue wool dress wide belt and fur cloak, iron torc, heavy boots. Tall substantial powerful feminine figure, confident upright posture."
+    ],
+    [
+      "gorund",
+      "Ancient clan chief Gorund: monumental extraordinarily muscular strongman MUCH larger broader than other Ogres, stone gray scarred skin, pale blue eyes, huge worn tusks, enormous silver white two braid beard iron rings, tied white hair, BLACK bear fur mantle, bronze torc, layered dark leather, huge ancestral axe. Ancient yet upright and exceptionally powerful, never frail."
+    ],
+    [
+      "dorrik",
+      "Dorrik young adult male Ogre: reddish brown skin, huge muscular strongman but leaner youthful shoulders, crooked broken nose, short tusks, uneven sandy blond shoulder hair with one right braid, untidy short blond beard and thick mustache. Patched red tunic, ONE worn leather shoulder guard, wolfskin belt, boots, giant wooden club in his hand. No fur cape. Loud mischievous proud expression."
+    ],
+    [
+      "astrid",
+      "Astrid young adult female Ogre: warm bronze olive skin, traditionally beautiful softer feminine Ogre face, broad feminine hips and full bust, strong thick legs and arms but feminine shape, hazel eyes, strong nose small upward lower tusks. Long chestnut braid over ONE shoulder and loose strands, rust red fitted wool dress with split skirt, boots belt cream fur shoulder mantle small BONE HEARTH PENDANT. Warm playfully confident expression, not muscular masculine body."
+    ],
+    [
+      "hrothgar",
+      "Hrothgar ancient MALE Ogre conqueror: immense upright extraordinarily powerful veteran strongman, deep barrel chest and muscular weightlifter's belly, dark ochre ruddy skin, angular huge jaw high bridge nose and prominent tusks dark eyes split eyebrow scar. Dark RED iron-gray heavy braids, enormous RED plaited beard with iron rings. BLACK fur mantle, heavy dark leather and simple iron cuirass, huge torc, enormous iron MAUL. His centuries make him MORE powerful, not elderly frailty. Charismatic imposing grin."
+    ],
+    [
+      "thyra",
+      "Thyra elder matriarch: towering formidable adult woman, warm gray olive skin, pale green eyes, strong FEMININE jaw cheekbones nose, short thick tusks, silver blond crown braids and shoulder braids, substantial mature beautiful curvy feminine physique with powerful arms and thighs. Dark GREEN fitted wool dress, broad GRAY fur mantle, iron and bronze necklace, ancestral rings. Authoritative assessing expression. Upright strong not frail."
+    ],
+    [
+      "runa",
+      "Runa young adult woman beastkeeper: tall attractive Ogre with athletic CURVY FEMININE figure, pale granite skin warm undertones, blue gray eyes, strong feminine face, short ivory tusks. Dark blond hunting braids tied pale leather bone ornaments. Fitted leather work garments, BLUE GRAY cloak, heavy boots, broad utility belt. Hooked beast handling staff naturally in one hand short axe at belt. Scarred forearms. Confident spirited expression."
+    ],
+    [
+      "eydis",
+      "Eydis mature adult woman craftswoman: statuesque beautiful feminine Ogre, warm gray brown skin, dark green eyes, prominent elegant cheekbones straight nose softly squared feminine jaw short symmetrical lower tusks, long BLACK two thick front braids with COPPER cords. Dark BURGUNDY wool dress heavy LEATHER SMITH APRON rolled sleeves practical iron jewelry, big strong hands. Substantial traditionally feminine full bust broad hips and strong legs. Independent dryly amused face, strong elegant posture. No fur cloak."
+    ]
+  ],
+  "action_prompts": [
+    [
+      "player_combat",
+      "/workspace/scratch/8fccb4c3783e/chiefs-of-war/assets/ogre/hearthlord_motion.png",
+      "Create the actual equipped COMBAT animation atlas for the SAME red-bearded young adult Ogre player in reference: tawny skin, cream fur shoulders, bare massive muscular strongman torso modest belly, red loincloth blue dark trousers fur boots leather bracers. Keep face, hair, body proportions, outfit perfectly consistent. Equip plain heavy iron hunting axe actually gripped in both hands. EXACT FOUR columns THREE rows. Row1 SOUTH forward, row2 RIGHT EAST profile, row3 BACK NORTH. Each column: 1 ready upright axe held low; 2 strongly readable anticipation lifting axe over shoulder; 3 decisive full body forward axe strike with committed weight followthrough, blade sweeps front at chest height; 4 braced block with axe haft across chest. Whole connected figures each independently drawn, no detached gear. Ample empty gutters to fit full axe arc all 12 cells. Match attached crisp warm outlined bright chunky 2D painted game art. TRANSPARENT square1536px sheet. No UI labels shadows decorations. No stretch deformation. Upright powerful relaxed posture not hunched."
+    ],
+    [
+      "hrothgar_combat",
+      "/workspace/scratch/8fccb4c3783e/generated_images/exec-8d577d2b-1494-472c-a498-ecca5b1c75f6.png",
+      "Create COMBAT animation atlas of EXACT same ancient immensely powerful red-bearded Ogre chief Hrothgar shown in reference, black fur shoulders dark leather armor, iron maul, dark ochre skin massive jaw, red braids darkiron rings, keep all identity and attire. Four columns THREE rows fullbody frames 12total. Row1 SOUTH, row2 RIGHT EAST, row3 NORTH BACK. Col1 upright ready maul low, col2 big threatening overhead maul windup both hands on haft, col3 devastating committed maul strike down and forward at opponent, col4 braced defensive maul haft across chest. Weapon stays in hands, whole connected independently illustrated body. Consistent actual body size ignoring raised maul height. Large transparent gutters, none overlaps, no text or shadows. Bright warm chunky inked cel painting same style. Pure TRANSPARENT 1536 square sprite sheet."
+    ],
+    [
+      "beast",
+      null,
+      "Production fullbody creature sprite atlas for bright chunky inked illustrated 2D fantasy game. Original young mineral-eating pack beast: huge barrel-bodied gray woolly rhinoceros-like quadruped, short blunt mineral-dusted snout small ivory side tusks, wide kind eyes, plates of slate stone along shoulders, enormous four hoofed feet, dark rough fur, simple leather traces and wooden yoke fitted naturally to body. Friendly but powerful practical work animal, no decorative glow. Crisp dark brown outlines warm gray blue slate shading rich ochre leather, readable classic illustrated strategy game style. FOUR columns THREE rows. Row1 RIGHT EAST profile, row2 SOUTH front, row3 NORTH back. Columns standing, walk left foreleg, walk passing, walk right foreleg. 12 complete connected beasts equally sized ample gutters, pure TRANSPARENT backdrop. No human no text no grid no floor shadow, 1536 square."
+    ]
+  ],
+  "portrait_prompt": "Three separate sheets, each exactly three columns by three rows of shoulder/head portraits. Rows match the supplied individual character references: Bramm/Svala/Gorund; Dorrik/Astrid/Hrothgar; Thyra/Runa/Eydis. Columns neutral speaking, warm amused/proud, angry/grieving serious. Retain exact face, skin, hair, beard, tusks, attire and individual proportions. Crisp chunky dark warm outlines and bright cel painting as the game sprite references; transparent background, no labels, frames or shadows.",
+  "cinematic_prompt": "Create a 2-column by 3-row SHEET of SIX landscape in-game cinematic illustrations, all panels equal size edge-to-edge, no text or captions. Original Hearth and Hunger illustrated 2D fantasy, use attached character sheets as exact identity and bright chunky dark-ink/cel-painted rendering style references. NOT sepia realism. Reference1 young player red beard white fur bare strongman torso red loincloth; reference2 giant ANCIENT Hrothgar red beard BLACK fur iron maul; reference3 Gorund monumental gray skin silver twin-braid beard black bear mantle. They are distinct tusked Ogres, all upright huge strongmen. Exact panel positions:\nTOP LEFT: THE BURNING HEARTH. Wide Emberhide riverside camp, overturned red canvas timber wagons, burning hide shelters, warriors amid smoke, pines and river behind, dramatic orange flames under blue dusk.\nTOP RIGHT: THE FALL OF GORUND. Hrothgar holding Gorund's large broken bronze torc and ancestral axe as evidence of victory beside the defeated chief's cloth-covered massive form. Restrained brutal political consequence, NO blood NO severed anatomy, fully compatible with low-gore setting.\nMIDDLE LEFT: THE CHALLENGE. Hrothgar towering 1.5 times over younger player standing fiercely with iron hunting axe, immense maul in chief's hands, burning camp backdrop, intimidation and interested grin.\nMIDDLE RIGHT: THE MERCY. Player battered seated on ground with axe beside him, Hrothgar's iron maul planted in earth beside the young Ogre sparing his life, no injury detail.\nBOTTOM LEFT: THE WANDERING HOST. Huge red cream canvas wagon caravan, woolly slate-armored rhino pack beasts and powerful tusked families crossing green northern mountain wilderness. Scale conveyed through enormous wagon wheels and tiny human traders. Portable nomadic settlement, not stone castle.\nBOTTOM RIGHT: THE FIRST INDEPENDENT HEARTH. Quiet hopeful young player lighting a small fire by his own red-canvas timber wagon beneath pines, dusk blue mountains, warm amber glow, room for a future household.\nAll panels vividly readable hand-illustrated aesthetic matching game sprites, strong scenery composition, distinct characters. 1536x1536 or larger square. No written text, no board margins.",
+  "sources": {
+    "bramm": "/workspace/scratch/8fccb4c3783e/generated_images/exec-e888857a-0a62-442e-87af-c5240f308ef3.png",
+    "svala": "/workspace/scratch/8fccb4c3783e/generated_images/exec-541b8efa-e176-43c9-98e9-e1aab9546ec0.png",
+    "gorund": "/workspace/scratch/8fccb4c3783e/generated_images/exec-4d0ea4fb-6a19-442a-80e6-6411a6beedfb.png",
+    "dorrik": "/workspace/scratch/8fccb4c3783e/generated_images/exec-da740bb1-1a31-4688-83c5-3676fba58191.png",
+    "astrid": "/workspace/scratch/8fccb4c3783e/generated_images/exec-a2d20d6d-84d0-456e-baeb-b621fe72d2cd.png",
+    "hrothgar": "/workspace/scratch/8fccb4c3783e/generated_images/exec-8d577d2b-1494-472c-a498-ecca5b1c75f6.png",
+    "thyra": "/workspace/scratch/8fccb4c3783e/generated_images/exec-fff2e304-d5f7-422e-9196-a18c8c9590f0.png",
+    "runa": "/workspace/scratch/8fccb4c3783e/generated_images/exec-dd18082c-cbdc-4755-ad52-dd49e6fca042.png",
+    "eydis": "/workspace/scratch/8fccb4c3783e/generated_images/exec-c7ffa45e-3079-4b96-a354-554ad175cc1e.png",
+    "player_combat": "/workspace/scratch/8fccb4c3783e/generated_images/exec-7c337e6b-12ca-4e2b-b6e8-fbb03e84bf21.png",
+    "hrothgar_combat": "/workspace/scratch/8fccb4c3783e/generated_images/exec-8a2d91b2-298a-4dc5-b34f-435880cdad8f.png",
+    "beast": "/workspace/scratch/8fccb4c3783e/generated_images/exec-158d6310-22ca-4619-90a1-8fd43c9f576c.png",
+    "portraits_ember": "/workspace/scratch/8fccb4c3783e/generated_images/exec-b6c566e6-8ccc-4f68-9159-2cb36594ae99.png",
+    "portraits_kin": "/workspace/scratch/8fccb4c3783e/generated_images/exec-4c09cc1e-6d69-4a81-8def-840759fcc1f6.png",
+    "portraits_host": "/workspace/scratch/8fccb4c3783e/generated_images/exec-d10305eb-9c24-455d-a212-21e90c9ecf31.png",
+    "cinematics": "/workspace/scratch/8fccb4c3783e/generated_images/exec-5ca34565-696f-466b-8b2f-b9002b096ab2.png"
+  },
+  "integration": "Copy unchanged generated PNGs into assets/chapter. Godot atlas rectangles, expression records and foot anchors live in resources/chapter. Alpha-component measurements produced metadata only; no raster edits were made. Three physical character directions with complete-body east/west mirroring; four walk poses per direction and separate authored combat states for player and Hrothgar.",
+  "acceptance": "In-engine reviewed candidates. Human acceptance of animation and proportions remains pending."
+}

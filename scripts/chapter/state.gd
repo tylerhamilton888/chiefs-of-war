@@ -11,6 +11,8 @@ var flags: Dictionary={}
 var inventory={"wood":0,"meat":0,"meals":0,"hide":0,"ore":0,"coin":0,"trophy":0}
 var relationships: Dictionary={}
 var scene: Dictionary={}
+var encounters: Dictionary={}
+var escort_x=430.0
 var collected: Array=[]
 var defeated: Array=[]
 var hp=160.0
@@ -44,7 +46,7 @@ func eat() -> bool:
 func eligible(id: String) -> bool:
     return id in ["astrid","runa","eydis"] and has(id+"_activity") and relationships[id].admiration>=2
 func pack() -> Dictionary:
-    return {"version":1,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region}
+    return {"version":1,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region,"encounters":encounters,"escort_x":escort_x}
 func save_game() -> bool:
     if unreadable:return false
     var f=FileAccess.open(SAVE+".tmp",FileAccess.WRITE)
@@ -60,7 +62,7 @@ func load_game() -> bool:
     if not valid(d):unreadable=true;return false
     region=d.region;player_position=Vector2(d.position[0],d.position[1]);chapter=int(d.chapter)
     flags=d.flags;inventory=d.inventory;relationships=d.relationships;scene=d.scene
-    collected=d.collected;defeated=d.defeated;hp=d.hp;fed=d.fed;clock=d.clock;defense_left=d.defense_left;gore=d.gore;camp_region=d.camp_region
+    collected=d.collected;defeated=d.defeated;hp=d.hp;fed=d.fed;clock=d.clock;defense_left=d.defense_left;gore=d.gore;camp_region=d.camp_region;encounters=d.encounters;escort_x=d.escort_x
     return true
 func number(value,low: float,high: float) -> bool:
     return (value is int or value is float) and is_finite(float(value)) and value>=low and value<=high
@@ -73,6 +75,9 @@ func valid(d) -> bool:
     if not d.inventory is Dictionary or not d.flags is Dictionary or not d.relationships is Dictionary or not d.scene is Dictionary:return false
     for item in inventory:
         if not d.inventory.has(item) or not number(d.inventory[item],0,100000) or d.inventory[item]!=int(d.inventory[item]):return false
+    if not d.encounters is Dictionary or d.encounters.size()>200 or not number(d.escort_x,430,1810):return false
+    for key in d.encounters:
+        if not key is String or not number(d.encounters[key],0,10000):return false
     for value in d.flags.values():
         if not value is bool:return false
     for id in PEOPLE:

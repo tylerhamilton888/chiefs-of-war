@@ -1,3 +1,7 @@
+# October 31 — The Fire We Carry
+
+The complete Chapter One directive now governs new Ogre content. Ogres of both sexes never weaken merely through aging; elders continue growing more formidable. Implement actual connected gameplay, individual family/clan characters, playable rescue/duel outcomes, optional adult courtship, physical caravan travel and a personal household. Preserve our existing illustrated style. See `design/chapter-one.md` and `source/FIRE_WE_CARRY_DIRECTIVE.txt`. Full generational simulation is explicitly outside the opening milestone.
+
 # Latest governing decision — October 30, 2026
 
 Hearth and Hunger is the new identity of this existing game. Playable people are distinct Ogres, not recolored Orcs. Preserve history, old campaigns and reusable systems. Follow the explicit staged milestones in design/hearth-and-hunger.md and source/HEARTH_AND_HUNGER_DIRECTIVE.txt.

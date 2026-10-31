@@ -1,7 +1,7 @@
 {
-  "version": "0.6.2",
-  "title": "Hearth and Hunger 0.6.2 \u2014 First Ogre Hearth",
-  "notes": "docs/RELEASE_0_6_2.md",
+  "version": "0.7.0",
+  "title": "Hearth and Hunger 0.7.0 \u2014 The Fire We Carry",
+  "notes": "docs/RELEASE_0_7_0.md",
   "prerelease": true,
   "package_layout": "clear-launch",
   "archive_prefix": "HearthAndHunger",

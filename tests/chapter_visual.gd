@@ -10,6 +10,7 @@ func shot(name: String) -> void:
 func run() -> void:
     if OS.has_environment("CHIEFS_REVIEW_DIR"):output=OS.get_environment("CHIEFS_REVIEW_DIR")
     DirAccess.make_dir_recursive_absolute(output)
+    DirAccess.remove_absolute("user://fire_we_carry_v1.json")
     game=load("res://scenes/fire_we_carry.tscn").instantiate();root.add_child(game);current_scene=game
     await frames(20);game.reveal=10000;await shot("dialogue")
     game.choose("work");await frames(5);await shot("crossing")

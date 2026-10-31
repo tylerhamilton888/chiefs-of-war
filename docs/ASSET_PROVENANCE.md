@@ -71,3 +71,7 @@ New originals generated with the built-in imagegen tool on October 30, 2026:
 - assets/ogre/menu_camp.png: nomadic-camp title background. Source exec-76d58066-260e-4012-8d8d-132e4d6b47ca.png.
 
 Style references are our existing architecture_aligned.png and menu_hearth.png. User-supplied Ogre/caravan sheets supplied anatomy/cultural ideas only. No Warcraft/Warhammer assets or heraldry were imported. These are AI-generated illustration candidates, not human-drawn art or a claim of guaranteed exclusivity. Existing engine notices remain packaged. Prompt record: docs/OGRE_ART_PROMPTS.md.
+
+## Chapter One (0.7.0)
+
+New assets under `assets/chapter/` were generated with the built-in image_gen tool using our existing sprite art for rendering style and the user's chapter directive for identities. They are generated illustrations, not human-drawn artwork. `docs/CHAPTER_ART_PROMPTS.json` records character specifications, action/portrait/cinematic prompt sets and source paths. PNG bytes are preserved; runtime atlas regions and foot anchors are metadata in `resources/chapter/`. In-engine scenes were reviewed, but final human acceptance of art and animation remains pending.

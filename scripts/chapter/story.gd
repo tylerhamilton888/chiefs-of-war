@@ -9,7 +9,7 @@ func objective() -> String:
     match s.chapter:
         0:return "AN OGRE EARNS HIS SUPPER · Bramm needs 6 timber at the damaged wagon"
         1:return "THE FIRST PORTION · Cook, eat [Q], and give Sava the first portion"
-        2:return "BLOOD IN THE PINES · Read three signs, hunt the wolf, bring home its trophy"
+        2:return "BLOOD IN THE PINES · Return to the Crossing and prepare the feast" if s.has("hunt_won") else "BLOOD IN THE PINES · Read three signs, hunt the wolf, bring home its trophy"
         3:return "THE LAST FEAST · Speak with your clan; tell Gorund when you are ready"
         4:return "SMOKE OVER THE RIVER · Defeat the blades, reach Bramm and Dorrik · %ds"%int(s.defense_left)
         5:return "THE STRONGER HAND · Face Hrothgar; every blow counts"
@@ -83,10 +83,15 @@ func action(id: String) -> void:
             s.mark("eydis_activity");s.mark("honed_axe");s.change("eydis","admiration",3);game.dialogue("eydis_done")
         "court_astrid","court_runa","court_eydis":
             var person=id.trim_prefix("court_")
-            if s.eligible(person):s.relationships[person].courting=true;s.change(person,"interest",3);game.say("%s agrees to courtship. Friendship and work remain available; no marriage has been promised."%game.cast[person].name)
+            if s.eligible(person):
+                s.relationships[person].courting=true
+                if not s.has("courted_"+person):s.mark("courted_"+person);s.change(person,"interest",3)
+                game.say("%s agrees to courtship. Friendship and work remain available; no marriage has been promised."%game.cast[person].name)
             else:game.say("Earn her trust through the work she cares about first.")
         "friend_astrid","friend_runa","friend_eydis":
-            var person=id.trim_prefix("friend_");s.relationships[person].courting=false;s.change(person,"friendship",1);game.say("Your friendship is welcome. Courtship remains your choice.")
+            var person=id.trim_prefix("friend_");s.relationships[person].courting=false
+            if not s.has("befriended_"+person):s.mark("befriended_"+person);s.change(person,"friendship",1)
+            game.say("Your friendship is welcome. Courtship remains your choice.")
         "buy_food":
             if s.pay({"coin":2}):s.inventory.meat+=4;game.say("Four cuts of meat for two coin.")
             else:game.say("You need two coin.")

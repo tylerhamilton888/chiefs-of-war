@@ -1,6 +1,6 @@
 # Hearth and Hunger — agent entry point
 
-Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. New work follows docs/design/hearth-and-hunger.md and the complete preserved pivot directive. The older Orc requirements below describe legacy campaigns; the explicit Ogre pivot supersedes them for new content. Retain our established illustrated style; attached concept sheets supply ideas only. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
+Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. New work follows docs/design/chapter-one.md and docs/source/FIRE_WE_CARRY_DIRECTIVE.txt, extending docs/design/hearth-and-hunger.md and the preserved pivot directive. The older Orc requirements below describe legacy campaigns; the explicit Ogre pivot supersedes them for new content. Retain our established illustrated style; attached concept sheets supply ideas only. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
 
 ## Start a session
 
@@ -19,7 +19,7 @@ Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. New w
 | Melee, enemies, hunting combat | `docs/design/combat-and-bestiary.md` | `docs/engineering/architecture.md` |
 | Finishers, blood, dismemberment | `docs/design/executions.md` | `scripts/execution_opener.gd`, `scripts/raider.gd` |
 | Gathering, workers, food, building | `docs/design/economy-and-building.md` | `scripts/world_state.gd`, `scripts/opener.gd` |
-| Story, characters, opening quests | `docs/design/narrative-opening.md` | `docs/state/current.md`, `scripts/opener.gd` |
+| Story, characters, opening quests | `docs/design/chapter-one.md` | `docs/engineering/chapter-one.md`, `scripts/chapter/` |
 | Tests, exports, publication | `docs/design/milestones-and-quality.md` | `docs/engineering/validation-and-release.md`, `docs/QA.md` |
 | Session loss or access failure | `docs/engineering/recovery.md` | `docs/SESSION_HANDOFF.md` |
 | Original assignment/source audit | `docs/design/development-mandate.md` | `docs/MASTER_BRIEF.md`, `docs/design/source-map.json` |

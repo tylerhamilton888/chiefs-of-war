@@ -1,0 +1,407 @@
+{
+  "bramm": {
+    "texture": "res://assets/chapter/portraits_ember.png",
+    "neutral": [
+      2,
+      12,
+      414,
+      366
+    ],
+    "amused": [
+      420,
+      12,
+      414,
+      366
+    ],
+    "proud": [
+      420,
+      12,
+      414,
+      366
+    ],
+    "angry": [
+      838,
+      12,
+      414,
+      366
+    ],
+    "threatening": [
+      838,
+      12,
+      414,
+      366
+    ],
+    "grieving": [
+      838,
+      12,
+      414,
+      366
+    ],
+    "surprised": [
+      2,
+      12,
+      414,
+      366
+    ]
+  },
+  "svala": {
+    "texture": "res://assets/chapter/portraits_ember.png",
+    "neutral": [
+      2,
+      386,
+      414,
+      395
+    ],
+    "amused": [
+      420,
+      386,
+      414,
+      395
+    ],
+    "proud": [
+      420,
+      386,
+      414,
+      395
+    ],
+    "angry": [
+      838,
+      386,
+      414,
+      395
+    ],
+    "threatening": [
+      838,
+      386,
+      414,
+      395
+    ],
+    "grieving": [
+      838,
+      386,
+      414,
+      395
+    ],
+    "surprised": [
+      2,
+      386,
+      414,
+      395
+    ]
+  },
+  "gorund": {
+    "texture": "res://assets/chapter/portraits_ember.png",
+    "neutral": [
+      2,
+      795,
+      414,
+      435
+    ],
+    "amused": [
+      420,
+      795,
+      414,
+      435
+    ],
+    "proud": [
+      420,
+      795,
+      414,
+      435
+    ],
+    "angry": [
+      838,
+      795,
+      414,
+      435
+    ],
+    "threatening": [
+      838,
+      795,
+      414,
+      435
+    ],
+    "grieving": [
+      838,
+      795,
+      414,
+      435
+    ],
+    "surprised": [
+      2,
+      795,
+      414,
+      435
+    ]
+  },
+  "dorrik": {
+    "texture": "res://assets/chapter/portraits_kin.png",
+    "neutral": [
+      4,
+      8,
+      416,
+      390
+    ],
+    "amused": [
+      423,
+      4,
+      414,
+      397
+    ],
+    "proud": [
+      423,
+      4,
+      414,
+      397
+    ],
+    "angry": [
+      839,
+      7,
+      414,
+      397
+    ],
+    "threatening": [
+      839,
+      7,
+      414,
+      397
+    ],
+    "grieving": [
+      839,
+      7,
+      414,
+      397
+    ],
+    "surprised": [
+      4,
+      8,
+      416,
+      390
+    ]
+  },
+  "astrid": {
+    "texture": "res://assets/chapter/portraits_kin.png",
+    "neutral": [
+      3,
+      406,
+      414,
+      405
+    ],
+    "amused": [
+      420,
+      404,
+      417,
+      406
+    ],
+    "proud": [
+      420,
+      404,
+      417,
+      406
+    ],
+    "angry": [
+      841,
+      408,
+      411,
+      405
+    ],
+    "threatening": [
+      841,
+      408,
+      411,
+      405
+    ],
+    "grieving": [
+      841,
+      408,
+      411,
+      405
+    ],
+    "surprised": [
+      3,
+      406,
+      414,
+      405
+    ]
+  },
+  "hrothgar": {
+    "texture": "res://assets/chapter/portraits_kin.png",
+    "neutral": [
+      4,
+      819,
+      414,
+      414
+    ],
+    "amused": [
+      420,
+      820,
+      416,
+      413
+    ],
+    "proud": [
+      420,
+      820,
+      416,
+      413
+    ],
+    "angry": [
+      838,
+      821,
+      413,
+      412
+    ],
+    "threatening": [
+      838,
+      821,
+      413,
+      412
+    ],
+    "grieving": [
+      838,
+      821,
+      413,
+      412
+    ],
+    "surprised": [
+      4,
+      819,
+      414,
+      414
+    ]
+  },
+  "thyra": {
+    "texture": "res://assets/chapter/portraits_host.png",
+    "neutral": [
+      8,
+      15,
+      405,
+      390
+    ],
+    "amused": [
+      423,
+      15,
+      411,
+      390
+    ],
+    "proud": [
+      423,
+      15,
+      411,
+      390
+    ],
+    "angry": [
+      843,
+      17,
+      406,
+      388
+    ],
+    "threatening": [
+      843,
+      17,
+      406,
+      388
+    ],
+    "grieving": [
+      843,
+      17,
+      406,
+      388
+    ],
+    "surprised": [
+      8,
+      15,
+      405,
+      390
+    ]
+  },
+  "runa": {
+    "texture": "res://assets/chapter/portraits_host.png",
+    "neutral": [
+      8,
+      411,
+      407,
+      410
+    ],
+    "amused": [
+      424,
+      411,
+      411,
+      410
+    ],
+    "proud": [
+      424,
+      411,
+      411,
+      410
+    ],
+    "angry": [
+      845,
+      411,
+      405,
+      410
+    ],
+    "threatening": [
+      845,
+      411,
+      405,
+      410
+    ],
+    "grieving": [
+      845,
+      411,
+      405,
+      410
+    ],
+    "surprised": [
+      8,
+      411,
+      407,
+      410
+    ]
+  },
+  "eydis": {
+    "texture": "res://assets/chapter/portraits_host.png",
+    "neutral": [
+      7,
+      826,
+      404,
+      406
+    ],
+    "amused": [
+      420,
+      826,
+      415,
+      407
+    ],
+    "proud": [
+      420,
+      826,
+      415,
+      407
+    ],
+    "angry": [
+      845,
+      825,
+      403,
+      409
+    ],
+    "threatening": [
+      845,
+      825,
+      403,
+      409
+    ],
+    "grieving": [
+      845,
+      825,
+      403,
+      409
+    ],
+    "surprised": [
+      7,
+      826,
+      404,
+      406
+    ]
+  }
+}

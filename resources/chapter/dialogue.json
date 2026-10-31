@@ -351,12 +351,14 @@
       {
         "speaker": "hrothgar",
         "text": "Gorund would not yield his hunting rights. A great chief. A great mistake. This torc is all the answer his household will receive.",
-        "expression": "threatening"
+        "expression": "threatening",
+        "art": 1
       },
       {
         "speaker": "hrothgar",
         "text": "And you. Still standing, still swinging. Come, then. Show me what his hearth raised.",
-        "expression": "amused"
+        "expression": "amused",
+        "art": 2
       }
     ],
     "choices": [
@@ -373,6 +375,12 @@
         "speaker": "hrothgar",
         "text": "Enough. A lesser creature would have begged before the second blow.",
         "expression": "proud"
+      },
+      {
+        "speaker": "hrothgar",
+        "text": "You put honest blows on me. I do not forget a young warrior who makes me work.",
+        "expression": "proud",
+        "requires": "duel_respected"
       },
       {
         "speaker": "hrothgar",

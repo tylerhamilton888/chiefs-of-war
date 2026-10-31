@@ -21,6 +21,7 @@ var flash=0.0
 var cooldown=0.0
 var locked=Vector2.DOWN
 var hostile=false
+var companion=false
 var ai_time=0.0
 var target: Node2D
 var combat_art: Dictionary={}
@@ -46,7 +47,7 @@ func show_frame(index: int) -> void:
     apply_region(r,walking_art,facing==1,height/float(art.height))
 func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> void:
     sprite.texture=texture;sprite.region_rect=Rect2(r[0],r[1],r[2],r[3]);sprite.flip_h=mirror
-    sprite.scale=Vector2.ONE*factor;sprite.position=Vector2(0,-r[3]*factor/2.0+3)
+    sprite.scale=Vector2.ONE*factor;sprite.position=Vector2((r[4] if r.size()>4 else 0)*factor*(-1 if mirror else 1),-r[3]*factor/2.0+3)
 func action_pose(index: int) -> void:
     if combat_art.is_empty():show_frame(1 if index==1 else 0);return
     var row=0 if facing==0 else 2 if facing==3 else 1
@@ -86,12 +87,16 @@ func _physics_process(delta: float) -> void:
         var off=target.position-position
         drive=off.normalized() if off.length()>145 else Vector2.ZERO
         if off.length()<200 and cooldown<=0 and attack_time<=0:attack(off)
+    elif companion and is_instance_valid(target):
+        var off=target.position-position
+        drive=game.route_direction(self,target.position)*0.72 if off.length()>170 else Vector2.ZERO
+        if off.length()<170:face(off)
     elif not controlled and not route.is_empty():
         rest-=delta
         if rest<=0:
             var dest=Vector2(route[route_index][0],route[route_index][1])
-            drive=(dest-position).normalized()*0.35
-            if position.distance_to(dest)<15:drive=Vector2.ZERO;rest=3.5;route_index=(route_index+1)%route.size()
+            drive=game.route_direction(self,dest)*0.35
+            if position.distance_to(dest)<35:drive=Vector2.ZERO;rest=3.5;route_index=(route_index+1)%route.size()
     if stun>0:velocity=velocity.move_toward(Vector2.ZERO,1500*delta);move_and_slide();action_pose(3)
     elif dodge_time>0:
         dodge_time=maxf(0,dodge_time-delta);velocity=locked*590;move_and_slide();action_pose(3)

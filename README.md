@@ -1,21 +1,13 @@
 # Hearth and Hunger
 
-An original 2D nomadic Ogre sandbox in Godot 4.4.1, continuing the Chiefs of War project and its history. Our existing bright, inked game style stays; the new concepts supply Ogre and traveling-clan design ideas.
+An original illustrated 2D Ogre RPG/sandbox in Godot 4.4.1, continuing Chiefs of War and preserving its history. Our existing bright, chunky, outlined game style stays; concept boards guide cultural and character ideas.
 
-## First playable pivot — 0.6.2
+[Download the Windows Chapter One build](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.7.0). Extract All, run **HearthAndHunger.exe**, choose **The Fire We Carry · Chapter One**.
 
-Choose **Enter the wandering hearth** from the title. Walk as the new strongman Ogre through a woodland camp with a covered wagon, canvas shelter, cooking hearth and provisions. Collect fallen timber, take meat from the supplies and prepare stored meals. WASD moves, E interacts, F5 saves and Esc opens the menu. Progress persists separately from earlier characters.
+The chapter goes from family work and the first hunt through the burning of Emberhide, Hrothgar's duel and Stonebelly's traveling host, to a personal wagon. Nine principal characters, seven connected areas, resource/cooking/construction gameplay, real combat and rescue outcomes, illustrated Godot cinematics, negotiated work and optional individual courtships are integrated into the existing game.
 
-This is an initial playable pivot, not a completed overhaul or sandbox. Ogre combat, equipment swapping, camp travel/deployment, beasts and family simulation remain future milestones. Generated character art and four-frame movement need user review; assets are not human-drawn.
+WASD move, E interact, LMB axe, RMB directional block/parry, Space dodge, Q eat, J journal/routes, I belongings, F5 save, Esc pause. Pack at your personal wagon, travel, then B settles it in a safe region. The chapter has an independent save; old campaigns and the first Ogre visit remain available.
 
-**[Download the verified Windows build (0.6.2)](https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.6.2/HearthAndHunger-Windows-0.6.2.zip)** · [Release and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.6.2). Extract All, then launch **HearthAndHunger.exe**. Native Windows startup/clean exit and downloaded package verification passed in run 41152724848. [Release notes](docs/RELEASE_0_6_2.md).
+This is a first playable chapter, with generated art/animation candidates still subject to human review. Interchangeable weapon/armor wardrobes and generational family simulation remain future work. See [release scope](docs/RELEASE_0_7_0.md), [chapter design](docs/design/chapter-one.md), [implementation](docs/engineering/chapter-one.md), and the [complete user directive](docs/source/FIRE_WE_CARRY_DIRECTIVE.txt).
 
-## Earlier campaigns
-
-The original characters, three save slots, appearance customization, hunting/combat, village and practice yard remain playable under Earlier campaigns. The rename preserves the original save folder and all campaign paths. [Earlier game guide](docs/LEGACY_CHIEFS_README.md). [Pre-pivot archive](https://github.com/tylerhamilton888/chiefs-of-war/tree/archive/chiefs-before-hearth-and-hunger).
-
-## Development
-
-Open project.godot with Godot 4.4.1. Main scene: scenes/main_menu.tscn. --ogre-hearth enters the new scene directly. See [governing pivot](docs/design/hearth-and-hunger.md), [implementation](docs/engineering/ogre-pivot.md), and [complete user directive](docs/source/HEARTH_AND_HUNGER_DIRECTIVE.txt).
-
-Read AGENTS.md and the current state before editing. Tests use isolated XDG_DATA_HOME; never test against user campaigns. The reusable release workflow checks imports, regressions, actual rendering, Windows export, native Windows startup and downloaded archives before publication.
+Open `project.godot` with Godot 4.4.1. Main scene: `scenes/main_menu.tscn`. `--chapter-one` launches the chapter directly; `--ogre-hearth` retains the first Ogre visit. The reusable Windows build/release workflow runs regressions, actual renders, export and native package startup checks before publication.

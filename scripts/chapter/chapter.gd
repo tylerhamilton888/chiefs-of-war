@@ -8,6 +8,8 @@ const NAMES={"crossing":"EMBERHIDE CROSSING","pines":"NORTHERN PINES","hollow":"
 const ROADS={"crossing":[["pines","north"],["host","east"]],"pines":[["crossing","south"],["hollow","north"],["cairn","east"]],"hollow":[["pines","south"]],"cairn":[["pines","west"],["trade","east"],["pass","north"]],"host":[["crossing","west"],["pass","north"],["trade","east"]],"pass":[["host","south"],["cairn","east"]],"trade":[["host","west"],["cairn","north"]]}
 var cast: Dictionary={}
 var story
+var director
+var beast_frames: Dictionary={}
 var npcs: Dictionary={}
 var enemies: Array=[]
 var region_root: Node2D
@@ -26,7 +28,13 @@ var smoke_nodes: Array=[]
 var defeat_pending=false
 func _ready() -> void:
     get_tree().auto_accept_quit=false
+    for key in {"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}:
+        if not InputMap.has_action(key):
+            InputMap.add_action(key)
+            var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
     state=ChapterState.new();var loaded=state.load_game()
+    director=preload("res://scripts/chapter/cinematic.gd").new();director.game=self;add_child(director)
+    if FileAccess.file_exists("res://resources/chapter/beast.json"):beast_frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/beast.json"))
     cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"));story=Story.new(self)
     build_world();build_ui()
     sfx=AudioStreamPlayer.new();sfx.volume_db=-16;add_child(sfx)
@@ -56,7 +64,7 @@ func build_world() -> void:
     var terrain=Terrain.new();terrain.state=ground_state;region_root.add_child(terrain)
     world=Node2D.new();world.y_sort_enabled=true;region_root.add_child(world)
     player=Actor.new();player.identity="player";player.game=self;player.position=state.player_position;player.hp=state.hp
-    player.struck.connect(player_strike);player.felled.connect(player_felled);world.add_child(player)
+    player.struck.connect(player_strike);player.felled.connect(player_felled);player.stepped.connect(func():play_sound("step"));world.add_child(player)
     camera=Camera2D.new();camera.zoom=Vector2.ONE*0.77;camera.offset=Vector2(0,-170);camera.position_smoothing_enabled=true;camera.position_smoothing_speed=8
     camera.limit_left=0;camera.limit_top=0;camera.limit_right=2260;camera.limit_bottom=1408;player.add_child(camera)
     var forest=state.region in ["pines","hollow","crossing"]
@@ -75,7 +83,7 @@ func build_world() -> void:
     if state.region=="pass":build_pass()
     if state.region in ["pines","hollow","cairn"]:build_wilds()
     build_resources()
-    if state.has("own_wagon") and state.camp_region==state.region:build_home()
+    if state.has("own_wagon") and not state.has("home_packed") and state.camp_region==state.region:build_home()
     if state.region=="crossing" and state.chapter==4:build_defense()
     if state.region=="crossing" and state.chapter==5:build_duel()
     if state.region=="crossing" and state.chapter==2 and state.has("hunt_won"):station("feast",Vector2(990,1130),"Prepare the clan feast · 2 meat")
@@ -108,7 +116,7 @@ func build_camp() -> void:
         if state.chapter>=4:
             for at in [Vector2(740,590),Vector2(1300,620),Vector2(540,660)]:fire_column(at)
     else:
-        for at in [Vector2(1780,700),Vector2(420,560),Vector2(1780,1140)]:wagon(at,0.58)
+        for at in [Vector2(1780,700),Vector2(420,560),Vector2(1880,430)]:wagon(at,0.58)
         tent(Vector2(430,1150),0.48);tent(Vector2(1600,480),0.6);tent(Vector2(1180,400),0.5)
         hearth(Vector2(1450,1150));hearth(Vector2(350,880))
         for id in ["hrothgar","thyra","runa","eydis"]:npc(id)
@@ -126,15 +134,16 @@ func npc(id: String,at: Vector2=Vector2.ZERO) -> Node2D:
     return actor
 func build_trade() -> void:
     # Reuse the old settlement's timber buildings for the smaller peoples' fixed post.
-    for at in [Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)]:tent(at,0.5)
-    for x in range(350,1900,85):world_prop("log",Vector2(x,470))
+    for i in range(3):
+        var building=preload("res://scripts/building.gd").new();building.kind=i;building.position=[Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)][i];world.add_child(building)
+    for x in range(350,1900,85):world_prop("wall",Vector2(x,470))
     wagon(Vector2(650,1080),0.5);hearth(Vector2(1160,1040))
     npc("eydis",Vector2(1380,920));station("trade",Vector2(1520,1010),"Trade · meat and hides")
     world_label("BLACKSTONE EXCHANGE",Vector2(1370,810));station("hearth",Vector2(1160,1100),"Cook at the trade hearth")
 func build_resources() -> void:
     var cycle=int(state.clock/480)
     for i in range(8):
-        var pos=Vector2(360+(i%4)*450,820+(i/4)*390)
+        var pos=[Vector2(400,850),Vector2(885,810),Vector2(1475,900),Vector2(1880,800),Vector2(500,1220),Vector2(960,1180),Vector2(1500,1260),Vector2(1940,1170)][i]
         var id="%s_wood_%d_%d"%[state.region,i,cycle]
         if not id in state.collected:
             var node=world_prop("log",pos);supplies.append({"kind":"wood","id":id,"position":pos,"text":"E  Gather 2 timber","node":node})
@@ -149,9 +158,16 @@ func build_wilds() -> void:
             var at=Vector2(820+i*130,890-i*240);station("track",at,"Read the predator's sign",str(i));world_prop("log" if i==1 else "rock",at)
             world_label(["GOUGED BARK","BLOOD ON THE NEEDLES","TRACKS INTO THE HOLLOW"][i],at-Vector2(0,45))
         add_wolf("pines_wolf_%d"%int(state.clock/480),Vector2(1660,710),false)
-        if state.has("companion") and state.chapter==2:npc("dorrik",Vector2(880,1100))
+        if state.chapter==2:
+            var father=npc("bramm",Vector2(880,1100));father.companion=true;father.target=player
+            if state.has("companion"):
+                var friend=npc("dorrik",Vector2(760,1160));friend.companion=true;friend.target=player
     elif state.region=="hollow":
         for at in [Vector2(650,600),Vector2(1450,650),Vector2(1650,950),Vector2(660,1080)]:world_prop("rock",at)
+        if state.chapter==2:
+            var father=npc("bramm",Vector2(900,1100));father.companion=true;father.target=player
+            if state.has("companion"):
+                var friend=npc("dorrik",Vector2(750,1140));friend.companion=true;friend.target=player
         if state.has("track_0") and state.has("track_1") and state.has("track_2"):add_wolf("hollow_alpha",Vector2(1130,700),true)
         else:world_label("THE TRAIL IS COLD · READ THE SIGNS IN THE PINES",Vector2(1100,800))
     else:
@@ -162,40 +178,42 @@ func add_wolf(id: String,at: Vector2,alpha: bool) -> void:
         if not ("loot_"+id) in state.collected:station("harvest",at,"Harvest the fallen wolf",id)
         return
     var wolf=Wolf.new();wolf.position=at;wolf.alpha=alpha;wolf.game=self;wolf.target=player;wolf.loot_id=id;wolf.set_meta("id",id)
-    wolf.strike.connect(enemy_strike);wolf.slain.connect(enemy_slain);world.add_child(wolf);enemies.append(wolf)
+    wolf.strike.connect(enemy_strike);wolf.slain.connect(enemy_slain);world.add_child(wolf);wolf.hp=state.encounters.get(id,wolf.hp);enemies.append(wolf)
 func add_raider(id: String,at: Vector2,kind: String) -> void:
     if id in state.defeated:return
     var foe=Raider.new();foe.kind=kind;foe.position=at;foe.game=self;foe.target=player;foe.set_meta("id",id)
-    foe.strike.connect(enemy_strike);foe.slain.connect(enemy_slain);world.add_child(foe);enemies.append(foe)
+    foe.strike.connect(enemy_strike);foe.slain.connect(enemy_slain);world.add_child(foe);foe.hp=state.encounters.get(id,foe.hp);enemies.append(foe)
 func build_defense() -> void:
     for i in range(4):add_raider("defense_%d"%i,Vector2(680+(i%2)*700,880+(i/2)*170),"orc")
     if not state.has("saved_bramm"):npc("bramm",Vector2(500,870));station("rescue",Vector2(500,900),"Get Bramm out · clear the western blades","bramm")
     if not state.has("saved_dorrik"):npc("dorrik",Vector2(1590,990));station("rescue",Vector2(1590,1020),"Get Dorrik out · clear the eastern blades","dorrik")
 func build_duel() -> void:
-    var chief=npc("hrothgar",Vector2(1320,940));chief.route=[];chief.hostile=true;chief.maximum=620;chief.hp=620;chief.target=player
+    var chief=npc("hrothgar",Vector2(1320,940));chief.route=[];chief.hostile=true;chief.maximum=620;chief.hp=state.encounters.get("duel",620);chief.target=player
     chief.struck.connect(enemy_strike);chief.felled.connect(enemy_slain);chief.set_meta("id","duel");enemies.append(chief)
 func build_pass() -> void:
     for i in range(3):
         if not state.has("rubble_"+str(i)):
             var at=Vector2(850+i*260,930);world_prop("rock",at);station("rubble",at+Vector2(0,45),"Clear the rockfall · gain 2 ore",str(i))
     beast=add_beast(Vector2(1530,740),0.55);station("beast",Vector2(1500,840),"Offer the stone-eater 3 ore")
-    caravan=wagon(escort_start if not state.has("caravan_moved") else Vector2(1810,950),0.56)
+    caravan=wagon(Vector2(state.escort_x,950) if not state.has("caravan_moved") else Vector2(1810,950),0.56)
     station("escort",Vector2(500,1020),"Lead the provision wagon through the pass")
     if state.has("escort_started") and not state.has("caravan_moved"):caravan_active=true
 func add_beast(at: Vector2,factor: float) -> Node2D:
     var b=Node2D.new();b.position=at;world.add_child(b)
     if ResourceLoader.exists("res://assets/chapter/beast.png"):
         var spr=Sprite2D.new();spr.texture=load("res://assets/chapter/beast.png");spr.region_enabled=true
-        var data=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/beast.json"));var r=data.frames[0][0]
+        var r=beast_frames.frames[0][0]
         spr.region_rect=Rect2(r[0],r[1],r[2],r[3]);spr.scale=Vector2.ONE*factor;spr.position.y=-r[3]*factor/2;b.add_child(spr)
     return b
 func build_home() -> void:
     wagon(Vector2(1800,1230),0.46);hearth(Vector2(1940,1280));station("home",Vector2(1800,1310),"Your household · rest, improve, or take the road")
     world_label("YOUR HEARTH",Vector2(1830,1110))
+    if state.has("platform"):camp_item("provisions",Vector2(1620,1300),Rect2(804,665,710,325),0.25,Vector2(140,40),Vector2(0,-16))
 func fire_column(at: Vector2) -> void:
-    # Existing hand-painted fire atlas, drawn in-world rather than a video overlay.
-    var prop=world_prop("log",at);prop.data.burning=true;prop.data.heat=1.0;smoke_nodes.append(prop)
+    # Smoke and flame are in-world effects over the existing camp illustrations.
+    var plume=preload("res://scripts/chapter/smoke.gd").new();plume.position=at+Vector2(0,80);plume.z_index=3;world.add_child(plume);smoke_nodes.append(plume)
 func rebuild() -> void:
+    director.finish()
     if is_instance_valid(region_root):remove_child(region_root);region_root.queue_free()
     build_world()
 func travel(region: String,spawn: Vector2=Vector2(1080,1000),forced: bool=false) -> void:
@@ -204,6 +222,7 @@ func travel(region: String,spawn: Vector2=Vector2(1080,1000),forced: bool=false)
         if region in ["host","trade","pass"] and state.chapter<6:say("Stonebelly warriors hold that road. Your family needs you at Emberhide Crossing.");return
         if state.chapter==3 and state.has("ready") and state.region=="crossing":state.mark("departed")
         if region=="crossing" and state.chapter==3 and state.has("departed"):state.chapter=4;state.defense_left=100
+    save_progress()
     state.hp=player.hp;state.region=region;state.player_position=spawn;rebuild();save_progress()
     say(NAMES[region].capitalize()+" · J opens your journal and the routes.")
     if state.chapter==4 and not state.has("burning_seen"):state.mark("burning_seen");dialogue("burning")
@@ -340,17 +359,17 @@ func finish_defense() -> void:
     if state.has("defense_ended"):return
     state.mark("defense_ended");state.mark("gorund_fallen");state.chapter=5
     for foe in enemies:foe.active=false
-    state.player_position=Vector2(960,1030);state.hp=maxf(110,player.hp);player.hp=state.hp
+    player.position=Vector2(960,1030);state.player_position=player.position;state.hp=maxf(110,player.hp);player.hp=state.hp
     dialogue("challenge")
 func contract_done() -> bool:return "cairn_0" in state.defeated and "cairn_1" in state.defeated and "cairn_2" in state.defeated
 func escort_tick(delta: float) -> void:
     if not is_instance_valid(caravan):return
     if player.position.distance_to(caravan.position)>400:return
-    caravan.position.x=minf(1810,caravan.position.x+100*delta)
+    caravan.position.x=minf(1810,caravan.position.x+100*delta);state.escort_x=caravan.position.x
     if is_instance_valid(beast):
         beast.position=caravan.position+Vector2(280,15)
         if beast.get_child_count()>0:
-            var spr=beast.get_child(0);var data=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/beast.json"));var r=data.frames[0][int(state.clock*5)%4];spr.region_rect=Rect2(r[0],r[1],r[2],r[3])
+            var spr=beast.get_child(0);var r=beast_frames.frames[0][int(state.clock*5)%4];spr.region_rect=Rect2(r[0],r[1],r[2],r[3])
     if caravan.position.x>=1810:
         caravan_active=false;state.mark("caravan_moved");state.chapter=maxi(8,state.chapter);state.inventory.coin+=8;state.change("thyra","admiration",2);say("The wagon clears the pass. Eight coin earned. Eydis has paid work at Blackstone, east of the Host.");save_progress()
 func has_line(from: Vector2,to: Vector2,_ignored=null) -> bool:
@@ -368,15 +387,22 @@ func player_strike(actor) -> void:
         if not is_instance_valid(foe) or foe.hp<=0:continue
         var off=foe.position-player.position
         if off.length()<145 and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
+            impact(foe.position)
             foe.receive_hit((36 if state.has("honed_axe") else 28)+(6 if state.fed>0 else 0),off.normalized());hit=true
     if hit:play_sound("hit")
     else:play_sound("swing")
+func impact(at: Vector2) -> void:
+    if not state.gore:return
+    var splash=Node2D.new();splash.position=at;splash.z_index=1;world.add_child(splash)
+    for i in range(5):
+        var drop=Polygon2D.new();drop.color=Color("7e322f");drop.polygon=PackedVector2Array([Vector2(-3,-2),Vector2(4,-1),Vector2(2,3),Vector2(-2,2)]);drop.position=Vector2.from_angle(i*2.4)*float(8+i*4);splash.add_child(drop)
+    var fade=create_tween();fade.tween_interval(0.4);fade.tween_property(splash,"modulate:a",0.0,0.4);fade.tween_callback(splash.queue_free)
 func enemy_strike(foe) -> void:
     var off=player.position-foe.position
     var reach=220 if foe is Actor else 115 if foe is Wolf else 120
     var direction=foe.locked if foe is Actor else foe.locked_direction
     if off.length()>reach or direction.dot(off.normalized())<0.1 or not has_line(foe.position,player.position):return
-    last_attacker=foe;player.receive_hit(42 if foe is Actor else 22 if foe is Wolf else 18,off.normalized());state.hp=player.hp
+    last_attacker=foe;play_sound("hit");player.receive_hit(42 if foe is Actor else 22 if foe is Wolf else 18,off.normalized());state.hp=player.hp
 func parry(_actor) -> void:
     if is_instance_valid(last_attacker):last_attacker.parried()
     say("Parried — strike while the weapon is checked.");play_sound("block")
@@ -401,6 +427,9 @@ func resolve_defeat() -> void:
         state.hp=110;state.player_position=Vector2(1080,1120);rebuild();say("You drag yourself out of danger. Your stores are intact. Eat, then try another approach.")
     defeat_pending=false
 func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F from the side","Staggered — follow through with your axe"))
+func play_sound(kind: String) -> void:
+    var files={"hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
+    if not leaving and kind in files and is_instance_valid(sfx):sfx.stream=load("res://assets/"+files[kind]+".wav");sfx.play()
 func sound(kind: String) -> void:play_sound(kind)
 func freeze(value: bool) -> void:
     player.enabled=not value
@@ -412,17 +441,22 @@ func clear_modal() -> void:
     for child in modal.get_children():modal.remove_child(child);child.queue_free()
     modal.show();freeze(true)
 func close_modal() -> void:
-    modal.hide();dialog_mode=false;map_mode=false;freeze(false)
+    modal.hide();dialog_mode=false;map_mode=false;director.finish();freeze(false)
 func dialogue(key: String,resume=false) -> void:
     if not key in story.scenes:return
     if not resume:state.scene={"key":key,"cursor":0}
     clear_modal();dialog_mode=true
     var scene=story.scenes[key];var index=mini(int(state.scene.cursor),scene.lines.size()-1);state.scene.cursor=index
-    var line=scene.lines[index];var person=line.speaker
+    var line=scene.lines[index]
+    if line.has("requires") and not state.has(line.requires):
+        state.scene.cursor+=1;dialogue(key,true);return
+    var person=line.speaker
+    director.stage(person,key)
     var shade=ColorRect.new();shade.color=Color(0.03,0.025,0.02,0.25);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
-    if scene.art>=0 and ResourceLoader.exists("res://assets/chapter/cinematics.png"):
+    var illustration=line.get("art",scene.art)
+    if illustration>=0 and ResourceLoader.exists("res://assets/chapter/cinematics.png"):
         var art=TextureRect.new();var atlas=AtlasTexture.new();atlas.atlas=load("res://assets/chapter/cinematics.png")
-        var width=atlas.atlas.get_width()/2.0;var height=atlas.atlas.get_height()/3.0;atlas.region=Rect2((scene.art%2)*width,int(scene.art/2)*height,width,height)
+        var width=atlas.atlas.get_width()/2.0;var height=atlas.atlas.get_height()/3.0;atlas.region=Rect2((int(illustration)%2)*width,int(illustration/2)*height,width,height)
         art.texture=atlas;art.position=Vector2(250,130);art.size=Vector2(780,350);art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;modal.add_child(art)
     var box=panel(Vector2(20,495),Vector2(1240,288));modal.add_child(box)
     var row=HBoxContainer.new();row.add_theme_constant_override("separation",22);box.add_child(row)
@@ -448,11 +482,11 @@ func portrait_texture(person: String,expression: String="neutral") -> Texture2D:
     if FileAccess.file_exists(expr_path):
         var expressions=JSON.parse_string(FileAccess.get_file_as_string(expr_path))
         if expressions.has(person):
-            var e=expressions[person].get(expression,expressions[person].neutral);atlas.atlas=load("res://assets/chapter/portraits.png");atlas.region=Rect2(e[0],e[1],e[2],e[3])
+            var e=expressions[person].get(expression,expressions[person].neutral);atlas.atlas=load(expressions[person].texture);atlas.region=Rect2(e[0],e[1],e[2],e[3])
     return atlas
 func advance_dialogue() -> void:
     if not dialog_mode:return
-    if dialog_text.visible_characters<dialog_text.text.length():reveal=100000;dialog_text.visible_characters=-1;return
+    if dialog_text.visible_characters>=0 and dialog_text.visible_characters<dialog_text.text.length():reveal=100000;dialog_text.visible_characters=-1;return
     var scene=story.scenes[state.scene.key]
     if state.scene.cursor<scene.lines.size()-1:state.scene.cursor+=1;dialogue(state.scene.key,true)
     elif scene.choices.size()==1:choose(scene.choices[0][1])
@@ -463,7 +497,10 @@ func choose(action: String) -> void:
     state.scene={};close_modal();story.action(action);save_progress()
 func save_progress() -> bool:
     if not is_instance_valid(player):return false
-    state.player_position=player.position;state.hp=player.hp;return state.save_game()
+    state.player_position=player.position;state.hp=player.hp
+    for foe in enemies:
+        if is_instance_valid(foe):state.encounters[foe.get_meta("id","")]=foe.hp
+    return state.save_game()
 func simple_menu(title: String,copy: String) -> VBoxContainer:
     clear_modal();var shade=ColorRect.new();shade.color=Color(0.03,0.03,0.02,0.7);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
     var box=panel(Vector2(150,145),Vector2(980,520));modal.add_child(box);var col=VBoxContainer.new();col.add_theme_constant_override("separation",12);box.add_child(col)
@@ -472,6 +509,7 @@ func pause_menu() -> void:
     var col=simple_menu("THE FIRE WE CARRY","The chapter autosaves. Earlier campaigns and the first Ogre visit have separate saves.")
     helper.action("Return to the fire",close_modal,col)
     helper.action("Journal and routes",journal,col)
+    helper.action("Stylized blood: "+("on" if state.gore else "off"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)
 func belongings() -> void:
@@ -488,12 +526,15 @@ func journal() -> void:
         var rel=state.relationships[id];text+="%s: %s · admiration %d · loyalty %d\n"%[cast[id].name,"courting" if rel.courting else "acquainted" if rel.met else "not yet met",rel.admiration,rel.loyalty]
     var col=simple_menu("JOURNAL · CHAPTER ONE",text);helper.action("Return to the road",close_modal,col)
 func home_menu() -> void:
-    var col=simple_menu("YOUR HOUSEHOLD","A wagon, a fire, and a claim on your own future. Rest restores health. Add a sleeping platform for six timber. You may settle in another safe region after traveling there.")
+    var col=simple_menu("YOUR HOUSEHOLD","A wagon, a fire, and a claim on your own future. Rest restores health. Add dry provision racks for six timber. You may settle in another safe region after traveling there.")
     helper.action("Rest beside your hearth",func():player.hp=160;state.hp=160;close_modal();save_progress(),col)
-    helper.action("Build the sleeping platform · 6 timber",func():
-        if state.has("platform"):say("Your sleeping platform is already built.")
-        elif state.pay({"wood":6}):state.mark("platform");state.inventory.meals+=3;say("A sleeping platform and dry stores fitted. Three meals stocked.")
+    helper.action("Build the provision racks · 6 timber",func():
+        if state.has("platform"):say("Your provision racks is already built.")
+        elif state.pay({"wood":6}):state.mark("platform");state.inventory.meals+=3;say("Dry provision racks and dry stores fitted. Three meals stocked.")
         else:say("Six timber needed.")
-        close_modal();save_progress(),col)
-    helper.action("Pack for the road",func():state.mark("home_packed");close_modal();say("Your household is packed. Press B in a safe region to settle it there.");save_progress(),col)
+        state.player_position=player.position;close_modal();rebuild();save_progress(),col)
+    helper.action("Pack for the road",func():state.mark("home_packed");state.player_position=player.position;close_modal();rebuild();say("Your household is packed. Press B in a safe region to settle it there.");save_progress(),col)
     helper.action("Return",close_modal,col)
+
+func prepare_exit() -> void:
+    director.finish();freeze(true);super.prepare_exit()
