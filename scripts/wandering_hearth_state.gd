@@ -43,4 +43,4 @@ func valid(data: Variant) -> bool:
     if not data.get("position") is Array or data.position.size()!=2:return false
     for n in data.position:
         if not (n is float or n is int) or not is_finite(n):return false
-    return data.position[0]>=60 and data.position[0]<=2200 and data.position[1]>=80 and data.position[1]<=1310
+    return data.position[0]>=60 and data.position[0]<=2200 and data.position[1]>=40 and data.position[1]<=1360

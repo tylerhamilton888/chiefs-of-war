@@ -2,13 +2,13 @@
 
 An original 2D nomadic Ogre sandbox in Godot 4.4.1, continuing the Chiefs of War project and its history. Our existing bright, inked game style stays; the new concepts supply Ogre and traveling-clan design ideas.
 
-## First playable pivot — 0.6.0
+## First playable pivot — 0.6.1
 
 Choose **Enter the wandering hearth** from the title. Walk as the new strongman Ogre through a woodland camp with a covered wagon, canvas shelter, cooking hearth and provisions. Collect fallen timber, take meat from the supplies and prepare stored meals. WASD moves, E interacts, F5 saves and Esc opens the menu. Progress persists separately from earlier characters.
 
 This is an initial playable pivot, not a completed overhaul or sandbox. Ogre combat, equipment swapping, camp travel/deployment, beasts and family simulation remain future milestones. Generated character art and four-frame movement need user review; assets are not human-drawn.
 
-The Windows package uses **HearthAndHunger.exe**. See [0.6.0 release notes](docs/RELEASE_0_6_0.md). Publication is complete only when the GitHub release contains the verified ZIP and checksum.
+The Windows package uses **HearthAndHunger.exe**. See [0.6.1 release notes](docs/RELEASE_0_6_1.md). Publication is complete only when the GitHub release contains the verified ZIP and checksum.
 
 ## Earlier campaigns
 

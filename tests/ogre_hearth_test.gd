@@ -25,6 +25,13 @@ func run():
     player.drive=Vector2.ZERO;await frames(12)
     check(player.velocity.length()<1,"Movement stops without sliding")
     check(player.frame_index==0,"Idle returns to grounded standing pose")
+    for edge in [Vector2(1000,90),Vector2(1000,1310)]:
+        player.position=edge;player.drive=Vector2.UP if edge.y<100 else Vector2.DOWN
+        await frames(40)
+        player.drive=Vector2.ZERO;await frames(8)
+        check(world.save_progress(),"Map-edge position saves")
+        var at_edge=State.new()
+        check(at_edge.load_game() and at_edge.player_position.distance_to(player.position)<0.1,"Reachable northern/southern boundary survives reload")
     player.position=Vector2(790,800);player.drive=Vector2.UP;await frames(70)
     check(player.position.y>660,"Wagon footprint blocks walking through its hull")
     player.drive=Vector2.ZERO;player.position=Vector2(940,790);await frames(8)

@@ -1,3 +1,7 @@
+## Final boundary correction
+
+The new Ogre suite now passes 40 checks, including actual movement to both map boundaries followed by save/load. The validator previously rejected reachable y positions below 80 or above 1310; accepted bounds now cover the full collision area. Delivered revision is 0.6.1.
+
 # Hearth and Hunger 0.6.0 local pivot checks
 
 Godot 4.4.1 Linux. Each suite used isolated XDG_DATA_HOME, never user saves. New ogre_hearth_test: 36 checks, 0 failures. Legacy customization, opener (48 checks), edges (17), motion, feel (10), execution (28), defense including 48 poses, practice isolation, save slots and menu-flow suites passed. 17 publication/package boundary tests passed, including new package names while retaining legacy validation. An initial local wrapper incorrectly gave --fresh to the save/menu suites; those invocations were discarded and rerun with the repository's intended flags. Do not count initial failures as regressions or conceal the incorrect invocation.
