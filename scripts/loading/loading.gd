@@ -2,6 +2,9 @@ extends Control
 ## Scene changes load in a background thread while the player sees Ogre art and tips.
 static var destination=""
 static var context="frontier"
+# Cycle across visits so the hunter, feast and battle each get their turn.
+static var next_art=0
+const ARTWORK=["res://assets/loading/tracking.png","res://assets/loading/feast.png","res://assets/loading/frontier.png"]
 const SCREEN="res://scenes/loading.tscn"
 const VALID={"frontier":"res://scenes/ogre_frontier.tscn","story":"res://scenes/fire_we_carry.tscn"}
 const TIPS={
@@ -22,6 +25,7 @@ const TIPS={
         "There is room to hunt, work and explore between the bigger moments of your story."
     ]
 }
+var displayed_art=""
 var progress_bar: ProgressBar
 var status_label: Label
 var elapsed=0.0
@@ -34,8 +38,8 @@ static func start(tree: SceneTree,kind: String) -> bool:
 func _ready() -> void:
     set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
     var bg=TextureRect.new();bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-    var art="res://assets/loading/"+("story.png" if context=="story" else "frontier.png")
-    bg.texture=load(art) if ResourceLoader.exists(art) else load("res://assets/ogre/menu_camp.png")
+    displayed_art=ARTWORK[posmod(next_art,ARTWORK.size())];next_art+=1
+    bg.texture=load(displayed_art) if ResourceLoader.exists(displayed_art) else load("res://assets/ogre/menu_camp.png")
     bg.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;bg.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;add_child(bg)
     var overlay=ColorRect.new();overlay.color=Color(0.035,0.035,0.025,0.18);overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(overlay)
     var panel=PanelContainer.new();panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)

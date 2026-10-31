@@ -1,3 +1,9 @@
+# Loading-art revision — work in progress
+
+The user disliked the injured boar in the loading artwork, likes animals, and requested a snowy tracking scene with an animal companion and another depicting an Ogre clan feast. They explicitly corrected a misinterpretation: combat violence, blood and existing finishers should remain unchanged. Replace the loading image, add the feast to the rotation and preserve the existing battle loading image. New images must show no wounded animals. 0.8.3 is not yet released; the existing public 0.8.2 remains available.
+
+---
+
 # Hearth and Hunger 0.8.2 — Ogre-only menu and loading screens, published
 
 Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.2

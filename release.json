@@ -1,7 +1,7 @@
 {
-  "version": "0.8.2",
-  "title": "Hearth and Hunger 0.8.2 \u2014 The Ogre Hearth",
-  "notes": "docs/RELEASE_0_8_2.md",
+  "version": "0.8.3",
+  "title": "Hearth and Hunger 0.8.3 \u2014 The Road and the Hearth",
+  "notes": "docs/RELEASE_0_8_3.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",

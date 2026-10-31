@@ -1,3 +1,7 @@
+## October 31 — loading artwork and combat violence clarification
+
+The user likes animals and does not want to stare at a visibly wounded or bleeding animal on a loading screen. Replace the boar image with snowy tracking alongside an animal companion and add an Ogre clan feast to the loading rotation. The user explicitly corrected an overly broad interpretation: combat violence, blood and existing finishers should remain unchanged; violence is fine in quick gameplay. This applies to lingering loading artwork, not a mandate to censor combat or restrict all gore to cutscenes.
+
 ## October 31 — Ogre-only player-facing experience and loading screens
 
 The user reported that the old menu offered the Orc creator and Orc save, and explicitly directed that Orc content be removed from playable view while retained for later use and other groups. The main menu now lists only three Ogre frontier hearths and the Ogre story; original Ogre frontier progress stays in slot one, and original Orc save bytes remain untouched. The package omits the old Orc practice launcher. The user also requested illustrated Ogre loading screens with helpful, accurate game tips. Loading uses real background scene loading and provides a return-to-title error path. Generated loading art and prompts: docs/LOADING_ART_PROMPTS.md.

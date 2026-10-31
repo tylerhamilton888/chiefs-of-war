@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Hearth and Hunger"
-config/version="0.8.2-the-ogre-hearth"
+config/version="0.8.3-road-and-hearth"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="godot/app_userdata/Chiefs of War"
 run/main_scene="res://scenes/main_menu.tscn"
