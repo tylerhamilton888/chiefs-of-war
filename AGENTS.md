@@ -1,6 +1,6 @@
 # Hearth and Hunger — agent entry point
 
-Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. New work follows docs/design/chapter-one.md and docs/source/FIRE_WE_CARRY_DIRECTIVE.txt, extending docs/design/hearth-and-hunger.md and the preserved pivot directive. The older Orc requirements below describe legacy campaigns; the explicit Ogre pivot supersedes them for new content. Retain our established illustrated style; attached concept sheets supply ideas only. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
+Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. The latest gameplay-first directive is recorded in docs/design/ogre-experience.md: physicality, combat, hunting, a useful beast and consequential contracts precede further narrative/dynasty expansion. Preserve docs/design/chapter-one.md and the released chapter. The older Orc requirements below describe legacy campaigns; the explicit Ogre pivot supersedes them for new content. Retain our established illustrated style; attached concept sheets supply ideas only. Do not create a replacement project or touch The Stellar Holds. This file is the short routing guide; read the relevant shards instead of reassessing the entire project on every task.
 
 ## Start a session
 

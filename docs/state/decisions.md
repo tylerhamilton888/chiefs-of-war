@@ -1,3 +1,7 @@
+## October 31 — The Ogre Experience
+
+The user explicitly prioritizes physicality, responsive combat, hunting, food, a useful animal, mobile home and consequential mercenary work over more social/dynasty/narrative expansion. Implement focused playable milestones in the existing repository; preserve Chapter One. See `docs/design/ogre-experience.md`. The immediate acceptance includes a goblin band, Ogre champion, great-beast hunt, restored trade pass and controlled corrupt bargain. No universal morality meter; no claim of continent simulation. Hand-drawn-style complete-body actions remain mandatory, and elders of both sexes remain physically formidable.
+
 ## Latest art steering
 
 The user explicitly requested more distinct portraits and stronger adult brutality in cutscenes, rejecting the animated-Hobbit feel. Keep the established illustrated style, but differentiate facial structure, age, scars and expression. Full treatment may show Gorund's severed head and bloody aftermath; retain the directive's adjustable-gore option as a restrained variant.
