@@ -46,7 +46,13 @@ func run() -> void:
     check(game.execution_sprite.material!=game.player.sprite.material and game.execution_sprite.material.get_shader_parameter("palette")==2,"paired animation carries an independent copy of selected look")
     game.execution_tick(0.23)
     check(game.execution_sprite.material.get_shader_parameter("hair_region")!=Vector4.ZERO,"paired art targets the Ogre’s head")
+    check(game.execution_sprite.texture.resource_path.ends_with("/devour.png"),"original bloody finisher art remains active")
     game.finish_execution(false)
     game.player.weapon_pose(1);check(game.player.sprite.material.get_shader_parameter("palette")==2,"combat keeps chosen palette")
+    check(game.player.sprite.texture.resource_path.ends_with("/player_combat_nordic.png"),"axe attacks use the revised player art")
+    game.state.cargo={"id":"test_log","kind":"log","yield":{"wood":8}}
+    game.player.weapon_pose(2)
+    check(game.player.sprite.texture.resource_path.ends_with("/log_attack_nordic.png"),"log attacks use the revised player art")
+    game.state.cargo.clear()
     print("FRONTIER CREATOR: %d checks, %d failures"%[checks,failures])
     game.prepare_exit();game.queue_free();await frames(4);quit(1 if failures else 0)

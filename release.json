@@ -1,7 +1,7 @@
 {
-  "version": "0.8.5",
-  "title": "Hearth and Hunger 0.8.5 \u2014 The Clan",
-  "notes": "docs/RELEASE_0_8_5.md",
+  "version": "0.8.6",
+  "title": "Hearth and Hunger 0.8.6 \u2014 Faces of the Clan",
+  "notes": "docs/RELEASE_0_8_6.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",

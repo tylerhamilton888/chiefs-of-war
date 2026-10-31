@@ -1,6 +1,6 @@
 # Ogre facial direction — October 31
 
-The user requests slightly different Ogre faces: more Nordic-inspired and less Orc-like, because the current look recalls the trolls from The Hobbit. Interpret this as a move toward varied, more human-proportioned faces, with less exaggerated jaws and tusks, while retaining the Ogres’ imposing physiques, distinctive identities and established illustrated style. Keep female Ogres strong and athletic, elder Ogres formidable, combat violence unchanged, and loading-screen animals unhurt. Work in progress; do not present art as accepted until reviewed.
+The user requests slightly different Ogre faces: more Nordic-inspired and less Orc-like, because the current look recalls the trolls from The Hobbit. Interpret this as a move toward varied, more human-proportioned faces, with less exaggerated jaws and tusks, while retaining the Ogres’ imposing physiques, distinctive identities and established illustrated style. Keep female Ogres strong and athletic, elder Ogres formidable, combat violence unchanged, and loading-screen animals unhurt. The user likes the direction so far and notes that Ogres can be distinguished by their immense size and strength, since few human-like peoples are currently present. Do not require tusks to define Ogres.
 
 ---
 

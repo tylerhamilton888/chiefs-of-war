@@ -544,4 +544,4 @@ func prepare_exit() -> void:
     director.finish();freeze(true);super.prepare_exit()
 
 func cinematic_texture_path() -> String:
-    return "res://assets/chapter/cinematics_brutal.png" if state.gore else "res://assets/chapter/cinematics.png"
+    return "res://assets/chapter/cinematics_brutal_nordic.png" if state.gore else "res://assets/chapter/cinematics_nordic.png"

@@ -32,11 +32,15 @@ func _ready() -> void:
     var path="res://resources/chapter/"+identity+".json"
     if FileAccess.file_exists(path):
         art=JSON.parse_string(FileAccess.get_file_as_string(path));frames=art.frames
-        walking_art=load("res://assets/chapter/"+identity+".png");sprite.texture=walking_art
+        var walking_texture="res://assets/chapter/"+identity+"_nordic.png"
+        if not ResourceLoader.exists(walking_texture):walking_texture="res://assets/chapter/"+identity+".png"
+        walking_art=load(walking_texture);sprite.texture=walking_art
     var action_path="res://resources/chapter/"+identity+"_combat.json"
     if FileAccess.file_exists(action_path):
         combat_art=JSON.parse_string(FileAccess.get_file_as_string(action_path))
-        action_art=load("res://assets/chapter/"+identity+"_combat.png")
+        var action_texture="res://assets/chapter/"+identity+"_combat_nordic.png"
+        if not ResourceLoader.exists(action_texture):action_texture="res://assets/chapter/"+identity+"_combat.png"
+        action_art=load(action_texture)
     collision_layer=2;collision_mask=1
     show_frame(0)
 func show_frame(index: int) -> void:

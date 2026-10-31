@@ -4,7 +4,9 @@ static func pose(sprite: Sprite2D,id: String,index: int,height: float,mirror: bo
     if not cache.has(id):
         var path="res://resources/frontier/"+id+".json"
         if not FileAccess.file_exists(path):return
-        cache[id]={"data":JSON.parse_string(FileAccess.get_file_as_string(path)),"texture":load("res://assets/frontier/"+id+".png")}
+        var texture_path="res://assets/frontier/"+id+"_nordic.png"
+        if not ResourceLoader.exists(texture_path):texture_path="res://assets/frontier/"+id+".png"
+        cache[id]={"data":JSON.parse_string(FileAccess.get_file_as_string(path)),"texture":load(texture_path)}
     var art=cache[id];var d=art.data;var r=d.frames[clampi(index,0,d.frames.size()-1)]
     var factor=height/float(d.height)
     sprite.texture=art.texture;sprite.region_enabled=true;sprite.region_rect=Rect2(r[0],r[1],r[2],r[3]);sprite.scale=Vector2.ONE*factor;sprite.flip_h=mirror

@@ -1,6 +1,8 @@
-# Nordic-inspired Ogre face pass — work in progress
+# Nordic-inspired Ogre face pass — release in preparation
 
-The user asks for slightly different Ogre faces, more Nordic and less Orcish; current faces remind them of the trolls from The Hobbit. Inspect existing portraits, animation sheets and loading art; develop varied, human-proportioned facial designs with less exaggerated underbites and tusks. Preserve individual characters, action poses, save data, violent combat, unharmed loading-screen animals, and original 2D art style. Sprite/portrait atlases have tightly measured rectangles; do not replace without validating alignment, consistency and gameplay. 0.8.5 remains the last verified release.
+The user requested faces that look more Nordic and less Orc-like, saying the former look recalled The Hobbit trolls. They like the direction so far and note that scale and strength can distinguish Ogres even with more human faces. Revised AI-generated alternatives are active for three loading illustrations, three dialogue portrait atlases, nine named clan walking sheets, Hrothgar’s combat sheet, the player walking/weapon/work/carry sheets, two non-bloody paired combat sheets and both cinematic atlases. Strong, athletic female figures and formidable elders remain; Flint is unharmed in loading art. Original assets remain alongside the variants. The generated devour candidate changed dimensions and blood detail, so the original bite-and-swallow sheet remains in use and may have older facial features. Combat mechanics, blood settings and saves are unchanged.
+
+Local checks: 94 chapter, 22 creator, 29 frontier brutality checks and loading/menu transitions passed; reviewed loading screens, portraits, creator colors, combat poses, clan scenes and both cinematics in Godot. Windows build 0.8.6 is pending release workflow and native Windows verification; 0.8.5 remains the last verified release. See docs/NORDIC_FACE_ART.md for image generation prompts and scope.
 
 ---
 
