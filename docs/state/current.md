@@ -1,10 +1,26 @@
 # Active pivot — Hearth and Hunger 0.6.2
 
-The user explicitly pivots this same game to nomadic Ogres while retaining OUR established bright illustrated game style. See design/hearth-and-hunger.md, engineering/ogre-pivot.md and source/HEARTH_AND_HUNGER_DIRECTIVE.txt (relative to docs). Old Orc design requirements remain relevant to preserved legacy content, not the new species.
+Published and verified: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.6.2
 
-Verified remote archive: archive/chiefs-before-hearth-and-hunger at ebcbd9ed032c51516f089e4954c17f1f5fe08ceb. New work is on feature/hearth-and-hunger. Existing campaigns, appearance, combat and slots remain. New Ogre scene reuses terrain/props/UI/audio and adds a distinct actor, campsite, finite timber/provision collection, cooking and separate validated save. This is an initial playable pivot; Ogre combat, modular equipment, traveling/deploying the camp, beasts and family mechanics are NOT delivered. Do not claim the full overhaul or milestone 1 polish is complete.
+- Release source: 25e9b4bfcdbfa847a86a59b05a3d91aef0158b31 (tree 2273e4b630e298df6ede90d9ca28ad32b3625d4c).
+- Successful run: 41152724848, including imports/regressions, actual Godot rendering, export/package, native Windows startup/clean exit and downloaded-release integrity verification.
+- Windows ZIP: HearthAndHunger-Windows-0.6.2.zip, 110668478 bytes.
+- SHA-256: f3de3c7e5265e361b6faf74da5d590e9b43a6974470cbc621a5f3464a22d4030.
+- Extract All, launch HearthAndHunger.exe, choose Enter the wandering hearth.
 
-0.6.0 source is verified at 571f1b554e8327f372651271f5037351f71be753 (run 41151630352). A final boundary-save correction follows as 0.6.1: physically reachable map edges now survive save/load. The new Ogre suite passes 40 checks. The earlier 0.6.1 candidate at d521c44a5238c7ff3b4c5c13d42ab81a8717078a passed Windows before the audio fix reached its run. Deliver 0.6.2, which includes both boundary and audio-shutdown fixes. 0.6.2 source/release verification is in progress. Read actual GitHub run/release state before claiming publication. New executable: HearthAndHunger.exe. Save directory remains godot/app_userdata/Chiefs of War; new file wandering_hearth_v1.json leaves prior slots intact. Runtime in this workspace: /tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64; display helper /tmp/hearth-runtime/render.py. Recheck that scratch helpers exist.
+The user explicitly pivots this same game to nomadic Ogres while retaining OUR established bright illustrated style. The new concept boards supply anatomy/cultural/architecture ideas only. Read docs/design/hearth-and-hunger.md, docs/engineering/ogre-pivot.md and the complete docs/source/HEARTH_AND_HUNGER_DIRECTIVE.txt. Older Orc design requirements describe preserved legacy campaigns, not the new species.
+
+Verified archive: archive/chiefs-before-hearth-and-hunger at ebcbd9ed032c51516f089e4954c17f1f5fe08ceb. Current development: feature/hearth-and-hunger; the default warlord branch remains older. The local reconstructed commit hashes differ from connector commits; compare trees and preserve actual remote ancestry. This handoff is a documentation-only follow-up to the released source.
+
+Implemented: distinct male Ogre body and directional whole-body idle/walk frames, collidable wagon/canvas campsite, woodland exploration, persistent finite timber/provision collection, cooking stored meals, separate validated save and title/menu return. Reuses original terrain, props, audio and UI style. New Ogre suite: 40 checks, including movement, collision, resource costs, pickup duplication, map-edge save/load, menu control and legacy/malformed-save preservation. The audio mixer is stopped/released before scene exit. Save directory remains godot/app_userdata/Chiefs of War; new file wandering_hearth_v1.json. Existing characters, appearance, combat, hunting and three slots remain accessible under Earlier campaigns.
+
+This is an initial playable pivot, NOT the complete overhaul or a claim of final animation polish. User review of proportions, game-scale readability and four-frame/mirrored gait remains pending. New Ogre combat, equippable weapons/armor, traveling/deploying the camp, beasts and new male/female/family NPC systems are not delivered. Cooking currently grants stored meals; no eating animation or buff is implemented. Follow the explicit milestones: refine/accept the living Ogre, then a convincing combat encounter before expanding systems.
+
+Native Windows headless normal/new-character/practice/Ogre launches, clean exits, path spaces, external working directories and campaign isolation passed. Actual graphical engine views were inspected on Linux; native Windows graphical playfeel and human fun/acceptance remain unverified. No new permission is needed to continue already requested development or releases.
+
+Earlier attempts: 0.6.0 publication was blocked by intermittent active-audio exit leakage. 0.6.1 at d521c44a5238c7ff3b4c5c13d42ab81a8717078a passed its native run and published before the audio correction arrived; use 0.6.2 with BOTH the map-boundary and audio fixes. Run 41152314672 correctly refused to replace immutable 0.6.1 with another source. Do not retry that source under the published tag.
+
+Current scratch runtime: /tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64; render helper /tmp/hearth-runtime/render.py. Recheck existence, isolate XDG_DATA_HOME, use the repository's suite-specific flags. Terminal Git push lacks authentication; GitHub connector blob/tree/commit/ref sync is proven. Do not replace upstream history.
 
 ---
 

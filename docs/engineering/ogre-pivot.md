@@ -12,4 +12,4 @@ The camp reuses the old world terrain/prop classes. Provisions and timber have p
 
 Validation: tests/ogre_hearth_test.gd covers movement, idle, collision, pose dimensions, single-use pickups, cooking costs, persistence, menu return, malformed saves and legacy isolation. tests/ogre_hearth_visual.gd captures title, camp, all sixteen direction/pose combinations and pause screen using actual Godot rendering. Native Windows smoke includes --ogre-hearth and checks the old campaign sentinel after Ogre startup.
 
-Release 0.6.0 uses HearthAndHunger.exe and HearthAndHunger-Windows-0.6.0.zip. release.py/package_windows.py read the new manifest names with legacy defaults so historical release audits still work.
+Release 0.6.2 uses HearthAndHunger.exe and HearthAndHunger-Windows-0.6.2.zip. release.py/package_windows.py read the new manifest names with legacy defaults so historical release audits still work.

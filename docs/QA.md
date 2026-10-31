@@ -1,3 +1,11 @@
+# Verified 0.6.2 delivery
+
+Source 25e9b4bfcdbfa847a86a59b05a3d91aef0158b31; run 41152724848 succeeded. All import/regression/render/export/package checks passed. Native Windows normal, creator, old practice and new Ogre startup/clean exit passed with no runtime errors; campaign sentinel, path spaces and external working directory were verified. Publication downloaded and verified the uploaded package before making the release public. ZIP 110668478 bytes; SHA256 f3de3c7e5265e361b6faf74da5d590e9b43a6974470cbc621a5f3464a22d4030. Human playfeel and native graphical review remain pending.
+
+The corrected Ogre suite passes 40 checks; legacy customization 73, opener 48, edges 17, motion 20, feel 10, execution 28, defense/48 poses, save slots, menu flow and practice passed. 17 release boundary tests passed. This establishes functional behavior, not final art acceptance or a complete sandbox.
+
+---
+
 ## Native startup correction
 
 First run 41151630352 passed imports/regressions, render checks and packaging, then native Windows Ogre shutdown reported an AudioStream resource still active at exit. Publication was blocked; 0.6.0 was not released. Reproduced locally with the Dummy audio driver. Fixed by reusing the legacy campaign's stop/release plus mixer-drain interval, guarded against duplicate exits. Linux packaged Ogre startup with active audio is now an explicit release gate as well as native Windows startup. Run 41152025724 used the earlier pre-fix 0.6.1 source; the follow-up run must be checked for the corrected source.

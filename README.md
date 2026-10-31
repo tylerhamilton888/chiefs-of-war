@@ -8,7 +8,7 @@ Choose **Enter the wandering hearth** from the title. Walk as the new strongman 
 
 This is an initial playable pivot, not a completed overhaul or sandbox. Ogre combat, equipment swapping, camp travel/deployment, beasts and family simulation remain future milestones. Generated character art and four-frame movement need user review; assets are not human-drawn.
 
-The Windows package uses **HearthAndHunger.exe**. See [0.6.2 release notes](docs/RELEASE_0_6_2.md). Publication is complete only when the GitHub release contains the verified ZIP and checksum.
+**[Download the verified Windows build (0.6.2)](https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.6.2/HearthAndHunger-Windows-0.6.2.zip)** · [Release and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.6.2). Extract All, then launch **HearthAndHunger.exe**. Native Windows startup/clean exit and downloaded package verification passed in run 41152724848. [Release notes](docs/RELEASE_0_6_2.md).
 
 ## Earlier campaigns
 
