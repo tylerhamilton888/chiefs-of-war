@@ -2,7 +2,7 @@
 
 The user said the menu was showing the old Orc creator and save and explicitly requested that Orc content be removed from playable view, preserving assets and old saves for later. The Ogre menu now has three isolated frontier slots (slot one uses the original Ogre save path), with an Ogre creator for empty slots and the separate Ogre story. The old Orc practice launcher is omitted from the Windows package. Two new AI-generated loading illustrations and practical tips appear while entering the frontier or story, with asynchronous scene loading and a recoverable failure path. Actual engine screenshots of the menu and loading screens were inspected. See docs/LOADING_ART_PROMPTS.md and docs/design/ogre-experience.md. User data must not be deleted or silently overwritten.
 
-Ogre menu, multiple-save, legacy-save-preservation, creator, loading-transition and release-format checks pass locally. Windows release 0.8.2 has not yet been built or published; inspect GitHub state before resuming publication. Previous v0.8.1 remains available.
+Ogre menu, multiple-save, legacy-save-preservation, creator, loading-transition and release-format checks pass locally. Windows release 0.8.2 is in progress. Run 41212236579 hung because its old Ogre Hearth regression called a deliberately removed legacy menu method; the test now loads that archived scene directly and checks the Ogre-only menu. A corrected run is needed; inspect GitHub state before retrying. Previous v0.8.1 remains available.
 
 ---
 
