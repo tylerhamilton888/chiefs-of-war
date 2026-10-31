@@ -1,3 +1,9 @@
+# Female Ogre proportions
+
+The women in the feast should match the existing in-game female Ogre sprites: leaner, athletic and strong rather than portly. Keep strong older women as well as the clan’s distinct Ogre features.
+
+---
+
 # Feast art direction
 
 The clan can enjoy a feast but should look like the Ogres in established game art, feel rugged and dangerous, and include dark humor such as goblins on a spit. Avoid wounded animals in the loading art. Combat violence and blood remain welcome.

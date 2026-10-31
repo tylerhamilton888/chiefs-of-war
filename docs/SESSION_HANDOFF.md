@@ -1,6 +1,6 @@
-# Ogre feast art revision — work in progress
+# Feast character refinement — work in progress
 
-The user requested that the clan feast feel like Ogres rather than warm Disney characters, match the established game art, and have dark humor such as goblins on a spit. They also want no wounded animals on loading screens; combat violence, blood and finishers remain unchanged. Version 0.8.4 will supersede the previous loading-art build after validation.
+The user requested that the women in the feast illustration have leaner, athletic builds closer to the existing female Ogre sprites. Keep their strong Ogre appearance and the goblin-on-a-spit dark humor; animals remain unharmed. Combat violence, blood and finishers remain unchanged. Version 0.8.5 will supersede the previous art build after validation.
 
 ---
 
