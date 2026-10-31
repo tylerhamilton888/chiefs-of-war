@@ -47,7 +47,10 @@ func _physics_process(delta: float) -> void:
         elif off.length()<205 and clock>0.55:
             locked=off.normalized();stance="windup";clock=0
         elif off.length()>175:
-            velocity=game.route_direction(self,target.position)*140;move_and_slide();phase=fposmod(phase+delta*1.6,1);show_frame(int(phase*4))
+            velocity=game.route_direction(self,target.position)*140
+            var before=position;move_and_slide();var traveled=position.distance_to(before)
+            phase=fposmod(phase+traveled/92.0,1) if traveled>0.04 else 0.0
+            show_frame(int(phase*4))
         else:action_pose(3)
     queue_redraw()
 func _draw() -> void:

@@ -27,6 +27,7 @@ var target: Node2D
 var combat_art: Dictionary={}
 var walking_art: Texture2D
 var action_art: Texture2D
+func motion_height() -> float:return height
 func _ready() -> void:
     super._ready()
     var path="res://resources/chapter/"+identity+".json"
@@ -48,6 +49,7 @@ func show_frame(index: int) -> void:
     frame_index=clampi(index,0,3)
     var row=0 if facing==0 else 2 if facing==3 else 1
     var r: Array=frames[row][frame_index]
+    if FrameArt.pose(sprite,walking_art,row*4+frame_index,height,facing==1):return
     apply_region(r,walking_art,facing==1,height/float(art.height))
 func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> void:
     sprite.texture=texture;sprite.region_rect=Rect2(r[0],r[1],r[2],r[3]);sprite.flip_h=mirror
@@ -55,6 +57,7 @@ func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> voi
 func action_pose(index: int) -> void:
     if combat_art.is_empty():show_frame(1 if index==1 else 0);return
     var row=0 if facing==0 else 2 if facing==3 else 1
+    if FrameArt.pose(sprite,action_art,row*4+index,height,facing==1):return
     apply_region(combat_art.frames[row][index],action_art,facing==1,height/float(combat_art.height))
 func direction() -> Vector2:return [Vector2.DOWN,Vector2.LEFT,Vector2.RIGHT,Vector2.UP][facing]
 func attack(aim: Vector2) -> bool:

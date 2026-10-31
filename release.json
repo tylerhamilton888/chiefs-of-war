@@ -1,7 +1,7 @@
 {
-  "version": "0.8.7",
-  "title": "Hearth and Hunger 0.8.7 \u2014 The Clan Feast",
-  "notes": "docs/RELEASE_0_8_7.md",
+  "version": "0.8.8",
+  "title": "Hearth and Hunger 0.8.8 \u2014 Animation Repair",
+  "notes": "docs/RELEASE_0_8_8.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",

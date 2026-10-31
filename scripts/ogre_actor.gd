@@ -1,6 +1,8 @@
 extends CharacterBody2D
 ## Whole-body atlas frames. No skeletal deformation or independent floating equipment.
 signal stepped
+const FrameArt=preload("res://scripts/ogre_frame_art.gd")
+const MOTION_TEXTURE=preload("res://assets/ogre/hearthlord_motion_nordic.png")
 const SPECIES="ogre"
 const WALK_SPEED=205.0
 const STRIDE=92.0
@@ -17,12 +19,13 @@ func _ready() -> void:
     frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/ogre_motion.json"))
     var shape=CollisionShape2D.new()
     var circle=CircleShape2D.new();circle.radius=22;shape.shape=circle;add_child(shape)
-    sprite=Sprite2D.new();sprite.texture=preload("res://assets/ogre/hearthlord_motion_nordic.png")
+    sprite=Sprite2D.new();sprite.texture=MOTION_TEXTURE
     sprite.region_enabled=true;add_child(sprite)
     show_frame(0)
 func face(direction: Vector2) -> void:
     if direction.length_squared()<0.001:return
     facing=(2 if direction.x>0 else 1) if absf(direction.x)>absf(direction.y) else (0 if direction.y>0 else 3)
+func motion_height() -> float:return 155.0
 func show_frame(index: int) -> void:
     frame_index=clampi(index,0,3)
     # The reviewed side view faces east. Mirror the complete illustrated body for west.
@@ -31,10 +34,13 @@ func show_frame(index: int) -> void:
     # pose for the second footfall; keep each pose whole, never deform limbs.
     var mirror_contact=facing in [0,3] and frame_index==3
     var r: Array=frames[row][1 if mirror_contact else frame_index]
+    # Select texture AND frame together: a previous attack/carry uses another atlas.
+    if FrameArt.pose(sprite,MOTION_TEXTURE,row*4+(1 if mirror_contact else frame_index),motion_height(),facing==1 or mirror_contact):return
+    sprite.texture=MOTION_TEXTURE
     sprite.region_rect=Rect2(r[0]-2,r[1]-2,r[2]+4,r[3]+4)
     sprite.flip_h=facing==1 or mirror_contact
-    sprite.scale=Vector2.ONE*0.55
-    sprite.position=Vector2(0,-float(r[3])*0.55*0.5+3)
+    sprite.scale=Vector2.ONE*motion_height()/280.0
+    sprite.position=Vector2(0,-float(r[3])*sprite.scale.y*0.5+3)
 func _physics_process(delta: float) -> void:
     if not enabled:velocity=Vector2.ZERO;return
     var direction=Input.get_vector("move_left","move_right","move_up","move_down") if controlled else drive.limit_length()

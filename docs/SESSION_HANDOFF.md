@@ -1,3 +1,11 @@
+# Hearth and Hunger 0.8.8 — Animation repair, locally validated; release pending
+
+The user reported broken animations. Reproduced the wrong-atlas return-to-walk bug (26 initial checks failed), fixed texture restoration and stature, and registered complete-pose geometry for 20 active atlases to prevent clipping/neighbor leakage. Improved log swing/carry sequencing, companion stopping/facing and champion gait cadence. Original art and combat gore remain. See docs/ANIMATION_QUALITY_0_8_8.md for evidence and remaining limited-pose animation constraints.
+
+Local animation (85), chapter (94), brutality (29) and creator (22) checks passed. Reviewed whole-pose contact sheets, continuous gameplay captures and creator palettes in the real OpenGL renderer. Windows publication is pending. Current playable release remains 0.8.7 until the new release is verified.
+
+---
+
 # Hearth and Hunger 0.8.7 — Clan feast refinement, published and verified
 
 The user selected the earlier clan feast design and asked for the women to be more attractive. The feast loading image has been refined with softer feminine features while retaining broad Ogre facial anatomy, strong physiques, the clan, goblin spit and unharmed companion. The rest of the game's artwork still uses the 0.8.6 designs; this change does not replace all character art. Some visible teeth still resemble small lower tusks. Combat, saves and gameplay are unchanged.

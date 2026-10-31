@@ -109,7 +109,11 @@ func _physics_process(delta: float) -> void:
         var spec=stats(mode)
         var windup=elapsed<spec.windup
         velocity=locked*(75 if windup else 150 if elapsed<spec.windup+spec.active else 15);move_and_slide()
-        weapon_pose(1 if windup else 2 if elapsed<spec.windup+spec.active+0.10 else 0)
+        if combat_weapon()=="log":
+            var row=0 if facing==0 else 2 if facing==3 else 1
+            var pose_index=0 if elapsed<spec.windup*0.65 else 1 if windup else 2 if elapsed<spec.windup+spec.active+0.10 else 3
+            full_pose("log_attack",row*4+pose_index,facing==1)
+        else:weapon_pose(1 if windup else 2 if elapsed<spec.windup+spec.active+0.10 else 0)
         if not hit_done and elapsed>=spec.windup:
             hit_done=true;game.player_contact(mode,spec)
         if desired_block and can_cancel() and elapsed>=spec.windup+spec.active+0.1:
@@ -133,7 +137,11 @@ func _physics_process(delta: float) -> void:
         else:phase=0
         if carrying():
             var row=0 if facing==0 else 2 if facing==3 else 1
-            full_pose("carry_log" if game.state.cargo.kind=="log" else "carry_spoils",row*4+int(phase*4),facing==1)
+            var step=int(phase*4)
+            # Front/rear sheets contain two opposite contacts and a duplicated
+            # contact. Alternate the authored feet through a neutral passing pose.
+            if row!=1 and game.state.cargo.kind=="log" and distance>0.05:step=[1,0,2,0][step]
+            full_pose("carry_log" if game.state.cargo.kind=="log" else "carry_spoils",row*4+step,facing==1)
         elif guarding:weapon_pose(3)
         elif distance>0.05:show_frame([1,2,3,0][int(phase*4)])
         elif combat_idle<4:weapon_pose(0)
