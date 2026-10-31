@@ -1,0 +1,4 @@
+{
+ "axe":{"name":"Hunting axe","light":{"windup":0.12,"active":0.09,"recovery":0.22,"reach":137,"damage":27,"guard":4,"push":230},"heavy":{"windup":0.30,"active":0.12,"recovery":0.34,"reach":160,"damage":55,"guard":18,"push":480}},
+ "maul":{"name":"Stonebreaker maul","light":{"windup":0.18,"active":0.10,"recovery":0.26,"reach":155,"damage":33,"guard":6,"push":320},"heavy":{"windup":0.37,"active":0.13,"recovery":0.40,"reach":180,"damage":66,"guard":23,"push":620}}
+}

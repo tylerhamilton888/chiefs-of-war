@@ -6,6 +6,8 @@ func _ready() -> void:
     get_tree().auto_accept_quit=true
     var first_boot=not Slots.booted
     Slots.booted=true
+    if first_boot and "--ogre-frontier" in OS.get_cmdline_user_args():
+        get_tree().change_scene_to_file.call_deferred("res://scenes/ogre_frontier.tscn");return
     if first_boot and "--chapter-one" in OS.get_cmdline_user_args():
         get_tree().change_scene_to_file.call_deferred("res://scenes/fire_we_carry.tscn");return
     if first_boot and "--ogre-hearth" in OS.get_cmdline_user_args():
@@ -35,6 +37,7 @@ func build() -> void:
     content=VBoxContainer.new();content.add_theme_constant_override("separation",10);panel.add_child(content)
     var title=words("HEARTH AND HUNGER",40);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(title)
     var sub=words("A NOMADIC OGRE SANDBOX",16,"b99a66");sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(sub)
+    action("Hunt · Fight · Feast — Sundered Frontier",func():get_tree().change_scene_to_file("res://scenes/ogre_frontier.tscn"),content)
     action("The Fire We Carry · Chapter One",func():get_tree().change_scene_to_file("res://scenes/fire_we_carry.tscn"),content)
     content.add_child(words("Family, the fall of Emberhide, and a hearth of your own",15,"b5ac98"))
     content.add_child(HSeparator.new())

@@ -1,3 +1,13 @@
+# Sundered Frontier — development checkpoint, not a released milestone
+
+The latest Ogre Experience directive now governs. See `docs/design/ogre-experience.md`. New `scripts/frontier/` and `scenes/ogre_frontier.tscn` integrate physical labor/cargo, buffered axe/maul combat, goblin formations, whole-body throw/feeding/clinch art, ridgeback hunt, useful Flint hauling, portable camp and data-driven regional contracts. Title entry and Chapter One home link are wired; separate `ogre_frontier_v1.json` protects prior progress.
+
+WIP: import and direct/headless startup pass. Full gameplay regression, actual rendered review, balancing, legacy regression and Windows delivery are still pending. Do not claim this checkpoint complete or publish yet. Generated assets/metadata and prompt provenance live in assets/frontier, resources/frontier and docs/FRONTIER_ART_PROMPTS.json. Current runtime `/tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64`. GitHub parent before this WIP is the directive checkpoint on feature/hearth-and-hunger; compare trees and preserve remote ancestry.
+
+The prior verified release remains below for historical evidence.
+
+---
+
 # Hearth and Hunger 0.7.0 — published and verified
 
 Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.7.0
