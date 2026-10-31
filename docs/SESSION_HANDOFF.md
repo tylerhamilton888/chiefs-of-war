@@ -1,8 +1,8 @@
-# Hearth and Hunger 0.8.8 — Animation repair, locally validated; release pending
+# Hearth and Hunger 0.8.8 — Animation repair, published and verified
 
 The user reported broken animations. Reproduced the wrong-atlas return-to-walk bug (26 initial checks failed), fixed texture restoration and stature, and registered complete-pose geometry for 20 active atlases to prevent clipping/neighbor leakage. Improved log swing/carry sequencing, companion stopping/facing and champion gait cadence. Original art and combat gore remain. See docs/ANIMATION_QUALITY_0_8_8.md for evidence and remaining limited-pose animation constraints.
 
-Local animation (85), chapter (94), brutality (29) and creator (22) checks passed. Reviewed whole-pose contact sheets, continuous gameplay captures and creator palettes in the real OpenGL renderer. Windows publication is pending. Current playable release remains 0.8.7 until the new release is verified.
+Local animation (85), chapter (94), brutality (29) and creator (22) checks passed. Reviewed whole-pose contact sheets, continuous gameplay captures and creator palettes in the real OpenGL renderer. Windows release is published and verified: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.8 . Source 91f13a5024854e960fe8f30c118d80e885cfe3f0 (tree d9204d61363bb7d587d8c01dd362f1051d7fd285), release run 41238624593. Full regressions, rendered scenes, exported-pack checks, native Windows launch and downloaded-asset verification passed. Windows ZIP: 210900524 bytes; SHA-256 2a7890b599f80679897127f250967363cc842daf5bcb762a4041d863f6e586b1. User playtest remains pending.
 
 ---
 
