@@ -11,3 +11,5 @@ Earlier Orc characters, three campaign slots, appearance editing, hunting/combat
 The package has one obvious root executable, START HERE.txt, optional old combat practice in Extras, and build/source information in Support. Matching checksums accompany the download. The release pipeline verifies Godot tests, rendering, export, native Windows startup and downloaded package integrity before publication.
 
 Final validation correction: saves now accept the complete physically reachable map area, including the northern and southern boundaries. Automated movement-to-edge/save/reload regressions pass.
+
+The new scene stops and releases audio playback before returning to the title or exiting, preserving the established clean shutdown behavior.

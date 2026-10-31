@@ -32,4 +32,4 @@ $save = Join-Path $saveDir 'ancestral_hearth_v1.json'
 Invoke-GameSmoke 'optional-practice' @('--combat-yard')
 Invoke-GameSmoke 'ogre-hearth' @('--ogre-hearth')
 if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'Practice modified the campaign sentinel.' }
-Write-Host 'WINDOWS PACKAGE VERIFIED: normal entry, practice entry, campaign isolation, path with spaces, external working directory.'
+Write-Host 'WINDOWS PACKAGE VERIFIED: normal entry, practice entry, Ogre entry, campaign isolation, path with spaces, external working directory.'

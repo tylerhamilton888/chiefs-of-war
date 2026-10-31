@@ -90,6 +90,7 @@ jobs:
           mkdir -p builds/windows
           Godot_v4.4.1-stable_linux.x86_64 --headless --export-release 'Windows Desktop' builds/windows/HearthAndHunger.exe 2>&1 | tee builds/logs/export.log
           XDG_DATA_HOME="$RUNNER_TEMP/pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --main-pack builds/windows/HearthAndHunger.exe --quit-after 120 -- --test --combat-yard 2>&1 | tee builds/logs/pack-smoke.log
+          XDG_DATA_HOME="$RUNNER_TEMP/ogre-pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --audio-driver Dummy --main-pack builds/windows/HearthAndHunger.exe -- --ogre-hearth --startup-smoke 2>&1 | tee builds/logs/ogre-pack-smoke.log
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd 2>&1 | tee builds/logs/notices.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/*.log; then exit 1; fi
           cp "$RUNNER_TEMP/review/creator.png" builds/creator.png

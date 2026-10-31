@@ -1,3 +1,7 @@
+## Native startup correction
+
+First run 41151630352 passed imports/regressions, render checks and packaging, then native Windows Ogre shutdown reported an AudioStream resource still active at exit. Publication was blocked; 0.6.0 was not released. Reproduced locally with the Dummy audio driver. Fixed by reusing the legacy campaign's stop/release plus mixer-drain interval, guarded against duplicate exits. Linux packaged Ogre startup with active audio is now an explicit release gate as well as native Windows startup. Run 41152025724 used the earlier pre-fix 0.6.1 source; the follow-up run must be checked for the corrected source.
+
 ## Final boundary correction
 
 The new Ogre suite now passes 40 checks, including actual movement to both map boundaries followed by save/load. The validator previously rejected reachable y positions below 80 or above 1310; accepted bounds now cover the full collision area. Delivered revision is 0.6.1.

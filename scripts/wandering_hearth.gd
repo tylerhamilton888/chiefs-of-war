@@ -19,6 +19,7 @@ var stations: Array=[]
 var supplies: Array=[]
 var nearest: Dictionary={}
 var save_clock=0.0
+var leaving=false
 var sound: AudioStreamPlayer
 var ambient: AudioStreamPlayer
 var helper=Menu.new()
@@ -153,13 +154,25 @@ func pause_menu() -> void:
 func save_progress() -> bool:
     state.player_position=player.position;return state.save_game()
 func return_to_menu() -> void:
+    if leaving:return
     if not state.unreadable and not save_progress():say("Could not save; staying here to preserve your progress.");close_modal();return
-    ambient.stop();get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+    prepare_exit()
+    await get_tree().create_timer(0.15).timeout
+    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 func quit_game() -> void:
+    if leaving:return
     if not state.unreadable and not save_progress():say("Could not save; staying here to preserve your progress.");close_modal();return
-    ambient.stop();get_tree().quit()
+    prepare_exit()
+    await get_tree().create_timer(0.15).timeout
+    get_tree().quit()
+func prepare_exit() -> void:
+    leaving=true;player.enabled=false;set_process(false)
+    # Reuse the legacy campaign's proven audio-mixer shutdown interval.
+    for child in get_children():
+        if child is AudioStreamPlayer:child.stop();child.stream=null
 func _notification(what: int) -> void:
     if what==NOTIFICATION_WM_CLOSE_REQUEST and is_instance_valid(player):quit_game()
 func _exit_tree() -> void:
-    if is_instance_valid(ambient):ambient.stop()
+    for child in get_children():
+        if child is AudioStreamPlayer:child.stop();child.stream=null
     helper.free()

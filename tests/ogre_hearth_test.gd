@@ -52,7 +52,7 @@ func run():
     world.show_panel("A test","Movement pauses during conversation.")
     check(not player.enabled,"Menu locks movement")
     world.close_modal();check(player.enabled,"Closing menu returns control")
-    world.return_to_menu();await frames(8)
+    world.return_to_menu();await create_timer(0.2).timeout;await frames(8)
     check(current_scene.has_method("ogre_hearth"),"Return reaches renamed title")
     current_scene.ogre_hearth();await frames(8)
     check(current_scene.state.inventory.meals==3,"Title entry resumes Ogre progress")
