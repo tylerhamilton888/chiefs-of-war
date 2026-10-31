@@ -1,24 +1,26 @@
-HEARTH AND HUNGER — THE FIRE WE CARRY
+HEARTH AND HUNGER — SUNDERED FRONTIER PLAYTEST
 
 1. Use Windows "Extract All" on the downloaded ZIP.
 2. Open the extracted folder and double-click HearthAndHunger.exe.
-3. Choose "The Fire We Carry · Chapter One".
+3. Choose "Hunt · Fight · Feast — Sundered Frontier" on the title screen.
 
-Start as a young Ogre at your family's traveling hearth. Work, hunt and feast;
-face the fall of Emberhide; earn a place in the Stonebelly Host and eventually
-a wagon and hearth of your own.
+You are an Ogre with a wandering hearth. Fight, hunt, carry heavy loads, care
+for Flint and take contracts. This is an early playtest; balance and animation
+will benefit from your feedback.
 
-WASD: move    E: interact    LMB: attack toward cursor
-RMB: hold to block toward cursor; press just before impact to parry
-Space: dodge    Q: eat meal    J: journal/routes    I: belongings
-F5: save    Esc: pause
-Dialogue: Space/Enter reveals and advances; Esc skips to final choices.
-Household: pack at your wagon, travel, then B settles in a safe region.
+WASD: move     E: interact     LMB: light attack toward cursor
+R or Shift + LMB: heavy attack     RMB: hold to block / time a parry
+Space: dodge     Q: eat a meal     X: set a carried load down
+F: throw a staggered goblin or clinch a vulnerable Ogre champion
+G: bite a vulnerable goblin     Shift + G: swallow a vulnerable goblin
+J: journal/routes     I: belongings     F5: save     Esc: pause
 
-Chapter One autosaves independently. Earlier campaigns and the first Ogre
-visit remain available from the title; they are never overwritten by this chapter.
-The optional combat practice launcher is in Extras. It uses the original campaign.
-Build/source information and engine notices are in Support.
+Earn Ferocity by landing attacks or parrying. Feed and throw cost Ferocity;
+stagger or critically wound the goblin first. Lift a whole trunk with E and
+use the attack controls to swing it, or take it to your wagon. Open the pause
+menu to select full or restrained blood effects.
 
-This is the first playable Chapter One release. Expanded equipment, marriage,
-children and a full dynasty simulation are later milestones.
+"The Fire We Carry · Chapter One" remains on the title screen. It and the
+frontier keep separate saves. Earlier campaigns remain available too. Optional
+original-campaign combat practice is in Extras. Build/source information and
+engine notices are in Support.
