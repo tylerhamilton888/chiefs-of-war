@@ -1,10 +1,10 @@
-# Active pivot — Hearth and Hunger 0.6.1
+# Active pivot — Hearth and Hunger 0.6.2
 
 The user explicitly pivots this same game to nomadic Ogres while retaining OUR established bright illustrated game style. See design/hearth-and-hunger.md, engineering/ogre-pivot.md and source/HEARTH_AND_HUNGER_DIRECTIVE.txt (relative to docs). Old Orc design requirements remain relevant to preserved legacy content, not the new species.
 
 Verified remote archive: archive/chiefs-before-hearth-and-hunger at ebcbd9ed032c51516f089e4954c17f1f5fe08ceb. New work is on feature/hearth-and-hunger. Existing campaigns, appearance, combat and slots remain. New Ogre scene reuses terrain/props/UI/audio and adds a distinct actor, campsite, finite timber/provision collection, cooking and separate validated save. This is an initial playable pivot; Ogre combat, modular equipment, traveling/deploying the camp, beasts and family mechanics are NOT delivered. Do not claim the full overhaul or milestone 1 polish is complete.
 
-0.6.0 source is verified at 571f1b554e8327f372651271f5037351f71be753 (run 41151630352). A final boundary-save correction follows as 0.6.1: physically reachable map edges now survive save/load. The new Ogre suite passes 40 checks. 0.6.1 source/release verification is in progress. Read actual GitHub run/release state before claiming publication. New executable: HearthAndHunger.exe. Save directory remains godot/app_userdata/Chiefs of War; new file wandering_hearth_v1.json leaves prior slots intact. Runtime in this workspace: /tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64; display helper /tmp/hearth-runtime/render.py. Recheck that scratch helpers exist.
+0.6.0 source is verified at 571f1b554e8327f372651271f5037351f71be753 (run 41151630352). A final boundary-save correction follows as 0.6.1: physically reachable map edges now survive save/load. The new Ogre suite passes 40 checks. The earlier 0.6.1 candidate at d521c44a5238c7ff3b4c5c13d42ab81a8717078a passed Windows before the audio fix reached its run. Deliver 0.6.2, which includes both boundary and audio-shutdown fixes. 0.6.2 source/release verification is in progress. Read actual GitHub run/release state before claiming publication. New executable: HearthAndHunger.exe. Save directory remains godot/app_userdata/Chiefs of War; new file wandering_hearth_v1.json leaves prior slots intact. Runtime in this workspace: /tmp/hearth-runtime/Godot_v4.4.1-stable_linux.x86_64; display helper /tmp/hearth-runtime/render.py. Recheck that scratch helpers exist.
 
 ---
 

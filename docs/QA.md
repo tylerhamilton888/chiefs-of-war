@@ -4,7 +4,7 @@ First run 41151630352 passed imports/regressions, render checks and packaging, t
 
 ## Final boundary correction
 
-The new Ogre suite now passes 40 checks, including actual movement to both map boundaries followed by save/load. The validator previously rejected reachable y positions below 80 or above 1310; accepted bounds now cover the full collision area. Delivered revision is 0.6.1.
+The new Ogre suite now passes 40 checks, including actual movement to both map boundaries followed by save/load. The validator previously rejected reachable y positions below 80 or above 1310; accepted bounds now cover the full collision area. Delivery target is 0.6.2 with both fixes.
 
 # Hearth and Hunger 0.6.0 local pivot checks
 
