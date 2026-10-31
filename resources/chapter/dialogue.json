@@ -352,13 +352,15 @@
         "speaker": "hrothgar",
         "text": "Gorund would not yield his hunting rights. A great chief. A great mistake. This torc is all the answer his household will receive.",
         "expression": "threatening",
-        "art": 1
+        "art": 1,
+        "brutal_text": "Gorund killed three of my men before I brought him down. He would not bend his neck. So I took his head. His hunting grounds are mine."
       },
       {
         "speaker": "hrothgar",
         "text": "And you. Still standing, still swinging. Come, then. Show me what his hearth raised.",
         "expression": "amused",
-        "art": 2
+        "art": 2,
+        "brutal_text": "You have his blood on your boots and my men's blood on your axe. Still standing. Good. Come show me what his hearth raised."
       }
     ],
     "choices": [
@@ -374,7 +376,8 @@
       {
         "speaker": "hrothgar",
         "text": "Enough. A lesser creature would have begged before the second blow.",
-        "expression": "proud"
+        "expression": "proud",
+        "brutal_text": "Enough. You swallowed blood rather than beg. Good. Keep that in you."
       },
       {
         "speaker": "hrothgar",

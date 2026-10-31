@@ -7,7 +7,7 @@
 - `story.gd`: ten-step chapter, contextual conversations, idempotent rewards, optional activities/courtship and ending into repeatable activities.
 - `cinematic.gd`: reusable Godot camera tweens and collision-aware whole-body actor staging. Resets camera/staging on skip, scene change and exit. Dialogue state and effects remain in the chapter/story layers.
 - `resources/chapter/`: cast records, dialogue/choices, portrait-expression selection and measured atlas regions. Pixel data is not modified by metadata measurement.
-- `assets/chapter/`: nine cast atlases, player and Hrothgar combat atlases, beast, three expression-portrait sheets, and six-panel cinematic sheet. Prompts/provenance: `docs/CHAPTER_ART_PROMPTS.json`.
+- `assets/chapter/`: nine cast atlases, player and Hrothgar combat atlases, beast, three expression-portrait sheets, and full/ restrained six-panel cinematic sheets. Prompts/provenance: `docs/CHAPTER_ART_PROMPTS.json`.
 
 Controls: WASD / E / LMB / RMB / Space / Q / J / I / Esc / F5; B settles a packed household in a safe region. The first Ogre visit retains its original controls and save.
 

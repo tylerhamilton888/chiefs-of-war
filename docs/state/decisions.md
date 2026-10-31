@@ -1,3 +1,7 @@
+## Latest art steering
+
+The user explicitly requested more distinct portraits and stronger adult brutality in cutscenes, rejecting the animated-Hobbit feel. Keep the established illustrated style, but differentiate facial structure, age, scars and expression. Full treatment may show Gorund's severed head and bloody aftermath; retain the directive's adjustable-gore option as a restrained variant.
+
 # October 31 — The Fire We Carry
 
 The complete Chapter One directive now governs new Ogre content. Ogres of both sexes never weaken merely through aging; elders continue growing more formidable. Implement actual connected gameplay, individual family/clan characters, playable rescue/duel outcomes, optional adult courtship, physical caravan travel and a personal household. Preserve our existing illustrated style. See `design/chapter-one.md` and `source/FIRE_WE_CARRY_DIRECTIVE.txt`. Full generational simulation is explicitly outside the opening milestone.

@@ -4,6 +4,7 @@ Chapter One is now playable from the Emberhide family camp through the loss of t
 
 Download **HearthAndHunger-Windows-0.7.0.zip**, Extract All, run **HearthAndHunger.exe**, and choose **The Fire We Carry · Chapter One**. This chapter uses its own save. Earlier campaigns and the first Ogre visit remain available and unchanged.
 
+- Distinct mature facial designs, asymmetric features, age, scars and individual expressions; full-brutality cinematic aftermath, Gorund's severed head, and bloodied confrontation. Esc → Brutality offers a restrained alternative.
 - Nine individually illustrated principal Ogres, directional whole-body walking frames, matching expressive dialogue portraits, and imposing ancient leaders.
 - Seven connected areas: Emberhide Crossing, Northern Pines, Wolfscar Hollow, Goblin Cairn, Sundered Pass, Stonebelly Host, and Blackstone Trade Post.
 - Gathering, a repaired family wagon, cooking, eating and food bonuses, the first offering, tracking, a real predator fight, harvesting, and the last feast.

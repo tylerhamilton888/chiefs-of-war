@@ -20,4 +20,7 @@ func run() -> void:
     game.state.chapter=5;game.travel("crossing",Vector2(1100,1050),true);game.freeze(true);await shot("duel")
     game.player.face(Vector2.RIGHT);game.player.action_pose(2);game.npcs.hrothgar.face(Vector2.LEFT);game.npcs.hrothgar.action_pose(1);await shot("strike")
     game.journal();await shot("journal");game.close_modal()
+    game.state.gore=true;game.dialogue("challenge");game.reveal=10000;await shot("brutal-fall")
+    game.state.gore=false;game.dialogue("challenge");game.reveal=10000;await shot("restrained-fall")
+    game.choose("close")
     game.prepare_exit();await create_timer(0.2).timeout;game.queue_free();await frames(3);quit()

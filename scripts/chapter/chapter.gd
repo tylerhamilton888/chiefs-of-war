@@ -396,7 +396,7 @@ func impact(at: Vector2) -> void:
     var splash=Node2D.new();splash.position=at;splash.z_index=1;world.add_child(splash)
     for i in range(5):
         var drop=Polygon2D.new();drop.color=Color("7e322f");drop.polygon=PackedVector2Array([Vector2(-3,-2),Vector2(4,-1),Vector2(2,3),Vector2(-2,2)]);drop.position=Vector2.from_angle(i*2.4)*float(8+i*4);splash.add_child(drop)
-    var fade=create_tween();fade.tween_interval(0.4);fade.tween_property(splash,"modulate:a",0.0,0.4);fade.tween_callback(splash.queue_free)
+    var fade=splash.create_tween();fade.tween_interval(0.4);fade.tween_property(splash,"modulate:a",0.0,0.4);fade.tween_callback(splash.queue_free)
 func enemy_strike(foe) -> void:
     var off=player.position-foe.position
     var reach=220 if foe is Actor else 115 if foe is Wolf else 120
@@ -454,8 +454,9 @@ func dialogue(key: String,resume=false) -> void:
     director.stage(person,key)
     var shade=ColorRect.new();shade.color=Color(0.03,0.025,0.02,0.25);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
     var illustration=line.get("art",scene.art)
+    if illustration>=0:shade.color=Color(0.03,0.025,0.02,0.82)
     if illustration>=0 and ResourceLoader.exists("res://assets/chapter/cinematics.png"):
-        var art=TextureRect.new();var atlas=AtlasTexture.new();atlas.atlas=load("res://assets/chapter/cinematics.png")
+        var art=TextureRect.new();var atlas=AtlasTexture.new();atlas.atlas=load(cinematic_texture_path())
         var width=atlas.atlas.get_width()/2.0;var height=atlas.atlas.get_height()/3.0;atlas.region=Rect2((int(illustration)%2)*width,int(illustration/2)*height,width,height)
         art.texture=atlas;art.position=Vector2(250,130);art.size=Vector2(780,350);art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;modal.add_child(art)
     var box=panel(Vector2(20,495),Vector2(1240,288));modal.add_child(box)
@@ -463,7 +464,7 @@ func dialogue(key: String,resume=false) -> void:
     var portrait=TextureRect.new();portrait.custom_minimum_size=Vector2(170,210);portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;portrait.texture=portrait_texture(person,line.expression);row.add_child(portrait)
     var column=VBoxContainer.new();column.size_flags_horizontal=Control.SIZE_EXPAND_FILL;column.add_theme_constant_override("separation",8);row.add_child(column)
     column.add_child(helper.words(cast[person].name.to_upper()+"  ·  "+cast[person].role,19,"efc580"))
-    dialog_text=helper.words(line.text,21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
+    dialog_text=helper.words(line.get("brutal_text",line.text) if state.gore else line.text,21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
     dialog_buttons=HBoxContainer.new();dialog_buttons.add_theme_constant_override("separation",10);column.add_child(dialog_buttons)
     if index<scene.lines.size()-1:helper.action("Continue  ·  Space",advance_dialogue,dialog_buttons)
     else:
@@ -509,7 +510,7 @@ func pause_menu() -> void:
     var col=simple_menu("THE FIRE WE CARRY","The chapter autosaves. Earlier campaigns and the first Ogre visit have separate saves.")
     helper.action("Return to the fire",close_modal,col)
     helper.action("Journal and routes",journal,col)
-    helper.action("Stylized blood: "+("on" if state.gore else "off"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
+    helper.action("Brutality: "+("full" if state.gore else "restrained"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)
 func belongings() -> void:
@@ -538,3 +539,6 @@ func home_menu() -> void:
 
 func prepare_exit() -> void:
     director.finish();freeze(true);super.prepare_exit()
+
+func cinematic_texture_path() -> String:
+    return "res://assets/chapter/cinematics_brutal.png" if state.gore else "res://assets/chapter/cinematics.png"

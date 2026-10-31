@@ -20,7 +20,7 @@ var fed=0.0
 var clock=0.0
 var defense_left=100.0
 var unreadable=false
-var gore=false
+var gore=true
 var camp_region="host"
 func _init() -> void:
     for id in PEOPLE:

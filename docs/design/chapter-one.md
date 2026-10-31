@@ -27,6 +27,10 @@ Seven loaded gameplay regions joined by marked walkable road exits. The player p
 
 ## Cinematics
 
-Godot runs camera pans, physical character staging, whole-body poses, written dialogue and original generated illustrated panels. No external videos. The fall of Gorund uses the broken torc, ancestral axe and covered body: brutal political consequence with no graphic anatomy. Optional stylized blood affects combat impacts. The six illustrations cover burning camp, Gorund's fall, challenge, mercy, host journey and personal hearth.
+Godot runs camera pans, physical character staging, whole-body poses, written dialogue and original generated illustrated panels. No external videos. The full-brutality treatment shows the bloody aftermath, Hrothgar displaying Gorund's severed head, and the battered player. This is the default for new chapters, following the user's explicit adult-game direction. The restrained setting uses the broken torc and covered body instead. The setting selects separate art and dialogue and also controls stylized combat blood. The six illustrations cover burning camp, Gorund's fall, challenge, mercy, host journey and personal hearth.
 
 The scene cursor is saved. Skip jumps to the final choices and never silently chooses romance or a different outcome. Gameplay pauses while dialogue is open, including the rescue timer. Every narrative mutation belongs to the story/action layer rather than a cosmetic tween.
+
+## October 31 portrait and brutality revision
+
+The user found the initial faces interchangeable and the cutscenes too close to children's animation. Redesign facial structure, eye/nose shapes, age, scars and individual expressions while retaining outfit/hair identity and the existing inked illustrated style. Bramm is blunt and weathered; Dorrik has a crooked nose/grin; Gorund is severe and deeply scarred; Hrothgar has an angular projecting jaw and predatory expression. Astrid has a softer freckled heart-shaped face; Svala a longer mature face; Runa a lean angular face; Thyra broad elder features; Eydis sculpted cheeks and a dry one-sided smile. Keep adult proportions and consequence in cinematics; do not confuse a cozy home loop with a childlike culture.

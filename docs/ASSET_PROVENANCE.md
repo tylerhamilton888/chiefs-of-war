@@ -75,3 +75,5 @@ Style references are our existing architecture_aligned.png and menu_hearth.png. 
 ## Chapter One (0.7.0)
 
 New assets under `assets/chapter/` were generated with the built-in image_gen tool using our existing sprite art for rendering style and the user's chapter directive for identities. They are generated illustrations, not human-drawn artwork. `docs/CHAPTER_ART_PROMPTS.json` records character specifications, action/portrait/cinematic prompt sets and source paths. PNG bytes are preserved; runtime atlas regions and foot anchors are metadata in `resources/chapter/`. In-engine scenes were reviewed, but final human acceptance of art and animation remains pending.
+
+The user's later adult-tone revision is recorded in `docs/CHAPTER_ART_REVISION.json`: three portrait sheets were redrawn with more individual adult facial structure; a full-brutality cinematic sheet adds the bloody aftermath and severed-head scene. The original restrained treatment remains available. A caravan continuity error was corrected with image_gen and inspected. No Python raster edits were used.
