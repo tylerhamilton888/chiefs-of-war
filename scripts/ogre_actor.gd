@@ -17,7 +17,7 @@ func _ready() -> void:
     frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/ogre_motion.json"))
     var shape=CollisionShape2D.new()
     var circle=CircleShape2D.new();circle.radius=22;shape.shape=circle;add_child(shape)
-    sprite=Sprite2D.new();sprite.texture=preload("res://assets/ogre/hearthlord_motion.png")
+    sprite=Sprite2D.new();sprite.texture=preload("res://assets/ogre/hearthlord_motion_nordic.png")
     sprite.region_enabled=true;add_child(sprite)
     show_frame(0)
 func face(direction: Vector2) -> void:

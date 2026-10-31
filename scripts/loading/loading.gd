@@ -4,7 +4,7 @@ static var destination=""
 static var context="frontier"
 # Cycle across visits so the hunter, feast and battle each get their turn.
 static var next_art=0
-const ARTWORK=["res://assets/loading/tracking.png","res://assets/loading/feast.png","res://assets/loading/frontier.png"]
+const ARTWORK=["res://assets/loading/tracking_nordic.png","res://assets/loading/feast_nordic.png","res://assets/loading/frontier_nordic.png"]
 const SCREEN="res://scenes/loading.tscn"
 const VALID={"frontier":"res://scenes/ogre_frontier.tscn","story":"res://scenes/fire_we_carry.tscn"}
 const TIPS={
@@ -43,7 +43,7 @@ func _ready() -> void:
     bg.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;bg.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;add_child(bg)
     # The feast is extra wide: show the whole clan above the tip panel while
     # retaining the same artwork, darkened, as a backdrop at any aspect ratio.
-    if displayed_art=="res://assets/loading/feast.png":
+    if displayed_art=="res://assets/loading/feast_nordic.png":
         bg.modulate=Color(0.3,0.3,0.3)
         var feast=TextureRect.new();feast.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
         feast.offset_bottom=-225;feast.texture=bg.texture

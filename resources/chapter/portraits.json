@@ -1,6 +1,6 @@
 {
   "bramm": {
-    "texture": "res://assets/chapter/portraits_ember.png",
+    "texture": "res://assets/chapter/portraits_ember_nordic.png",
     "neutral": [
       3,
       2,
@@ -45,7 +45,7 @@
     ]
   },
   "svala": {
-    "texture": "res://assets/chapter/portraits_ember.png",
+    "texture": "res://assets/chapter/portraits_ember_nordic.png",
     "neutral": [
       3,
       409,
@@ -90,7 +90,7 @@
     ]
   },
   "gorund": {
-    "texture": "res://assets/chapter/portraits_ember.png",
+    "texture": "res://assets/chapter/portraits_ember_nordic.png",
     "neutral": [
       3,
       828,
@@ -135,7 +135,7 @@
     ]
   },
   "dorrik": {
-    "texture": "res://assets/chapter/portraits_kin.png",
+    "texture": "res://assets/chapter/portraits_kin_nordic.png",
     "neutral": [
       3,
       2,
@@ -180,7 +180,7 @@
     ]
   },
   "astrid": {
-    "texture": "res://assets/chapter/portraits_kin.png",
+    "texture": "res://assets/chapter/portraits_kin_nordic.png",
     "neutral": [
       3,
       400,
@@ -225,7 +225,7 @@
     ]
   },
   "hrothgar": {
-    "texture": "res://assets/chapter/portraits_kin.png",
+    "texture": "res://assets/chapter/portraits_kin_nordic.png",
     "neutral": [
       3,
       813,
@@ -270,7 +270,7 @@
     ]
   },
   "thyra": {
-    "texture": "res://assets/chapter/portraits_host.png",
+    "texture": "res://assets/chapter/portraits_host_nordic.png",
     "neutral": [
       3,
       2,
@@ -315,7 +315,7 @@
     ]
   },
   "runa": {
-    "texture": "res://assets/chapter/portraits_host.png",
+    "texture": "res://assets/chapter/portraits_host_nordic.png",
     "neutral": [
       3,
       407,
@@ -360,7 +360,7 @@
     ]
   },
   "eydis": {
-    "texture": "res://assets/chapter/portraits_host.png",
+    "texture": "res://assets/chapter/portraits_host_nordic.png",
     "neutral": [
       3,
       827,
