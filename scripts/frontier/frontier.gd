@@ -40,8 +40,8 @@ func _ready() -> void:
     for key in {"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}:
         if not InputMap.has_action(key):
             InputMap.add_action(key);var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
-    var first_visit=not FileAccess.file_exists(FrontierState.SAVE)
-    state=FrontierState.new();var loaded=state.load_game();contracts=preload("res://scripts/frontier/contracts.gd").new(state)
+    state=FrontierState.new();var first_visit=not FileAccess.file_exists(state.save_file)
+    var loaded=state.load_game();contracts=preload("res://scripts/frontier/contracts.gd").new(state)
     cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"))
     seed_world();build_world();build_ui()
     sfx=AudioStreamPlayer.new();sfx.volume_db=-15;add_child(sfx);ambient=AudioStreamPlayer.new();ambient.stream=load("res://assets/opener/ambient.wav");ambient.volume_db=-25;add_child(ambient)

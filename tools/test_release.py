@@ -70,6 +70,23 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(len(release.validate_files(self.directory, data, self.sha)), 2)
         self.assertEqual(len(release.validate_files(self.directory, self.data, self.sha)), 3)
 
+    def test_ogre_only_package_has_no_orc_practice_launcher(self):
+        data = {**self.data, "package_layout": "ogre-only", "archive_prefix": "HearthAndHunger", "executable": "HearthAndHunger.exe"}
+        archive, checksum = release.names(data)
+        def write_fixture(include_old):
+            with zipfile.ZipFile(self.directory / archive, "w") as package:
+                for name in ["HearthAndHunger.exe", "START HERE.txt", "Support/THIRD_PARTY_NOTICES.txt"]:
+                    package.writestr(name, "fixture")
+                package.writestr("Support/BUILD.txt", f"Source commit: {self.sha}\n")
+                if include_old: package.writestr("Extras/Combat Practice.bat", "legacy")
+            digest=hashlib.sha256((self.directory / archive).read_bytes()).hexdigest()
+            (self.directory / checksum).write_text(f"{digest}  {archive}\n")
+        write_fixture(False)
+        self.assertEqual(len(release.validate_files(self.directory, data, self.sha)), 2)
+        write_fixture(True)
+        with self.assertRaisesRegex(ValueError, "old Orc practice launcher"):
+            release.validate_files(self.directory, data, self.sha)
+
     def test_corrupt_archive_rejected(self):
         (self.directory / release.names(self.data)[0]).write_bytes(b"truncated")
         with self.assertRaisesRegex(ValueError, "checksum"):

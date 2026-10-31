@@ -2,7 +2,7 @@ HEARTH AND HUNGER — SUNDERED FRONTIER PLAYTEST
 
 1. Use Windows "Extract All" on the downloaded ZIP.
 2. Open the extracted folder and double-click HearthAndHunger.exe.
-3. Choose "Hunt · Fight · Feast — Sundered Frontier" on the title screen.
+3. Choose an empty hearth and select "Create Ogre", or continue an existing Ogre.
 
 Name your Ogre and choose one of four beard colors on a new frontier save.
 For an existing frontier, press Esc and choose “Change your Ogre’s name and look.”
@@ -24,7 +24,7 @@ stagger or critically wound the goblin first. Lift a whole trunk with E and
 use the attack controls to swing it, or take it to your wagon. Open the pause
 menu to select full or restrained blood effects.
 
-"The Fire We Carry · Chapter One" remains on the title screen. It and the
-frontier keep separate saves. Earlier campaigns remain available too. Optional
-original-campaign combat practice is in Extras. Build/source information and
-engine notices are in Support.
+"The Fire We Carry · Ogre Story" is available on the title screen and keeps
+a separate save. Your original frontier save appears as the first Ogre hearth;
+the other two hearths are independent. Build/source information and engine
+notices are in Support.

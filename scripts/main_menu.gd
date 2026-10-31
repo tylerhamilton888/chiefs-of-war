@@ -1,5 +1,7 @@
 extends Control
-const Slots=preload("res://scripts/save_slots.gd")
+const Slots=preload("res://scripts/save_slots.gd") # Legacy command-line regression entry only.
+const FrontierSlots=preload("res://scripts/frontier/slots.gd")
+const Loading=preload("res://scripts/loading/loading.gd")
 var content: VBoxContainer
 var status: Label
 func _ready() -> void:
@@ -15,7 +17,7 @@ func _ready() -> void:
     if first_boot and ("--combat-yard" in OS.get_cmdline_user_args() or "--fresh" in OS.get_cmdline_user_args()):
         Slots.practice="--combat-yard" in OS.get_cmdline_user_args();Slots.fresh=true
         get_tree().change_scene_to_file.call_deferred("res://scenes/opener.tscn");return
-    Slots.restore_selection();Slots.practice=false;Slots.fresh=false
+    FrontierSlots.restore();Slots.practice=false;Slots.fresh=false
     build()
     if "--startup-smoke" in OS.get_cmdline_user_args(): get_tree().create_timer(2.0).timeout.connect(get_tree().quit)
 func style(bg: String,border: String) -> StyleBoxFlat:
@@ -37,35 +39,29 @@ func build() -> void:
     content=VBoxContainer.new();content.add_theme_constant_override("separation",10);panel.add_child(content)
     var title=words("HEARTH AND HUNGER",40);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(title)
     var sub=words("A NOMADIC OGRE SANDBOX",16,"b99a66");sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(sub)
-    action("Hunt · Fight · Feast — Sundered Frontier",func():get_tree().change_scene_to_file("res://scenes/ogre_frontier.tscn"),content)
-    action("The Fire We Carry · Chapter One",func():get_tree().change_scene_to_file("res://scenes/fire_we_carry.tscn"),content)
-    content.add_child(words("Family, the fall of Emberhide, and a hearth of your own",15,"b5ac98"))
-    content.add_child(HSeparator.new())
-    var current=Slots.info(Slots.selected)
-    var resume=action("Continue • "+current.name if not current.empty else "Continue • no character yet",func():launch(Slots.selected,false),content);resume.disabled=current.empty or not current.valid
-    content.add_child(words("EARLIER CAMPAIGNS • CHIEFS OF WAR",16,"b99a66"))
-    for i in Slots.COUNT:
-        var info=Slots.info(i);var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);content.add_child(row)
+    content.add_child(words("CHOOSE YOUR OGRE",18,"b99a66"))
+    var first_button: Button
+    for i in FrontierSlots.COUNT:
+        var info=FrontierSlots.info(i);var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);content.add_child(row)
         var label_text="%d   %s"%[i+1,info.name]
-        if not info.empty and info.valid:label_text+="   •   Day %d   •   %s"%[info.day,info.outfit.capitalize()]
+        if not info.empty and info.valid:label_text+="   ·   Day %d   ·   %s"%[info.day,info.region.replace("_"," ").capitalize()]
         var l=words(label_text,17);l.clip_text=true;l.custom_minimum_size.x=420;l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(l)
         var index=i;var empty=info.empty
-        var b=action("New character" if empty else "Play",func():launch(index,empty),row);b.custom_minimum_size.x=190;b.disabled=not info.valid
-    status=words("Each character has its own world, progress and checkpoints.",15,"b5ac98");content.add_child(status)
-    if Slots.load_failed:status.text="That save could not be loaded. It has been preserved; choose another slot."
+        var button=action("Create Ogre" if empty else "Continue",func():launch_frontier(index,empty),row)
+        button.custom_minimum_size.x=190;button.disabled=not info.valid
+        if first_button==null and not button.disabled:first_button=button
+    status=words("Each Ogre has a separate frontier and saved progress.",15,"b5ac98");content.add_child(status)
+    action("The Fire We Carry · Ogre Story",func():Loading.start(get_tree(),"story"),content)
+    content.add_child(words("A separate story of Emberhide and the Stonebelly Host",15,"b5ac98"))
     var extras=HBoxContainer.new();extras.add_theme_constant_override("separation",12);content.add_child(extras)
-    for spec in [["First Ogre visit",ogre_hearth],["Practice",practice],["Controls",controls],["Quit",func():get_tree().quit()]]:
-        var b=action(spec[0],spec[1],extras);b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-    content.get_child(2).grab_focus()
-func ogre_hearth() -> void:
-    get_tree().change_scene_to_file("res://scenes/wandering_hearth.tscn")
-func launch(index: int,new_character: bool) -> void:
-    var info=Slots.info(index)
-    if not info.valid or (new_character and not info.empty):status.text="This slot already contains a character. Choose an empty slot.";return
-    Slots.choose(index,new_character)
-    get_tree().change_scene_to_file("res://scenes/opener.tscn")
-func practice() -> void:
-    Slots.practice=true;Slots.fresh=true;Slots.load_failed=false
-    get_tree().change_scene_to_file("res://scenes/opener.tscn")
+    for spec in [["Controls",controls],["Quit",func():get_tree().quit()]]:
+        var button=action(spec[0],spec[1],extras);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    if first_button:first_button.grab_focus()
+func launch_frontier(index: int,new_character: bool) -> void:
+    var info=FrontierSlots.info(index)
+    if not info.valid or new_character!=info.empty:
+        status.text="That hearth is unavailable. Existing saves are preserved.";return
+    FrontierSlots.choose(index)
+    Loading.start(get_tree(),"frontier")
 func controls() -> void:
-    status.text="WASD move • LMB axe • RMB hold block / timed parry • Space dodge\nE interact • I belongings • J journal • Esc pause • F5 save"
+    status.text="WASD move · LMB attack · R heavy · RMB block/parry · Space dodge\nE interact · F throw/clinch · G bite · Shift+G swallow · Esc pause"

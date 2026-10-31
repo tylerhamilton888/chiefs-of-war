@@ -1,3 +1,7 @@
+## October 31 — Ogre-only player-facing experience and loading screens
+
+The user reported that the old menu offered the Orc creator and Orc save, and explicitly directed that Orc content be removed from playable view while retained for later use and other groups. The main menu now lists only three Ogre frontier hearths and the Ogre story; original Ogre frontier progress stays in slot one, and original Orc save bytes remain untouched. The package omits the old Orc practice launcher. The user also requested illustrated Ogre loading screens with helpful, accurate game tips. Loading uses real background scene loading and provides a return-to-title error path. Generated loading art and prompts: docs/LOADING_ART_PROMPTS.md.
+
 ## October 31 — adult Ogre feeding and the log weapon
 
 The user requested more brutal eating: Ogres bite limbs off and can swallow goblins whole. The Ogre should also wield the log as a weapon. This supersedes earlier restraint as the default artistic direction; the existing optional restrained setting remains. In Sundered Frontier, an earned G finisher bites and Shift+G swallows a staggered or critically wounded goblin; both cost Ferocity. A carried whole trunk functions as a heavy, long-reaching improvised weapon without losing its cargo identity. Original AI-generated whole-body sprite art and source sheets are retained under assets/frontier; this is not a claim of human-drawn art. Gameplay and animation remain subject to visual and player testing.

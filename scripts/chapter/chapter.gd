@@ -536,7 +536,7 @@ func home_menu() -> void:
         state.player_position=player.position;close_modal();rebuild();save_progress(),col)
     helper.action("Explore Sundered Frontier · gameplay expedition",func():
         if not save_progress():return
-        prepare_exit();await get_tree().create_timer(0.15).timeout;get_tree().change_scene_to_file("res://scenes/ogre_frontier.tscn"),col)
+        prepare_exit();await get_tree().create_timer(0.15).timeout;preload("res://scripts/loading/loading.gd").start(get_tree(),"frontier"),col)
     helper.action("Pack for the road",func():state.mark("home_packed");state.player_position=player.position;close_modal();rebuild();say("Your household is packed. Press B in a safe region to settle it there.");save_progress(),col)
     helper.action("Return",close_modal,col)
 

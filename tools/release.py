@@ -37,7 +37,7 @@ def manifest():
 
 
 def names(data):
-    if data.get("package_layout") == "clear-launch":
+    if data.get("package_layout") in ("clear-launch", "ogre-only"):
         return (f"{data.get('archive_prefix', 'ChiefsOfWar')}-Windows-{data['version']}.zip", f"SHA256SUMS-{data['version']}.txt")
     return (f"Chiefs-of-War-{data['version']}-Windows.zip", f"SHA256SUMS-{data['version']}.txt", "creator.png")
 
@@ -67,8 +67,12 @@ def validate_files(directory, data, sha):
     with zipfile.ZipFile(archive) as package:
         required = {"ChiefsOfWar.exe", "README.txt", "Combat-Practice.bat", "BUILD.txt", "THIRD_PARTY_NOTICES.txt"}
         build_name = "BUILD.txt"
-        if data.get("package_layout") == "clear-launch":
-            required = {data.get("executable", "ChiefsOfWar.exe"), "START HERE.txt", "Extras/Combat Practice.bat", "Support/BUILD.txt", "Support/THIRD_PARTY_NOTICES.txt"}
+        if data.get("package_layout") in ("clear-launch", "ogre-only"):
+            required = {data.get("executable", "ChiefsOfWar.exe"), "START HERE.txt", "Support/BUILD.txt", "Support/THIRD_PARTY_NOTICES.txt"}
+            if data.get("package_layout") == "clear-launch":
+                required.add("Extras/Combat Practice.bat")
+            elif "Extras/Combat Practice.bat" in package.namelist():
+                raise ValueError("Ogre package contains the old Orc practice launcher")
             build_name = "Support/BUILD.txt"
         if not required.issubset(package.namelist()) or package.testzip():
             raise ValueError("Windows ZIP is incomplete/corrupt")

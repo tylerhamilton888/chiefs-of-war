@@ -66,11 +66,11 @@ jobs:
           for suite in customization_test opener_test opener_edges motion_test feel_test execution_test defense_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --fresh --test
           done
-          for suite in save_slots_test ogre_hearth_test chapter_test frontier_brutality_test frontier_creator_test; do
+          for suite in save_slots_test ogre_hearth_test chapter_test frontier_brutality_test frontier_creator_test loading_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
           check_godot frontier_first_start env XDG_DATA_HOME="$RUNNER_TEMP/frontier_first_start" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script tests/frontier_first_start_test.gd -- --test --creator-first-test
-          check_godot menu_flow_test env XDG_DATA_HOME="$RUNNER_TEMP/menu_flow_test" Godot_v4.4.1-stable_linux.x86_64 --headless --max-fps 60 --script tests/menu_flow_test.gd
+          check_godot menu_flow_test env XDG_DATA_HOME="$RUNNER_TEMP/menu_flow_test" Godot_v4.4.1-stable_linux.x86_64 --headless --max-fps 60 --script tests/menu_flow_test.gd -- --test --creator-first-test
           check_godot practice env XDG_DATA_HOME="$RUNNER_TEMP/practice" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script tests/practice_test.gd -- --fresh --test --combat-yard
       - name: Render creator and practice menus
         if: steps.release.outputs.complete != 'true'
@@ -85,6 +85,7 @@ jobs:
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-chapter" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/chapter_visual.gd -- --test 2>&1 | tee builds/logs/render-chapter.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-frontier" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/frontier_visual.gd -- --test 2>&1 | tee builds/logs/render-frontier.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-frontier-creator" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/frontier_creator_visual.gd -- --test 2>&1 | tee builds/logs/render-frontier-creator.log
+          CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-loading" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/loading_visual.gd -- --test 2>&1 | tee builds/logs/render-loading.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/render-*.log; then exit 1; fi
       - name: Export and package Windows
         if: steps.release.outputs.complete != 'true'
@@ -99,13 +100,14 @@ jobs:
           XDG_DATA_HOME="$RUNNER_TEMP/frontier-pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --audio-driver Dummy --main-pack builds/windows/HearthAndHunger.exe -- --ogre-frontier --startup-smoke 2>&1 | tee builds/logs/frontier-pack-smoke.log
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd 2>&1 | tee builds/logs/notices.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/*.log; then exit 1; fi
-          cp "$RUNNER_TEMP/review/creator.png" builds/creator.png
+          cp "$RUNNER_TEMP/review/creator-0.png" builds/creator.png
           cp "$RUNNER_TEMP/review/ogre-title.png" builds/main-menu.png
           cp "$RUNNER_TEMP/review/ogre-hearth.png" builds/ogre-hearth.png
           cp "$RUNNER_TEMP/review/chapter-crossing.png" builds/chapter-crossing.png
           cp "$RUNNER_TEMP/review/chapter-host.png" builds/chapter-host.png
           cp "$RUNNER_TEMP"/review/frontier-*.png builds/
           cp "$RUNNER_TEMP"/review/creator-*.png builds/
+          cp "$RUNNER_TEMP"/review/loading-*.png builds/
           python3 tools/package_windows.py --exe builds/windows/HearthAndHunger.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
       - name: Preserve build before publication
         if: steps.release.outputs.complete != 'true'
@@ -125,6 +127,7 @@ jobs:
             builds/chapter-host.png
             builds/frontier-*.png
             builds/creator-*.png
+            builds/loading-*.png
       - name: Preserve diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4

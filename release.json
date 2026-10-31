@@ -1,9 +1,9 @@
 {
-  "version": "0.8.1",
-  "title": "Hearth and Hunger 0.8.1 \u2014 Choose Your Ogre",
-  "notes": "docs/RELEASE_0_8_1.md",
+  "version": "0.8.2",
+  "title": "Hearth and Hunger 0.8.2 \u2014 The Ogre Hearth",
+  "notes": "docs/RELEASE_0_8_2.md",
   "prerelease": true,
-  "package_layout": "clear-launch",
+  "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",
   "executable": "HearthAndHunger.exe",
   "game_name": "Hearth and Hunger"

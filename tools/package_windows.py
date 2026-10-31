@@ -34,11 +34,13 @@ def package(exe: Path, output: Path, version: str, source: str) -> Path:
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         z.writestr(game_exe, binary)
         z.writestr('START HERE.txt', readme.replace('\n', '\r\n'))
-        z.writestr('Extras/Combat Practice.bat', practice)
+        if settings.get('package_layout') != 'ogre-only':
+            z.writestr('Extras/Combat Practice.bat', practice)
         z.writestr('Support/BUILD.txt', build)
         z.write(notices, 'Support/THIRD_PARTY_NOTICES.txt')
-    expected = {game_exe, 'START HERE.txt', 'Extras/Combat Practice.bat',
-                'Support/BUILD.txt', 'Support/THIRD_PARTY_NOTICES.txt'}
+    expected = {game_exe, 'START HERE.txt', 'Support/BUILD.txt', 'Support/THIRD_PARTY_NOTICES.txt'}
+    if settings.get('package_layout') != 'ogre-only':
+        expected.add('Extras/Combat Practice.bat')
     with zipfile.ZipFile(archive) as z:
         if set(z.namelist()) != expected or z.testzip() is not None:
             raise ValueError('Distribution layout or ZIP integrity failed')

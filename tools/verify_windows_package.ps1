@@ -24,14 +24,11 @@ function Invoke-GameSmoke([string]$Name, [string[]]$GameArgs) {
     Write-Host "WINDOWS PACKAGED STARTUP PASS: $Name"
 }
 Invoke-GameSmoke 'main-menu' @()
-Invoke-GameSmoke 'new-character' @('--fresh')
 $saveDir = Join-Path $env:APPDATA 'Godot/app_userdata/Chiefs of War'
 New-Item -ItemType Directory -Force -Path $saveDir | Out-Null
 $save = Join-Path $saveDir 'ancestral_hearth_v1.json'
 [System.IO.File]::WriteAllText($save, 'campaign sentinel - do not overwrite')
-Invoke-GameSmoke 'optional-practice' @('--combat-yard')
-Invoke-GameSmoke 'ogre-hearth' @('--ogre-hearth')
 Invoke-GameSmoke 'chapter-one' @('--chapter-one')
 Invoke-GameSmoke 'ogre-frontier' @('--ogre-frontier')
-if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'Practice modified the campaign sentinel.' }
-Write-Host 'WINDOWS PACKAGE VERIFIED: normal entry, practice entry, Ogre entry, Chapter One entry, campaign isolation, path with spaces, external working directory.'
+if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'The Ogre game modified the legacy campaign sentinel.' }
+Write-Host 'WINDOWS PACKAGE VERIFIED: Ogre menu, Chapter One, frontier, legacy save isolation, path with spaces, external working directory.'

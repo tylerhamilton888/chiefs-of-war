@@ -24,6 +24,10 @@ Continue this existing Godot 4.4.1 / GDScript game, now Hearth and Hunger. The l
 | Session loss or access failure | `docs/engineering/recovery.md` | `docs/SESSION_HANDOFF.md` |
 | Original assignment/source audit | `docs/design/development-mandate.md` | `docs/MASTER_BRIEF.md`, `docs/design/source-map.json` |
 
+## Current player-facing scope
+
+The user explicitly removed the legacy Orc campaign and Orc practice launcher from playable menus and downloads. Preserve their source, assets and saves for possible later use; Orcs may appear as other groups in the Ogre world. The player-facing menu and creation flow lead to the Ogre game. The original Ogre frontier save is slot one; new slots are independent. Do not silently reset any save.
+
 ## Non-negotiable project constraints
 
 - Original rugged illustrated 2D art, square-aligned elevated environments. Warcraft II is a readability reference, never an asset source. Do not revisit the rejected 3D direction.

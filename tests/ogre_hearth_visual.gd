@@ -9,7 +9,7 @@ func capture(name: String):
 func run():
     change_scene_to_file("res://scenes/main_menu.tscn");await frames(8)
     await capture("ogre-title")
-    current_scene.ogre_hearth();await frames(12)
+    change_scene_to_file("res://scenes/wandering_hearth.tscn");await frames(12)
     var world=current_scene;world.player.controlled=false;world.player.position=Vector2(940,810);world.camera.reset_smoothing()
     await capture("ogre-hearth")
     world.player.set_physics_process(false)

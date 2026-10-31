@@ -1,6 +1,9 @@
 extends RefCounted
 ## A separate durable regional ledger. Never migrates or overwrites narrative saves.
 const SAVE="user://ogre_frontier_v1.json"
+const FrontierSlots=preload("res://scripts/frontier/slots.gd")
+# Capture the selected slot when this ledger is created; changing menus cannot redirect an existing instance.
+var save_file: String=FrontierSlots.path()
 const REGIONS=["hearth","forest","den","pass","blackstone","dunmere","ridge"]
 var region="hearth"
 var player_position=Vector2(1080,1050)
@@ -51,15 +54,15 @@ func pack() -> Dictionary:
     return {"version":1,"region":region,"position":[player_position.x,player_position.y],"hp":hp,"fed":fed,"ferocity":ferocity,"clock":clock,"day":day,"gore":gore,"inventory":inventory,"flags":flags,"encounters":encounters,"objects":objects,"cargo":cargo,"contracts":contracts,"reputation":reputation,"regional":regional,"animal":animal,"camp_region":camp_region,"packed":packed,"equipment":equipment,"player_name":player_name,"appearance":appearance}
 func save_game() -> bool:
     if unreadable:return false
-    var file=FileAccess.open(SAVE+".tmp",FileAccess.WRITE)
+    var file=FileAccess.open(save_file+".tmp",FileAccess.WRITE)
     if not file:return false
     file.store_string(JSON.stringify(pack(),"\t"));file.flush();var error=file.get_error();file.close()
     if error!=OK:return false
-    return DirAccess.rename_absolute(SAVE+".tmp",SAVE)==OK
+    return DirAccess.rename_absolute(save_file+".tmp",save_file)==OK
 func load_game() -> bool:
-    if not FileAccess.file_exists(SAVE):return true
+    if not FileAccess.file_exists(save_file):return true
     var parser=JSON.new()
-    if parser.parse(FileAccess.get_file_as_string(SAVE))!=OK or not valid(parser.data):unreadable=true;return false
+    if parser.parse(FileAccess.get_file_as_string(save_file))!=OK or not valid(parser.data):unreadable=true;return false
     var d: Dictionary=parser.data
     region=d.region;player_position=Vector2(d.position[0],d.position[1]);hp=d.hp;fed=d.fed;ferocity=d.ferocity;clock=d.clock;day=int(d.day);gore=d.gore
     inventory=d.inventory;flags=d.flags;encounters=d.encounters;objects=d.objects;cargo=d.cargo;contracts=d.contracts;reputation=d.reputation;regional=d.regional;animal=d.animal;camp_region=d.camp_region;packed=d.packed;equipment=d.equipment
