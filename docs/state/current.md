@@ -1,3 +1,9 @@
+# Nordic-inspired Ogre face pass — work in progress
+
+The user asks for slightly different Ogre faces, more Nordic and less Orcish; current faces remind them of the trolls from The Hobbit. Inspect existing portraits, animation sheets and loading art; develop varied, human-proportioned facial designs with less exaggerated underbites and tusks. Preserve individual characters, action poses, save data, violent combat, unharmed loading-screen animals, and original 2D art style. Sprite/portrait atlases have tightly measured rectangles; do not replace without validating alignment, consistency and gameplay. 0.8.5 remains the last verified release.
+
+---
+
 # Hearth and Hunger 0.8.5 — The Clan, published and verified
 
 Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.5
