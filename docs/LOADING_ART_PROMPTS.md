@@ -2,11 +2,11 @@
 
 Built-in image generation. These are generated illustrations in the game's existing inked 2D style, not human-drawn artwork.
 
-Tracking (`assets/loading/tracking.png`): An imposing bearded Ogre hunter examines fresh tracks in a snowy pine forest alongside Flint, his healthy, living shaggy stone-plated companion. Mountain dawn and an adventurous, warm mood; no wounded animals, carcasses, blood, text or UI. Style reference: `assets/ogre/menu_camp.png`; companion reference: `assets/chapter/beast.png`.
+Tracking (`assets/loading/tracking.png`): An imposing bearded Ogre hunter examines fresh tracks in a snowy pine forest alongside Flint, his healthy, living shaggy stone-plated companion. Mountain dawn and an adventurous, warm mood; no wounded animals, carcasses, blood, text or UI. References include `assets/ogre/hearthlord_motion.png` and `assets/chapter/beast.png`.
 
-Feast (`assets/loading/feast.png`): A rugged Ogre clan shares food and stories around their traveling hearth, with goblins on a spit adding dark humor. The Ogres' proportions, features and attire follow the existing game art; Flint rests safely nearby. References: `assets/loading/frontier.png`, `assets/loading/tracking.png`, and `assets/ogre/menu_camp.png`.
+Feast (`assets/loading/feast.png`): A rugged Ogre clan shares food and stories around their traveling hearth, with goblins on a spit adding dark humor. The Ogres' proportions, features and attire follow the existing game art; Flint rests safely nearby. Final references include `assets/chapter/gorund.png`, `assets/chapter/thyra.png`, `assets/chapter/hrothgar.png` and `assets/chapter/portraits_kin.png`.
 
-Battle (`assets/loading/frontier.png`): An enormous Ogre warrior swings an uprooted trunk against small goblin raiders in a rugged mountain pass at sunset; energetic scale, colorful inked 2D fantasy illustration, no text or UI. Style reference: `assets/ogre/menu_camp.png`.
+Battle (`assets/loading/frontier.png`): An enormous Ogre warrior swings an uprooted trunk against small goblin raiders in a rugged mountain pass at sunset; energetic scale, colorful inked 2D fantasy illustration, no text or UI. Final character reference: `assets/ogre/hearthlord_motion.png`.
 
 ## Generation prompts for 0.8.3
 

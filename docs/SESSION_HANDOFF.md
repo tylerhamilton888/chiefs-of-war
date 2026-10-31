@@ -1,6 +1,10 @@
-# Feast character refinement — work in progress
+# Hearth and Hunger 0.8.5 — The Clan, published and verified
 
-The user requested that the women in the feast illustration have leaner, athletic builds closer to the existing female Ogre sprites. Keep their strong Ogre appearance and the goblin-on-a-spit dark humor; animals remain unharmed. Combat violence, blood and finishers remain unchanged. Version 0.8.5 will supersede the previous art build after validation.
+Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.5
+Windows: https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.8.5/HearthAndHunger-Windows-0.8.5.zip
+Source 538e567f43c390c3f87fa395fdccd160fd7aaf59 (tree 755c70677f3b13f4ea655275e7ef81132bce8dd1); successful release run 41216367050. ZIP size 162973264 bytes, SHA-256 609bf3cf517fe835f8661db40fcbb6b833fe80102d9fb034542aa21a0b1a836b. The public prerelease has the verified ZIP and checksum. Regression, render, native Windows startup and release download verification passed.
+
+The user requested replacing a loading screen showing a wounded animal with an Ogre tracking in the snow with the unharmed animal companion, plus a clan feast. They clarified that combat violence and blood remain welcome and existing combat and finishers must stay unchanged. They requested a dark Ogre edge (goblins on a spit), then asked that the art match established in-game Ogre designs and that the women be leaner and more athletic, matching the in-game sprites. All three rotating loading illustrations were revised using the actual character sprites as references: tracking with Flint, clan feast with goblin spit, and a log-wielding Ogre battling goblins. The feast is framed to show the full clan above the tips. No injured animals appear. Art was visually reviewed in Godot and loading transitions passed; combat code was unchanged and its 29 checks passed. The new build has not yet been playtested by the user.
 
 ---
 
