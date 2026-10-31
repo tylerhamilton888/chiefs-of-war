@@ -12,7 +12,7 @@ func run() -> void:
     DirAccess.make_dir_recursive_absolute(output)
     DirAccess.remove_absolute("user://ogre_frontier_v1.json")
     game=load("res://scenes/ogre_frontier.tscn").instantiate();root.add_child(game);current_scene=game
-    await frames(20);game.player.controlled=false;game.player.position=Vector2(1250,1150)
+    await frames(20);game.player.controlled=false;game.player.position=Vector2(1500,1000)
     game.camera.reset_smoothing();game.player.enabled=false;game.set_process(false)
     game.state.cargo={"id":"visual_log","kind":"log","yield":{"wood":8}}
     game.player.face(Vector2.RIGHT);game.player.weapon_pose(1);await shot("log-windup")

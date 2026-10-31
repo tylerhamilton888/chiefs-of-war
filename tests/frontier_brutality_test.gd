@@ -33,6 +33,8 @@ func run() -> void:
     check(not game.overpower(true),"feeding requires earned Ferocity")
     game.state.ferocity=100
     check(game.overpower(true),"bite finisher starts on staggered goblin")
+    game.execution_tick(0.23)
+    check(game.execution_sprite.position.distance_to(game.player.position)<180,"feeding artwork is anchored at the actual player location")
     game.finish_execution(true)
     check(bite.hp==0 and game.player.hp==128,"bite defeats prey and restores health")
     check(game.state.encounters.get("bite_target",1)==0,"bite records defeat")

@@ -441,6 +441,9 @@ func clinch_input() -> void:
     if not execution_busy or execution_kind!="clinch" or clinch_result!=0:return
     clinch_result=1 if execution_clock>=0.82 and execution_clock<=1.14 else -1
     sound("block" if clinch_result==1 else "hit")
+func execution_pose(id: String,index: int,mirror: bool) -> void:
+    Atlas.pose(execution_sprite,id,index,170,mirror)
+    execution_sprite.position+=player.position
 func execution_tick(delta: float) -> void:
     execution_clock+=delta
     if not is_instance_valid(execution_target):finish_execution(false);return
@@ -450,7 +453,7 @@ func execution_tick(delta: float) -> void:
         if execution_clock>1.18:
             if clinch_result==0:clinch_result=-1
             index=(4 if execution_clock<1.43 else 5) if clinch_result==1 else (6 if execution_clock<1.43 else 7)
-        Atlas.pose(execution_sprite,"clinch",index,170,mirror)
+        execution_pose("clinch",index,mirror)
         var gold=execution_clock>=0.82 and execution_clock<=1.14
         prompt.text="F  DRIVE THROUGH NOW" if gold else "Wait for the gold opening…" if clinch_result==0 else "You turn his weight." if clinch_result==1 else "He has your balance."
         prompt.modulate=Color("ffd37c") if gold else Color.WHITE
@@ -460,7 +463,7 @@ func execution_tick(delta: float) -> void:
         var feeding=execution_kind in ["feed","swallow"]
         var art="devour" if feeding and state.gore and FileAccess.file_exists("res://resources/frontier/devour.json") else "overpower"
         var row=4 if execution_kind=="swallow" and art=="devour" else 0 if art=="devour" else 4 if feeding else 0
-        Atlas.pose(execution_sprite,art,frame+row,170,mirror)
+        execution_pose(art,frame+row,mirror)
         if execution_kind=="throw" and execution_clock>=0.60 and not execution_contact:
             execution_contact=true;execution_target.position=player.position+execution_direction*105;execution_target.sprite.show();execution_target.launch(execution_direction);sound("hit");shake=5;state.mark("thrown")
         if execution_clock>=0.82:finish_execution(true)
