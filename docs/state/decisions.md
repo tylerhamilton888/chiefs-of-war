@@ -1,3 +1,9 @@
+# Feast art direction
+
+The clan can enjoy a feast but should look like the Ogres in established game art, feel rugged and dangerous, and include dark humor such as goblins on a spit. Avoid wounded animals in the loading art. Combat violence and blood remain welcome.
+
+---
+
 ## October 31 — loading artwork and combat violence clarification
 
 The user likes animals and does not want to stare at a visibly wounded or bleeding animal on a loading screen. Replace the boar image with snowy tracking alongside an animal companion and add an Ogre clan feast to the loading rotation. The user explicitly corrected an overly broad interpretation: combat violence, blood and existing finishers should remain unchanged; violence is fine in quick gameplay. This applies to lingering loading artwork, not a mandate to censor combat or restrict all gore to cutscenes.

@@ -41,6 +41,13 @@ func _ready() -> void:
     displayed_art=ARTWORK[posmod(next_art,ARTWORK.size())];next_art+=1
     bg.texture=load(displayed_art) if ResourceLoader.exists(displayed_art) else load("res://assets/ogre/menu_camp.png")
     bg.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;bg.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;add_child(bg)
+    # The feast is extra wide: show the whole clan above the tip panel while
+    # retaining the same artwork, darkened, as a backdrop at any aspect ratio.
+    if displayed_art=="res://assets/loading/feast.png":
+        bg.modulate=Color(0.3,0.3,0.3)
+        var feast=TextureRect.new();feast.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+        feast.offset_bottom=-225;feast.texture=bg.texture
+        feast.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;feast.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;add_child(feast)
     var overlay=ColorRect.new();overlay.color=Color(0.035,0.035,0.025,0.18);overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(overlay)
     var panel=PanelContainer.new();panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
     panel.offset_left=36;panel.offset_right=-36;panel.offset_top=-225;panel.offset_bottom=-35
