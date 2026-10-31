@@ -1,8 +1,14 @@
-# Ogre creator — work in progress
+# Hearth and Hunger 0.8.1 — Choose Your Ogre, published and verified
 
-The user requested a player character creator with a few styles. The new Sundered Frontier creator asks for a name and offers four beard-color presets on the existing complete-body illustrated animation frames. First visit opens it; existing saves keep their progress and may open it via Esc → Change your Ogre’s name and look. Old frontier saves without appearance keys migrate to the original look; Chapter One has a separate protagonist/save. This is palette customization, not independently authored facial or hairstyle shapes. See tests/frontier_creator_test.gd and tests/frontier_first_start_test.gd. The saved character’s palette is shared with the paired execution sprite; inspect all presets, including finishing moves, and check if this unintentionally recolors other actors.
+Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.1
+Windows: https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.8.1/HearthAndHunger-Windows-0.8.1.zip
+Exact source d5210694d81ab763a4496ef33c07ac3a83aa7f58 (tree 576ecb535113df823060782b7cc425bd20af7f51); successful release workflow 41210251235. ZIP size 155413386 bytes; SHA-256 d31077e3c750399a1c606db94fd18b4dbf7c5473045a213464f76e0826077530. GitHub confirms an uploaded ZIP and checksum on the public prerelease. The workflow checked the downloaded assets and native Windows startup, including the frontier entry.
 
-Local first-start and 19 creator checks pass. Actual Godot renders of all four presets and selected log/feeding actions were inspected; full release workflow and a new Windows release are pending; do not claim 0.8.1 is published. Prior 0.8.0 remains the current published playtest.
+The user requested a character creator with a few styles. A first visit to Sundered Frontier opens a name field and a live preview with copper, dark, golden and silver hair/beard palettes. These are color presets of the existing illustrated body and hairstyle, not independently authored hair/face shapes; some red accents can be recolored. Returning players can choose Esc → Change your Ogre’s name and look without losing progress. Old 0.8.0 frontier saves load with the original default and gain optional identity fields; Chapter One uses its own protagonist/save. Name and palette follow movement, combat, hauling and paired finishers; hand-authored shader regions improve palette consistency in devour poses.
+
+Validation: 19 creator tests including legacy save, cancel, validation, rollback and reload; a separate first-start/continue test; 29 existing frontier combat checks; complete release regressions; actual Godot renders of all presets and log/feeding poses inspected; native Windows launch and publication verification passed. This is still an early playtest; additional independently drawn hairstyles, faces, body types and Chapter One creator support are not implemented. User playtest and art acceptance remain pending.
+
+Development branch feature/hearth-and-hunger and release/v0.8.1 preserve upstream ancestry; local reconstructed commit SHAs differ. The source release is an empty release commit on top of feature source with the same tree. Respond to user feedback or continue the Ogre Experience directive when asked.
 
 ---
 
