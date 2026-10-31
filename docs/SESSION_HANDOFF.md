@@ -1,8 +1,16 @@
-# Ogre-only menu and loading screens — work in progress
+# Hearth and Hunger 0.8.2 — Ogre-only menu and loading screens, published
 
-The user said the menu was showing the old Orc creator and save and explicitly requested that Orc content be removed from playable view, preserving assets and old saves for later. The Ogre menu now has three isolated frontier slots (slot one uses the original Ogre save path), with an Ogre creator for empty slots and the separate Ogre story. The old Orc practice launcher is omitted from the Windows package. Two new AI-generated loading illustrations and practical tips appear while entering the frontier or story, with asynchronous scene loading and a recoverable failure path. Actual engine screenshots of the menu and loading screens were inspected. See docs/LOADING_ART_PROMPTS.md and docs/design/ogre-experience.md. User data must not be deleted or silently overwritten.
+Release: https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.2
+Windows: https://github.com/tylerhamilton888/chiefs-of-war/releases/download/v0.8.2/HearthAndHunger-Windows-0.8.2.zip
+Source 4e67455dc1db7c7564d7fe1b2438d6d9a7335c32 (tree 1fd5f65322b407e67595e15c2aad3a2c0dedddeb); release run 41213200956 passed. ZIP size 160570709 bytes; SHA-256 6f1fe6965a399df891bc123b0d3e30b8d61d10097be7afed11a628906fabad7e. Public prerelease has both verified ZIP and checksum; native Windows startup and release-download verification passed.
 
-Ogre menu, multiple-save, legacy-save-preservation, creator, loading-transition and release-format checks pass locally. Windows release 0.8.2 is in progress. Run 41212236579 hung because its old Ogre Hearth regression called a deliberately removed legacy menu method; the test now loads that archived scene directly and checks the Ogre-only menu. A corrected run is needed; inspect GitHub state before retrying. Previous v0.8.1 remains available.
+The user saw the old Orc creator/save and directed that Orc content be removed from playable view but preserved as a backburner and for other groups. The main menu now shows three independent Ogre frontier hearths and the separate Ogre story. Slot one uses the original Ogre frontier path and keeps that progress; slots two and three are new paths. Empty slots open the Ogre creator. Orc saves and source remain untouched, and the Windows ZIP excludes the old Orc practice launcher. Tests confirm no Orc menu entry, separate Ogre saves, protection against overwriting occupied or unreadable slots, and unchanged legacy save bytes.
+
+The user also requested dedicated Ogre loading screens. Two generated illustrations with context-specific tips and a real background-loading progress bar appear when entering Sundered Frontier or The Fire We Carry, including story-to-frontier travel. An error offers a return to title. Art prompts are in docs/LOADING_ART_PROMPTS.md. Menu and both screens were visually inspected in the real Godot renderer.
+
+Local tests: Ogre menu/three saves/legacy preservation, loading transitions including failure path, 19 creator checks, 29 combat checks, 92 Chapter One checks, and 18 release-format checks. The full release workflow, render checks, Windows launch and public asset verification passed. First run 41212236579 hung on an archived-scene regression that referenced a removed menu method; that test was corrected and the succeeding run 41213200956 used the fixed source. The feature branch has the same source tree before this documentation-only update; the release branch is immutable once published.
+
+This remains an early playtest; the player has not yet evaluated the new build. The creator is still the existing body/hairstyle with four color presets, not independently drawn hairstyle and face shapes. Retain that limitation honestly.
 
 ---
 
