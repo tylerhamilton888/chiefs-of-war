@@ -6,7 +6,7 @@ func check(ok: bool,message: String) -> void:
     if not ok:failures+=1;push_error("LOADING: "+message)
 func run() -> void:
     check(not Loading.start(self,"bad-destination"),"invalid destination is rejected")
-    check(Loading.ARTWORK.size()==3 and Loading.ARTWORK[0].ends_with("tracking_nordic.png") and Loading.ARTWORK[1].ends_with("feast_nordic.png"),"tracking and clan feast are included in the rotation")
+    check(Loading.ARTWORK.size()==3 and Loading.ARTWORK[0].ends_with("tracking_nordic.png") and Loading.ARTWORK[1].ends_with("feast_clan_v2.png"),"tracking and clan feast are included in the rotation")
     for path in Loading.ARTWORK:check(ResourceLoader.exists(path),"loading art exists: "+path)
     Loading.next_art=0
     Loading.destination="res://missing-journey.tscn";Loading.context="story"

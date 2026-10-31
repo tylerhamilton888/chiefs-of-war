@@ -1,3 +1,11 @@
+# Hearth and Hunger 0.8.7 — Clan feast refinement, release pending
+
+The user selected the earlier clan feast design and asked for the women to be more attractive. The feast loading image has been refined with softer feminine features while retaining broad Ogre facial anatomy, strong physiques, the clan, goblin spit and unharmed companion. The rest of the game's artwork still uses the 0.8.6 designs; this change does not replace all character art. Some visible teeth still resemble small lower tusks. Combat, saves and gameplay are unchanged.
+
+Local validation: Godot 4.4.1 import and loading transition test passed; reviewed the feast loading screen in the OpenGL renderer. Windows release publication and native Windows checks are pending. See `docs/LOADING_ART_PROMPTS.md`.
+
+---
+
 # Hearth and Hunger 0.8.6 — Faces of the Clan, published and verified
 
 The user requested faces that look more Nordic and less Orc-like, saying the former look recalled The Hobbit trolls. They like the direction so far and note that scale and strength can distinguish Ogres even with more human faces. Revised AI-generated alternatives are active for three loading illustrations, three dialogue portrait atlases, nine named clan walking sheets, Hrothgar’s combat sheet, the player walking/weapon/work/carry sheets, two non-bloody paired combat sheets and both cinematic atlases. Strong, athletic female figures and formidable elders remain; Flint is unharmed in loading art. Original assets remain alongside the variants. The generated devour candidate changed dimensions and blood detail, so the original bite-and-swallow sheet remains in use and may have older facial features. Combat mechanics, blood settings and saves are unchanged.
