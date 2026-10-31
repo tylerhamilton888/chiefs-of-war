@@ -43,6 +43,8 @@ func _ready() -> void:
     say("Your axe, two meals and a hearth. A whole trunk lies west of camp. Shoulder it and bring it to the wagon.")
     if not loaded:say("The frontier save is unreadable and has been preserved. This visit cannot overwrite it.")
     if "--startup-smoke" in OS.get_cmdline_user_args():get_tree().create_timer(2.0).timeout.connect(quit_game)
+func sound(kind: String) -> void:
+    if not "--test" in OS.get_cmdline_user_args():play_sound(kind)
 func seed_object(id: String,kind: String,region: String,at: Vector2,hp: float,rewards: Dictionary) -> void:
     if not id in state.objects:state.objects[id]={"kind":kind,"region":region,"position":[at.x,at.y],"hp":hp,"yield":rewards,"taken":false}
 func seed_world() -> void:

@@ -27,7 +27,11 @@ func run() -> void:
     check(game.drop_cargo(),"can put the same trunk down after fighting")
     check(game.state.cargo.is_empty() and game.state.objects.test_trunk.kind=="log","drop returns the trunk to world")
     foe.queue_free();game.enemies.erase(foe);await frames(2)
-    var bite=spawn_foe("bite_target",Vector2(75,0));bite.vulnerable=2;game.state.ferocity=100;game.player.hp=90
+    var bite=spawn_foe("bite_target",Vector2(75,0));game.state.ferocity=100;game.player.hp=90
+    check(not game.overpower(true),"healthy alert goblin cannot be eaten")
+    bite.vulnerable=2;game.state.ferocity=0
+    check(not game.overpower(true),"feeding requires earned Ferocity")
+    game.state.ferocity=100
     check(game.overpower(true),"bite finisher starts on staggered goblin")
     game.finish_execution(true)
     check(bite.hp==0 and game.player.hp==128,"bite defeats prey and restores health")
@@ -42,6 +46,26 @@ func run() -> void:
     check(saved.encounters.get("swallow_target",1)==0 and saved.objects.has("test_trunk"),"save retains defeat and dropped trunk")
     game.state.cargo={"id":"prize","kind":"spoils","yield":{"meat":10}}
     check(not game.player.request("light",Vector2.RIGHT),"animal spoils cannot be used as a trunk")
+    game.state.cargo.clear()
+    game.player.position=game.objects.test_trunk.position+Vector2(-30,0)
+    check(game.lift_cargo("test_trunk"),"can begin lifting a dropped trunk")
+    game.player.receive_hit(5,Vector2.LEFT);await frames(70)
+    check(game.state.cargo.is_empty() and not game.state.objects.test_trunk.taken,"interrupted lift neither duplicates nor consumes cargo")
+    game.player.mode="idle";game.player.position=Vector2(1250,1150);game.state.ferocity=100
+    var thrown=spawn_foe("thrown_target",Vector2(75,0));thrown.vulnerable=2
+    var struck=spawn_foe("throw_victim",Vector2(245,0));var victim_hp=struck.hp
+    check(game.overpower(false),"throw starts on staggered goblin")
+    game.execution_tick(0.61);thrown.active=true
+    await frames(35)
+    check(struck.hp<victim_hp,"thrown goblin collides with another enemy")
+    check(not game.execution_busy,"throw releases control after recovery")
+    var contract_state=State.new();var book=load("res://scripts/frontier/contracts.gd").new(contract_state)
+    check(book.accept("pass","coin"),"accept pass contract")
+    check(not book.claim("pass"),"cannot claim an unfinished contract")
+    book.event("pass_cleared");book.event("rockfall_cleared")
+    var coins=contract_state.inventory.coin
+    check(contract_state.regional.pass_safe and book.claim("pass"),"actual road clearance enables payment")
+    check(contract_state.inventory.coin>coins and not book.claim("pass"),"contract cannot pay twice")
     print("FRONTIER BRUTALITY: %d checks, %d failures"%[checks,failures])
     game.prepare_exit();game.queue_free();await frames(3)
     quit(1 if failures else 0)
