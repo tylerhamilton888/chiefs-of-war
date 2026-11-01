@@ -1,8 +1,12 @@
-# Hearth and Hunger 0.8.10 — Scale implementation, release pending
+# Hearth and Hunger 0.8.10 — Ogre world scale, published and verified
 
-Implemented the user's 1:2:4 footprint rule, proportional Ogre/elder bodies, smaller settlements and reeve, larger ridgeback, consistent pack beasts, full-body steering and size-aware contact. See docs/RELEASE_0_8_10.md. Fresh local scale (13), navigation (200), frontier systems (84), animation (90), chapter (94), chapter quality (17), brutality (31), creator (22) passed. Actual engine visual review passed; human balance/playfeel remains pending. No source PNG changes or save resets. Preserve pre-existing untracked source/import files.
+Implemented the user's continuous-world 1:2:4 footprint standard across the playable chapter and frontier: proportional Ogre/elder collision bodies, smaller humanoids and settlements, a smaller Dunmere reeve, a larger ridgeback, consistent pack beasts, full-body steering and size-aware melee/thrown contact. See docs/RELEASE_0_8_10.md. Existing saves and source art are preserved; no literal grid, new interior system or replacement animation set was introduced.
 
-Next: publish through the standard Windows workflow, verify all jobs and public assets, then replace this pending header with exact release evidence. Base remote feature head e624d8c02e80fda46765db5eac331fe11ee1dafe, tree c30069629b3f0ec896f2f001a4adac102054af50. Use actual upstream ancestry and expected-head lease.
+Fresh Godot 4.4.1 checks passed: scale 13, navigation 200 across all 14 regions, frontier systems 84, animation 90, chapter 94, chapter quality 17, brutality 31, creator 22, rendered layout 100 and release tools 18. Reviewed actual OpenGL output for the scale lineup, camp, small settlement, den, champion region and expanded chapter beast pen. The standard release pipeline passed full regressions, renders, export and pack checks. Native Windows verified main menu, chapter and frontier launches/clean exits, save isolation, paths with spaces and external working directories. Human playfeel and balance remain pending; animation still uses limited authored whole-body poses.
+
+Published https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.10 . Exact release source c96efa268b1e81725dd17a382d32d91292816f82, tree b10378409f9c857761818d55b845faeafafab38d, feature implementation 9af5193d4aa4a769833e43f32b7c2c6a677fc2d8. Release run 41311539052; public release draft=false and source matches. Windows ZIP 210923342 bytes; SHA-256 d518885d6c602824a3fd2938c8b4d5b90e23efd86288461818713f5629281e3a. Publication verifies downloaded assets before making the release public.
+
+This header is a documentation-only follow-up. Local implementation commit fc20e9bd3f1105df1ffe80cc37da9a1e78fb2e7c has the same tested tree; preserve actual upstream ancestry and expected-head leases. Keep pre-existing untracked source/import files. Next: respond to the user's opening-chapter and scale playtest. Select The Fire We Carry for the chapter; frontier hearth slots remain separate.
 
 ---
 
