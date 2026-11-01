@@ -2,7 +2,7 @@
 
 An original illustrated 2D Ogre RPG/sandbox in Godot 4.4.1, continuing Chiefs of War and preserving its history. Our existing bright, chunky, outlined game style stays; concept boards guide cultural and character ideas.
 
-[Download Windows 0.8.9](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.9). Extract All, run **HearthAndHunger.exe**, choose **The Fire We Carry · Chapter One** for the story, or an Ogre hearth for **Sundered Frontier**.
+[Download Windows 0.8.9](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.9). Extract All, run **HearthAndHunger.exe**, choose **The Fire We Carry · Ogre Story** for the story, or an Ogre hearth for **Sundered Frontier**.
 
 The chapter goes from family work and the first hunt through the burning of Emberhide, Hrothgar's duel and Stonebelly's traveling host, to a personal wagon. Nine principal characters, seven connected areas, resource/cooking/construction gameplay, real combat and rescue outcomes, illustrated Godot cinematics, negotiated work and optional individual courtships are integrated into the existing game.
 

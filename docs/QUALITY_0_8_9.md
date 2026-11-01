@@ -20,7 +20,7 @@ Fresh local counts: Chapter One 94, chapter quality 17, navigation 201, frontier
 
 Actual OpenGL review: full-body player/weapon/work/carry/clinch/devour/cast/beast pose sheets; opening dialogue, host, personal hearth at the southern boundary, northern road, caravan, challenge panel and both journals. `ogre_quality_visual.gd` checks all final dialogue choice rows and text layouts (**100 checks**) at the game's 1280×800 logical viewport. New captures and logs are retained by the release workflow.
 
-Exact source, native Windows launch result and downloadable ZIP checksum are recorded in current state and the session handoff after publication.
+Published v0.8.9 from source `e6d2cd70bdba0ac860830802b3c562ddb8c7058f` (tree `922763b7029eac41ccf321f2c23cbc423583e8ed`). Workflow **41266973462**, attempt 2, passed full regressions, renders, export/package, native Windows main-menu/chapter/frontier launch and clean exit, then publication/download verification. The first attempt failed during the external export-template download, before game tests. ZIP: **210919990 bytes**, SHA-256 `7f9fa50404f841956f6c6ce4c66f4fb19ab7c0c2320efc83ddf9bd8915baefa5`. Gameplay sequence captures additionally checked log swings, carry transitions, feeding and return to walking. [Download and checksum](https://github.com/tylerhamilton888/chiefs-of-war/releases/tag/v0.8.9).
 
 ## Remaining playtest judgments
 
