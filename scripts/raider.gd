@@ -2,6 +2,8 @@ extends CharacterBody2D
 # Whole-body poses; the execution coordinator owns the shared contact clock.
 signal strike(raider)
 signal slain(raider)
+const Scale=preload("res://scripts/ogre_scale.gd")
+var ogre_world=false
 var kind := "goblin"
 var hp := 110.0
 var maximum := 110.0
@@ -39,20 +41,21 @@ func _ready() -> void:
  maximum=180.0 if kind=="orc" else 110.0
  hp=maximum
  collision_layer=2; collision_mask=1
- var c=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=19 if kind=="orc" else 14;c.shape=shape;add_child(c)
+ var c=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=Scale.radius(kind) if ogre_world else (19 if kind=="orc" else 14);c.shape=shape;add_child(c)
  sprite.texture=ART;sprite.region_enabled=true;add_child(sprite);pose(0)
 func pose(index: int,cleave_row: bool=false) -> void:
  if kind=="orc":
   var frame:=clampi(index,0,5)
   var region: Rect2=ORC_RECTS[frame]
-  sprite.texture=ORC_ART;sprite.region_rect=region;sprite.scale=Vector2.ONE*0.255
-  var placement: Vector2=(region.get_center()-ORC_ANCHORS[frame])*0.255
+  var factor=Scale.LARGE_HEIGHT/480.0 if ogre_world else 0.255
+  sprite.texture=ORC_ART;sprite.region_rect=region;sprite.scale=Vector2.ONE*factor
+  var placement: Vector2=(region.get_center()-ORC_ANCHORS[frame])*factor
   if sprite.flip_h:placement.x=-placement.x
   sprite.position=placement;return
  sprite.texture=ART
  var row:=1 if cleave_row else 0
  var rect: Rect2=RECTS[row][clampi(index,0,5)]
- var scale_factor:=0.37 if kind=="orc" else 0.28
+ var scale_factor:=Scale.SMALL_HEIGHT/275.0 if ogre_world else 0.28
  var anchor:=Vector2(ANCHORS[row][clampi(index,0,5)],870 if row==2 else 545 if row==1 else 295)
  sprite.region_rect=rect;sprite.scale=Vector2.ONE*scale_factor
  var offset: Vector2=(rect.position+rect.size*0.5-anchor)*scale_factor

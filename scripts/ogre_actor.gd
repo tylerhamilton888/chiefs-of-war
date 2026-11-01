@@ -3,6 +3,7 @@ extends CharacterBody2D
 signal stepped
 const FrameArt=preload("res://scripts/ogre_frame_art.gd")
 const MOTION_TEXTURE=preload("res://assets/ogre/hearthlord_motion_nordic.png")
+const Scale=preload("res://scripts/ogre_scale.gd")
 const SPECIES="ogre"
 const WALK_SPEED=205.0
 const STRIDE=92.0
@@ -18,7 +19,7 @@ var enabled=true
 func _ready() -> void:
     frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/ogre_motion.json"))
     var shape=CollisionShape2D.new()
-    var circle=CircleShape2D.new();circle.radius=22;shape.shape=circle;add_child(shape)
+    var circle=CircleShape2D.new();circle.radius=Scale.radius("ogre",motion_height()/Scale.OGRE_HEIGHT);shape.shape=circle;add_child(shape)
     sprite=Sprite2D.new();sprite.texture=MOTION_TEXTURE
     sprite.region_enabled=true;add_child(sprite)
     show_frame(0)
@@ -59,4 +60,4 @@ func _physics_process(delta: float) -> void:
         phase=0.0;distance_since_step=0;show_frame(0)
 func _draw() -> void:
     draw_set_transform(Vector2(0,4),0,Vector2(1,0.38))
-    draw_circle(Vector2.ZERO,32,Color(0.08,0.09,0.06,0.25))
+    draw_circle(Vector2.ZERO,Scale.radius("ogre",motion_height()/Scale.OGRE_HEIGHT),Color(0.08,0.09,0.06,0.25))

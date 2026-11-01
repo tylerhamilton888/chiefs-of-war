@@ -135,9 +135,10 @@ func add_small(id: String,at: Vector2,role: String,slot: int) -> void:
 func build_settlement(dunmere: bool) -> void:
     var Building=load("res://scripts/building.gd")
     for i in range(2):
-        var b=Building.new();b.kind=i;b.position=Vector2(650+i*900,650);world.add_child(b)
+        var b=Building.new();b.kind=i;b.settlement_scale=Scale.SETTLEMENT_SCALE;b.position=Vector2(650+i*900,650);world.add_child(b)
     if dunmere:
-        npc("bramm",Vector2(1120,850));station("dunmere",Vector2(1120,940),"Speak with Dunmere's reeve")
+        var reeve=Raider.new();reeve.kind="orc";reeve.ogre_world=true;reeve.active=false;reeve.position=Vector2(1120,850);world.add_child(reeve)
+        station("dunmere",Vector2(1120,940),"Speak with Dunmere's reeve")
         var line="Stores burned. Doorways barred." if state.has("dunmere_raid") else "Ogre banners over the storehouses." if state.regional.dunmere_control=="ogre" else "The trade carts have returned." if state.regional.pass_safe else "Empty wheel tracks. The pass is shut."
         world_label(line,Vector2(1100,600));world_label("Prosperity %d · Resistance %d"%[state.regional.dunmere_prosperity,state.regional.dunmere_resistance],Vector2(1100,640))
         if state.has("raid_started") and not state.has("raid_won"):
@@ -348,7 +349,7 @@ func player_contact(kind: String,spec: Dictionary) -> void:
     for foe in enemies:
         if not is_instance_valid(foe) or foe.hp<=0:continue
         var off=foe.position-player.position
-        var radius=52 if foe is GreatBeast else 28
+        var radius=Scale.body_radius(foe)
         if off.length()<=spec.reach+radius and player.locked.dot(off.normalized())>0.12 and has_line(player.position,foe.position):
             foe.receive_hit(amount,off.normalized());impact(foe.position);connected=true
             if foe is SmallFoe and foe.hp>0:foe.recoil=off.normalized()*spec.push

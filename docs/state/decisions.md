@@ -1,3 +1,9 @@
+# November 1 — Ogre world scale
+
+The user requests continuous-world footprint areas of 1 for small humanoids, 2 for Orcs/large humans, and 4 (2×2) for adult Ogres: “Goliaths in a world of Davids,” with monsters of varied sizes. This is area/bulk, not 1:2:4 height or literal grid movement. Implemented baseline footprint diameters are 32, 45.25, and 64 world units; visual statures approximately 80, 113, and 160, with original uniform proportions. Individual Ogre stature scales its body; formidable elders exceed baseline. Smaller settlements use 0.72 of the archived building dimensions, while Ogre camps preserve caravan clearances. Large monsters retain larger bodies. Whole-pose art, saved progress and existing combat content remain.
+
+---
+
 # Ogre facial direction — October 31
 
 The user requests slightly different Ogre faces: more Nordic-inspired and less Orc-like, because the current look recalls the trolls from The Hobbit. Interpret this as a move toward varied, more human-proportioned faces, with less exaggerated jaws and tusks, while retaining the Ogres’ imposing physiques, distinctive identities and established illustrated style. Keep female Ogres strong and athletic, elder Ogres formidable, combat violence unchanged, and loading-screen animals unhurt. The user likes the direction so far and notes that Ogres can be distinguished by their immense size and strength, since few human-like peoples are currently present. Do not require tusks to define Ogres.

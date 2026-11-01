@@ -1,4 +1,5 @@
 extends CharacterBody2D
+const Scale=preload("res://scripts/ogre_scale.gd")
 const BeastArt=preload("res://scripts/beast_art.gd")
 var game
 var sprite=Sprite2D.new()
@@ -9,9 +10,9 @@ var data: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://reso
 var load_sprite: Node2D
 func _ready() -> void:
     collision_layer=0;collision_mask=1
-    var col=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=32;col.shape=shape;add_child(col)
+    var col=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=Scale.COMPANION_RADIUS;col.shape=shape;add_child(col)
     sprite.texture=load("res://assets/chapter/beast.png");sprite.region_enabled=true;add_child(sprite)
-    load_sprite=Sprite2D.new();load_sprite.texture=load("res://assets/ogre/traveling_camp.png");load_sprite.region_enabled=true;load_sprite.region_rect=Rect2(804,665,710,325);load_sprite.scale=Vector2.ONE*0.13;load_sprite.position=Vector2(-20,-120);add_child(load_sprite)
+    load_sprite=Sprite2D.new();load_sprite.texture=load("res://assets/ogre/traveling_camp.png");load_sprite.region_enabled=true;load_sprite.region_rect=Rect2(804,665,710,325);load_sprite.scale=Vector2.ONE*0.13;load_sprite.position=Vector2(-20,-138);add_child(load_sprite)
 func _physics_process(delta: float) -> void:
     if not enabled:return
     var a=game.state.animal
@@ -27,7 +28,7 @@ func _physics_process(delta: float) -> void:
     if traveled>0.04:
         facing=0 if absf(velocity.x)>absf(velocity.y) else 1 if velocity.y>0 else 2
         sprite.flip_h=facing==0 and velocity.x<0
-    BeastArt.pose(sprite,facing,int(phase*4),273*0.48,sprite.flip_h)
+    BeastArt.pose(sprite,facing,int(phase*4),Scale.COMPANION_HEIGHT,sprite.flip_h)
     load_sprite.visible=not a.cargo.is_empty()
     if a.command=="haul" and not a.cargo.is_empty() and position.distance_to(dest)<100 and game.state.region==game.state.camp_region and not game.state.packed:
         game.state.deliver(a.cargo);a.trust=mini(100,a.trust+3);a.command="follow";game.say("Flint has brought the load to your wagon.");game.save_progress()

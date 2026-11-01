@@ -1,0 +1,31 @@
+extends "res://tests/ogre_animation_visual.gd"
+const Scale=preload("res://scripts/ogre_scale.gd")
+func show_pose(sprite: Sprite2D,index: int,text: String,cols: int=4) -> void:
+    var at=Vector2(160+index%cols*(1280.0/cols),310+int(index/cols)*255)
+    var ground=ColorRect.new();ground.color=Color("a9d2a0");ground.position=at-Vector2(80,0);ground.size=Vector2(160,1);panel.add_child(ground)
+    var copy=sprite.duplicate();copy.visible=true;copy.position+=at;panel.add_child(copy)
+    label(text,at+Vector2(-145,12),15)
+func run() -> void:
+    DirAccess.make_dir_recursive_absolute(output)
+    game=load("res://scenes/ogre_frontier.tscn").instantiate();root.add_child(game);current_scene=game
+    await process_frame;await process_frame;game.freeze(true)
+    game.hide();board=CanvasLayer.new();root.add_child(board)
+    await page("Shared world scale | complete poses, unchanged proportions")
+    game.add_small("scale_small",Vector2.ZERO,"knife",0)
+    game.add_small("scale_large",Vector2.ZERO,"orc",1)
+    game.freeze(true)
+    show_pose(game.enemies[-2].sprite,0,"Small humanoid | 1 footprint")
+    show_pose(game.enemies[-1].sprite,1,"Orc / large humanoid | 2")
+    game.player.show_frame(0);show_pose(game.player.sprite,2,"Ogre | 4 (2 by 2)")
+    var elder=game.npc("hrothgar",Vector2.ZERO);elder.set_physics_process(false);show_pose(elder.sprite,3,"Elder Ogre | larger still")
+    var pet_sprite=Sprite2D.new();panel.add_child(pet_sprite);pet_sprite.hide()
+    preload("res://scripts/beast_art.gd").pose(pet_sprite,0,0,Scale.COMPANION_HEIGHT);show_pose(pet_sprite,4,"Flint | pack beast")
+    var monster=Sprite2D.new();panel.add_child(monster);monster.hide()
+    Atlas.pose(monster,"great_beast",0,Scale.RIDGEBACK_HEIGHT);show_pose(monster,6,"Ridgeback | towering threat")
+    await shot("scale-lineup")
+    board.hide();game.show()
+    for region in ["hearth","dunmere","den","ridge"]:
+        game.travel(region,Vector2(1080,1000),true)
+        await process_frame;await process_frame;game.freeze(true)
+        await shot("scale-"+region)
+    game.prepare_exit();game.queue_free();await process_frame;quit()

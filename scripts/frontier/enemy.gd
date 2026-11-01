@@ -8,11 +8,11 @@ var thrown_hits: Array=[]
 var formation=false
 var id=""
 func _ready() -> void:
-    super._ready();maximum=70 if role=="spear" else 115 if role=="orc" else 58;hp=maximum
+    ogre_world=true;super._ready();maximum=70 if role=="spear" else 115 if role=="orc" else 58;hp=maximum
 func pose(index: int,cleave_row: bool=false) -> void:
     if role=="spear":
         var mapping=[0,4,5,6,6,7]
-        Atlas.pose(sprite,"spearmen",mapping[clampi(index,0,5)],90,locked_direction.x<0)
+        Atlas.pose(sprite,"spearmen",mapping[clampi(index,0,5)],Scale.SMALL_HEIGHT,locked_direction.x<0)
     else:super.pose(index,cleave_row)
 func receive_hit(amount: float,direction: Vector2) -> void:
     if hp<=0 or held:return
@@ -37,7 +37,7 @@ func _physics_process(delta: float) -> void:
         pose(4)
         for other in game.enemies:
             if other==self or not is_instance_valid(other) or other.hp<=0 or other in thrown_hits:continue
-            if Geometry2D.get_closest_point_to_segment(other.position,previous,position).distance_to(other.position)<48:
+            if Geometry2D.get_closest_point_to_segment(other.position,previous,position).distance_to(other.position)<Scale.body_radius(self)+Scale.body_radius(other):
                 thrown_hits.append(other);other.receive_hit(45,recoil.normalized());game.impact(other.position);game.sound("hit")
         if collision or throw_time<=0:
             throw_time=0;game.contact_kind="heavy";receive_hit(24,recoil.normalized());vulnerable=1.5;game.impact(position)
@@ -75,9 +75,9 @@ func _physics_process(delta: float) -> void:
             var dest=target.position-off.normalized()*(145 if spear else 65)+flank
             velocity=game.route_direction(self,dest)*125 if position.distance_to(dest)>25 else Vector2.ZERO
             for other in game.enemies:
-                if other!=self and is_instance_valid(other) and other.hp>0 and position.distance_to(other.position)<52:velocity+=(position-other.position).normalized()*85
+                if other!=self and is_instance_valid(other) and other.hp>0 and position.distance_to(other.position)<Scale.body_radius(self)+Scale.body_radius(other)+12:velocity+=(position-other.position).normalized()*85
             move_and_slide()
-            if spear:Atlas.pose(sprite,"spearmen",3 if formation else 1+int(fmod(clock,0.5)>0.25),90,off.x<0)
+            if spear:Atlas.pose(sprite,"spearmen",3 if formation else 1+int(fmod(clock,0.5)>0.25),Scale.SMALL_HEIGHT,off.x<0)
             else:pose(1 if fmod(clock,0.5)<0.25 else 0)
     else:
         var back=home-position;velocity=game.route_direction(self,home)*75 if back.length()>30 else Vector2.ZERO;move_and_slide();pose(0)

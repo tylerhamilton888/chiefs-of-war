@@ -19,7 +19,7 @@ var hit_pause=0.0
 var combat_idle=0.0
 var combo=0
 func _ready() -> void:
-    super._ready();maximum=180;hp=game.state.hp;height=170;weapon=game.state.equipment
+    height=170;super._ready();maximum=180;hp=game.state.hp;weapon=game.state.equipment
     apply_appearance(game.state.appearance)
 func apply_appearance(style: String) -> void:
     var material=ShaderMaterial.new()

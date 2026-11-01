@@ -1,3 +1,11 @@
+# Hearth and Hunger 0.8.10 — Scale implementation, release pending
+
+Implemented the user's 1:2:4 footprint rule, proportional Ogre/elder bodies, smaller settlements and reeve, larger ridgeback, consistent pack beasts, full-body steering and size-aware contact. See docs/RELEASE_0_8_10.md. Fresh local scale (13), navigation (200), frontier systems (84), animation (90), chapter (94), chapter quality (17), brutality (31), creator (22) passed. Actual engine visual review passed; human balance/playfeel remains pending. No source PNG changes or save resets. Preserve pre-existing untracked source/import files.
+
+Next: publish through the standard Windows workflow, verify all jobs and public assets, then replace this pending header with exact release evidence. Base remote feature head e624d8c02e80fda46765db5eac331fe11ee1dafe, tree c30069629b3f0ec896f2f001a4adac102054af50. Use actual upstream ancestry and expected-head lease.
+
+---
+
 # Hearth and Hunger 0.8.9 — Quality pass, published and verified
 
 The user requested a general pass before the next opening-chapter playtest. Fixed 12 reproduced story/framing/entrance check failures, revised contextual objectives, and cleaned up beast poses, movement and paired-action overlays. Existing source art, blood settings, saves and Ogre-only menus are preserved. See docs/QUALITY_0_8_9.md and docs/RELEASE_0_8_9.md for scope and limits.

@@ -1,4 +1,5 @@
 extends Node2D
+var settlement_scale=1.0
 var kind:=0
 var integrity:=1.0
 var parts: Array[float]=[1.0,1.0,1.0]
@@ -7,7 +8,7 @@ var body:=StaticBody2D.new()
 func _ready() -> void:
     var texture=load("res://assets/opener/architecture_aligned.png")
     var region: Rect2=[Rect2(18,23,577,511),Rect2(602,21,484,511),Rect2(1123,78,388,453)][kind]
-    var factor:=0.56 if kind==0 else 0.60
+    var factor: float=(0.56 if kind==0 else 0.60)*settlement_scale
     add_child(body)
     for i in 3:
         var sprite=Sprite2D.new()
@@ -15,14 +16,14 @@ func _ready() -> void:
         sprite.region_enabled=true
         sprite.region_rect=Rect2(region.position+Vector2(i*region.size.x/3,0),Vector2(region.size.x/3,region.size.y))
         sprite.scale=Vector2.ONE*factor
-        sprite.position=Vector2((i-1)*region.size.x/3*factor,-region.size.y*factor*0.5+20)
+        sprite.position=Vector2((i-1)*region.size.x/3*factor,-region.size.y*factor*0.5+20*settlement_scale)
         add_child(sprite)
         panels.append(sprite)
         var c=CollisionShape2D.new()
         var s=RectangleShape2D.new()
-        s.size=Vector2(78,120)
+        s.size=Vector2(78,120)*settlement_scale
         c.shape=s
-        c.position=Vector2((i-1)*78,-65)
+        c.position=Vector2((i-1)*78,-65)*settlement_scale
         body.add_child(c)
 func _process(_delta: float) -> void:
     for i in 3:
@@ -31,6 +32,7 @@ func _process(_delta: float) -> void:
         body.get_child(i).disabled=parts[i]<=0
     queue_redraw()
 func _draw() -> void:
+    draw_set_transform(Vector2.ZERO,0,Vector2.ONE*settlement_scale)
     for i in 3:
         if parts[i]>0: continue
         var x=(i-1)*78

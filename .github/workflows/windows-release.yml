@@ -66,7 +66,7 @@ jobs:
           for suite in customization_test opener_test opener_edges motion_test feel_test execution_test defense_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --fresh --test
           done
-          for suite in save_slots_test ogre_hearth_test chapter_test chapter_quality_test frontier_brutality_test frontier_systems_test frontier_creator_test loading_test ogre_animation_test ogre_navigation_test; do
+          for suite in save_slots_test ogre_hearth_test chapter_test chapter_quality_test frontier_brutality_test frontier_systems_test frontier_creator_test loading_test ogre_animation_test ogre_navigation_test ogre_scale_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
           check_godot frontier_first_start env XDG_DATA_HOME="$RUNNER_TEMP/frontier_first_start" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script tests/frontier_first_start_test.gd -- --test --creator-first-test
@@ -88,6 +88,7 @@ jobs:
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-loading" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/loading_visual.gd -- --test 2>&1 | tee builds/logs/render-loading.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-animation" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_animation_visual.gd -- --test 2>&1 | tee builds/logs/render-animation.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-quality" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_quality_visual.gd -- --test 2>&1 | tee builds/logs/render-quality.log
+          CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-scale" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_scale_visual.gd -- --test 2>&1 | tee builds/logs/render-scale.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/render-*.log; then exit 1; fi
       - name: Export and package Windows
         if: steps.release.outputs.complete != 'true'

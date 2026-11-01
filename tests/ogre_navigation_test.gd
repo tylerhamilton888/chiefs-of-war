@@ -13,7 +13,7 @@ func frames(n: int) -> void:
 func build_grid() -> void:
     grid=AStarGrid2D.new();grid.region=Rect2i(0,0,54,32);grid.cell_size=Vector2(40,40);grid.offset=Vector2(80,80)
     grid.diagonal_mode=AStarGrid2D.DIAGONAL_MODE_NEVER;grid.update()
-    var shape=CircleShape2D.new();shape.radius=26
+    var shape=CircleShape2D.new();shape.radius=preload("res://scripts/ogre_scale.gd").body_radius(game.player)+3
     var query=PhysicsShapeQueryParameters2D.new();query.shape=shape;query.collision_mask=1
     for x in 54:
         for y in 32:

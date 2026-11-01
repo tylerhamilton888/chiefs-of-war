@@ -1,4 +1,5 @@
 extends "res://scripts/wandering_hearth.gd"
+const Scale=preload("res://scripts/ogre_scale.gd")
 const ChapterState=preload("res://scripts/chapter/state.gd")
 const Actor=preload("res://scripts/chapter/actor.gd")
 const Story=preload("res://scripts/chapter/story.gd")
@@ -137,7 +138,7 @@ func npc(id: String,at: Vector2=Vector2.ZERO) -> Node2D:
 func build_trade() -> void:
     # Reuse the old settlement's timber buildings for the smaller peoples' fixed post.
     for i in range(3):
-        var building=preload("res://scripts/building.gd").new();building.kind=i;building.position=[Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)][i];world.add_child(building)
+        var building=preload("res://scripts/building.gd").new();building.kind=i;building.settlement_scale=Scale.SETTLEMENT_SCALE;building.position=[Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)][i];world.add_child(building)
     for x in range(350,1900,85):world_prop("wall",Vector2(x,470))
     wagon(Vector2(650,1080),0.5);hearth(Vector2(1160,1040))
     npc("eydis",Vector2(1380,920));station("trade",Vector2(1520,1010),"Trade · meat and hides")
@@ -179,11 +180,11 @@ func add_wolf(id: String,at: Vector2,alpha: bool) -> void:
     if id in state.defeated:
         if not ("loot_"+id) in state.collected:station("harvest",at,"Harvest the fallen wolf",id)
         return
-    var wolf=Wolf.new();wolf.position=at;wolf.alpha=alpha;wolf.game=self;wolf.target=player;wolf.loot_id=id;wolf.set_meta("id",id)
+    var wolf=Wolf.new();wolf.ogre_world=true;wolf.position=at;wolf.alpha=alpha;wolf.game=self;wolf.target=player;wolf.loot_id=id;wolf.set_meta("id",id)
     wolf.strike.connect(enemy_strike);wolf.slain.connect(enemy_slain);world.add_child(wolf);wolf.hp=state.encounters.get(id,wolf.hp);enemies.append(wolf)
 func add_raider(id: String,at: Vector2,kind: String) -> void:
     if id in state.defeated:return
-    var foe=Raider.new();foe.kind=kind;foe.position=at;foe.game=self;foe.target=player;foe.set_meta("id",id)
+    var foe=Raider.new();foe.ogre_world=true;foe.kind=kind;foe.position=at;foe.game=self;foe.target=player;foe.set_meta("id",id)
     foe.strike.connect(enemy_strike);foe.slain.connect(enemy_slain);world.add_child(foe);foe.hp=state.encounters.get(id,foe.hp);enemies.append(foe)
 func build_defense() -> void:
     for i in range(4):add_raider("defense_%d"%i,Vector2(680+(i%2)*700,880+(i/2)*170),"orc")
@@ -203,7 +204,7 @@ func build_pass() -> void:
 func add_beast(at: Vector2,factor: float) -> Node2D:
     var b=Node2D.new();b.position=at;world.add_child(b)
     if ResourceLoader.exists("res://assets/chapter/beast.png"):
-        var spr=Sprite2D.new();b.add_child(spr);BeastArt.pose(spr,0,0,273*factor)
+        var spr=Sprite2D.new();b.add_child(spr);BeastArt.pose(spr,0,0,maxf(Scale.COMPANION_HEIGHT,273*factor))
     return b
 func build_home() -> void:
     wagon(Vector2(1800,1230),0.46);hearth(Vector2(1940,1280));station("home",Vector2(1800,1310),"Your household · rest, improve, or take the road")
@@ -389,7 +390,7 @@ func route_direction(actor: Node2D,dest: Vector2) -> Vector2:
     var direct=(dest-actor.position).normalized()
     for angle in [0.0,0.6,-0.6,1.15,-1.15]:
         var trial=direct.rotated(angle)
-        if has_line(actor.position,actor.position+trial*85):return trial
+        if Scale.clear_step(actor,trial*85):return trial
     return Vector2.ZERO
 var last_attacker
 func player_strike(actor) -> void:
@@ -397,7 +398,7 @@ func player_strike(actor) -> void:
     for foe in enemies:
         if not is_instance_valid(foe) or foe.hp<=0:continue
         var off=foe.position-player.position
-        if off.length()<145 and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
+        if off.length()<121+Scale.body_radius(foe) and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
             impact(foe.position)
             foe.receive_hit((36 if state.has("honed_axe") else 28)+(6 if state.fed>0 else 0),off.normalized());hit=true
     if hit:play_sound("hit")

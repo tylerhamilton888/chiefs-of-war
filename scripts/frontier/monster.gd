@@ -1,6 +1,7 @@
 extends CharacterBody2D
 signal strike(foe)
 signal slain(foe)
+const Scale=preload("res://scripts/ogre_scale.gd")
 const Atlas=preload("res://scripts/frontier/atlas.gd")
 var game
 var target
@@ -22,8 +23,8 @@ var charges=0
 var walk_phase=0.0
 func _ready() -> void:
     home=position;collision_layer=2;collision_mask=1
-    var col=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=52;col.shape=shape;add_child(col);add_child(sprite);pose(0)
-func pose(index: int) -> void:Atlas.pose(sprite,"great_beast",index,205,locked_direction.x<0)
+    var col=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=Scale.RIDGEBACK_RADIUS;col.shape=shape;add_child(col);add_child(sprite);pose(0)
+func pose(index: int) -> void:Atlas.pose(sprite,"great_beast",index,Scale.RIDGEBACK_HEIGHT,locked_direction.x<0)
 func receive_hit(amount: float,direction: Vector2) -> void:
     if hp<=0:return
     var frontal=locked_direction.dot(-direction)>0.55
@@ -77,8 +78,8 @@ func _physics_process(delta: float) -> void:
     queue_redraw()
 func _draw() -> void:
     if hp<=0:return
-    draw_line(Vector2(-90,-223),Vector2(90,-223),Color("211d18"),8)
-    draw_line(Vector2(-90,-223),Vector2(-90+180*hp/maximum,-223),Color("bb623e"),5)
+    draw_line(Vector2(-90,-Scale.RIDGEBACK_HEIGHT-18),Vector2(90,-Scale.RIDGEBACK_HEIGHT-18),Color("211d18"),8)
+    draw_line(Vector2(-90,-Scale.RIDGEBACK_HEIGHT-18),Vector2(-90+180*hp/maximum,-Scale.RIDGEBACK_HEIGHT-18),Color("bb623e"),5)
     if stage=="windup":
         var end=locked_direction*580;draw_line(Vector2.ZERO,end,Color(0.8,0.3,0.12,0.26),85);draw_line(Vector2.ZERO,end,Color("e5ae54"),3)
     elif stage=="sweep" and clock<0.7:draw_arc(Vector2.ZERO,225,locked_direction.angle()-1.2,locked_direction.angle()+1.2,28,Color("e5ae54"),4)
