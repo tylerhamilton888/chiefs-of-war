@@ -1,7 +1,7 @@
 {
-  "version": "0.8.8",
-  "title": "Hearth and Hunger 0.8.8 \u2014 Animation Repair",
-  "notes": "docs/RELEASE_0_8_8.md",
+  "version": "0.8.9",
+  "title": "Hearth and Hunger 0.8.9 — Opening Chapter Quality Pass",
+  "notes": "docs/RELEASE_0_8_9.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",

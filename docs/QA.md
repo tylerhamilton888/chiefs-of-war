@@ -1,3 +1,7 @@
+# 0.8.9 quality pass
+
+See [quality evidence](QUALITY_0_8_9.md) for the reproduced failures, repairs, fresh suite counts, visual review and remaining playtest judgments. Exact publication evidence is recorded in current state and the session handoff.
+
 # Verified 0.6.2 delivery
 
 Source 25e9b4bfcdbfa847a86a59b05a3d91aef0158b31; run 41152724848 succeeded. All import/regression/render/export/package checks passed. Native Windows normal, creator, old practice and new Ogre startup/clean exit passed with no runtime errors; campaign sentinel, path spaces and external working directory were verified. Publication downloaded and verified the uploaded package before making the release public. ZIP 110668478 bytes; SHA256 f3de3c7e5265e361b6faf74da5d590e9b43a6974470cbc621a5f3464a22d4030. Human playfeel and native graphical review remain pending.

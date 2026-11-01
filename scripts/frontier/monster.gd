@@ -19,6 +19,7 @@ var flash=0.0
 var vulnerable=0.0
 var hit_pause=0.0
 var charges=0
+var walk_phase=0.0
 func _ready() -> void:
     home=position;collision_layer=2;collision_mask=1
     var col=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=52;col.shape=shape;add_child(col);add_child(sprite);pose(0)
@@ -32,7 +33,7 @@ func receive_hit(amount: float,direction: Vector2) -> void:
     elif stage=="stunned":amount*=1.65
     else:amount*=1.2
     hp=maxf(0,hp-amount);flash=0.14
-    if hp<=0:stage="dead";velocity=Vector2.ZERO;slain.emit(self)
+    if hp<=0:stage="dead";velocity=Vector2.ZERO;sprite.modulate=Color.WHITE;queue_redraw();slain.emit(self)
 func parried() -> void:
     if stage=="sweep":stage="stunned";clock=0;vulnerable=2
 func _physics_process(delta: float) -> void:
@@ -67,7 +68,11 @@ func _physics_process(delta: float) -> void:
         elif off.length()<210 and cooldown<=0:
             locked_direction=off.normalized();stage="sweep";clock=0;hits.clear()
         else:
-            velocity=game.route_direction(self,target.position)*60 if off.length()>180 else Vector2.ZERO;move_and_slide();pose(1+int(fmod(clock*5,3)))
+            velocity=game.route_direction(self,target.position)*60 if off.length()>180 else Vector2.ZERO
+            var before=position;move_and_slide();var traveled=position.distance_to(before)
+            walk_phase=fposmod(walk_phase+traveled/150.0,1) if traveled>0.04 else 0.0
+            if traveled>0.04:locked_direction=velocity.normalized()
+            pose(1+int(walk_phase*3) if traveled>0.04 else 0)
     else:pose(0)
     queue_redraw()
 func _draw() -> void:

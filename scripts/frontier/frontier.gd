@@ -73,9 +73,9 @@ func build_world() -> void:
         for x in range(15,56):
             for y in range(20,37):ground_state.terrain["%d,%d"%[x,y]]="earth"
     ground_state.revision+=1
-    var terrain=Terrain.new();terrain.state=ground_state;region_root.add_child(terrain);world=Node2D.new();world.y_sort_enabled=true;region_root.add_child(world)
+    var terrain=OgreTerrain.new();terrain.state=ground_state;region_root.add_child(terrain);world=Node2D.new();world.y_sort_enabled=true;region_root.add_child(world)
     player=Fighter.new();player.game=self;player.position=state.player_position;player.felled.connect(player_felled);player.stepped.connect(func():sound("step"));world.add_child(player)
-    camera=Camera2D.new();camera.zoom=Vector2.ONE*0.78;camera.offset=Vector2(0,-140);camera.position_smoothing_enabled=true;camera.position_smoothing_speed=10;camera.limit_left=0;camera.limit_top=0;camera.limit_right=2260;camera.limit_bottom=1408;player.add_child(camera)
+    camera=OgreCamera.new();camera.gameplay_zoom=0.78;player.add_child(camera)
     for rect in [Rect2(-40,-40,2340,100),Rect2(-40,1340,2340,100),Rect2(-40,0,100,1408),Rect2(2200,0,100,1408)]:
         var body=StaticBody2D.new();body.position=rect.get_center();var col=CollisionShape2D.new();var shape=RectangleShape2D.new();shape.size=rect.size;col.shape=shape;body.add_child(col);region_root.add_child(body)
     for road in PATHS[state.region]:
@@ -174,7 +174,7 @@ func _process(delta: float) -> void:
     state.clock+=delta;state.fed=maxf(0,state.fed-delta);state.animal.fed=maxf(0,state.animal.fed-delta);state.hp=player.hp
     if execution_busy:execution_tick(delta);return
     player.set_block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT),get_global_mouse_position()-player.position)
-    shake=maxf(0,shake-delta*25);camera.offset=Vector2(sin(state.clock*85)*shake,-140+cos(state.clock*70)*shake*0.5)
+    shake=maxf(0,shake-delta*25);camera.offset=Vector2(sin(state.clock*85)*shake,cos(state.clock*70)*shake*0.5)
     nearest={};var best=130.0
     for entry in stations:
         var distance=player.position.distance_to(entry.position)
@@ -257,7 +257,7 @@ func prepare_exit() -> void:
         if child is AudioStreamPlayer:child.stop();child.stream=null
 func interact(entry: Dictionary) -> void:
     match entry.kind:
-        "road":travel(entry.id)
+        "road":travel(entry.id,road_arrival(PATHS,entry.id))
         "cargo":lift_cargo(entry.id)
         "depot":unload(false)
         "timber_yard":unload(true)
@@ -433,7 +433,7 @@ func overpower(feed: bool, swallow: bool=false) -> bool:
     var sign=1 if target_foe.position.x>=player.position.x else -1
     var stance=target_foe.position-Vector2(sign*76,0)
     if not has_line(player.position,stance) or not has_line(stance,target_foe.position):return false
-    state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind=("swallow" if swallow else "feed") if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.sprite.hide();player.sprite.hide()
+    state.ferocity-=cost;player.position=stance;execution_direction=Vector2(sign,0);execution_kind=("swallow" if swallow else "feed") if feed else "throw";execution_target=target_foe;execution_clock=0;execution_contact=false;execution_busy=true;target_foe.held=true;target_foe.hide();player.hide()
     execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material.duplicate();world.add_child(execution_sprite);execution_sprite.position=player.position
     return true
 func begin_clinch(foe) -> bool:
@@ -441,7 +441,7 @@ func begin_clinch(foe) -> bool:
     var sign=1 if foe.position.x>=player.position.x else -1
     var at=foe.position-Vector2(sign*110,0)
     if not has_line(player.position,at):return false
-    player.position=at;execution_direction=Vector2(sign,0);execution_kind="clinch";execution_target=foe;execution_clock=0;execution_busy=true;execution_contact=false;clinch_result=0;player.sprite.hide();foe.sprite.hide()
+    player.position=at;execution_direction=Vector2(sign,0);execution_kind="clinch";execution_target=foe;execution_clock=0;execution_busy=true;execution_contact=false;clinch_result=0;player.hide();foe.hide()
     execution_sprite=Sprite2D.new();execution_sprite.material=player.sprite.material.duplicate();execution_sprite.position=player.position;world.add_child(execution_sprite)
     say("Hold your weight. F once when the ring turns gold.");return true
 func clinch_input() -> void:
@@ -480,15 +480,15 @@ func execution_tick(delta: float) -> void:
         var row=4 if execution_kind=="swallow" and art=="devour" else 0 if art=="devour" else 4 if feeding else 0
         execution_pose(art,frame+row,mirror)
         if execution_kind=="throw" and execution_clock>=0.60 and not execution_contact:
-            execution_contact=true;execution_target.position=player.position+execution_direction*105;execution_target.sprite.show();execution_target.launch(execution_direction);sound("hit");shake=5;state.mark("thrown")
+            execution_contact=true;execution_target.position=player.position+execution_direction*105;execution_target.show();execution_target.launch(execution_direction);sound("hit");shake=5;state.mark("thrown")
         if execution_clock>=0.82:finish_execution(true)
 func finish_execution(resolve: bool) -> void:
     var foe=execution_target;var kind=execution_kind
-    execution_busy=false;execution_kind="";player.sprite.show();player.mode="idle";player.guarding=false
+    execution_busy=false;execution_kind="";player.show();player.sprite.show();player.mode="idle";player.guarding=false
     if is_instance_valid(execution_sprite):execution_sprite.queue_free()
     prompt.modulate=Color.WHITE
     if is_instance_valid(foe):
-        foe.sprite.show()
+        foe.show();foe.sprite.show();foe.queue_redraw()
         if foe is SmallFoe:foe.held=false
         if resolve:
             contact_kind="heavy"

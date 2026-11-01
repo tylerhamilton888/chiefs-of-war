@@ -8,8 +8,9 @@ func stage(person: String,key: String) -> void:
     if not is_instance_valid(game.camera):return
     var focal=game.player.position
     if game.npcs.has(person):focal=game.npcs[person].position
+    game.camera.allow_dialogue_pan()
     camera_tween=create_tween().set_parallel(true)
-    camera_tween.tween_property(game.camera,"offset",focal-game.player.position+Vector2(0,-190),0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+    camera_tween.tween_property(game.camera,"position",focal-game.player.position+Vector2(0,70),0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
     camera_tween.tween_property(game.camera,"zoom",Vector2.ONE*(0.68 if key in ["feast","host_arrival"] else 0.85),0.65)
     if key=="feast":
         for id in ["bramm","svala","astrid"]:
@@ -32,4 +33,4 @@ func finish(reset_camera=true) -> void:
         if is_instance_valid(entry.actor):entry.actor.velocity=Vector2.ZERO;entry.actor.show_frame(0)
     actors.clear()
     if reset_camera and is_instance_valid(game.camera):
-        game.camera.offset=Vector2(0,-170);game.camera.zoom=Vector2.ONE*0.77
+        game.camera.reset_gameplay()

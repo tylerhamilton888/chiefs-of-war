@@ -33,9 +33,11 @@ func run() -> void:
     check(not game.overpower(true),"feeding requires earned Ferocity")
     game.state.ferocity=100
     check(game.overpower(true),"bite finisher starts on staggered goblin")
+    check(not bite.visible and not game.player.visible,"paired art hides original actors and their health/stagger overlays")
     game.execution_tick(0.23)
     check(game.execution_sprite.position.distance_to(game.player.position)<180,"feeding artwork is anchored at the actual player location")
     game.finish_execution(true)
+    check(bite.visible and game.player.visible,"bite restores the surviving player and defeated target")
     check(bite.hp==0 and game.player.hp==128,"bite defeats prey and restores health")
     check(game.state.encounters.get("bite_target",1)==0,"bite records defeat")
     bite.queue_free();game.enemies.erase(bite);await frames(2)

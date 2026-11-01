@@ -11,11 +11,12 @@ func _initialize() -> void:
     register(entries,"res://assets/ogre/hearthlord_motion_nordic.png","res://resources/ogre_motion.json","motion")
     for name in ["astrid","bramm","dorrik","eydis","gorund","hrothgar","runa","svala","thyra","player_combat","hrothgar_combat"]:
         register(entries,"res://assets/chapter/"+name+"_nordic.png","res://resources/chapter/"+name+".json","chapter")
-    for name in ["carry_log","carry_spoils","work","log_attack","player_maul","overpower","clinch","spearmen"]:
+    register(entries,"res://assets/chapter/beast.png","res://resources/chapter/beast.json","chapter")
+    for name in ["carry_log","carry_spoils","work","log_attack","player_maul","overpower","clinch","spearmen","great_beast"]:
         var path="res://assets/frontier/"+name+"_nordic.png"
         if not FileAccess.file_exists(path):path="res://assets/frontier/"+name+".png"
         register(entries,path,"res://resources/frontier/"+name+".json","frontier")
-    if entries.size()!=20:quit(1);return
+    if entries.size()!=22:quit(1);return
     var file=FileAccess.open("res://resources/ogre_frame_registration.json",FileAccess.WRITE)
     file.store_string(JSON.stringify(entries)+"\n")
     print("Registered ",entries.size()," existing atlases without changing their artwork")

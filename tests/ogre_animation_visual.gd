@@ -55,10 +55,22 @@ func run() -> void:
             Atlas.pose(sprite,sheet,frame,145 if sheet=="clinch" else 170)
             show_pose(sprite,frame,str(frame))
         await shot(sheet)
-    await page("Clan walking | complete bodies in all directions")
+    await page("Clan walking | complete right-facing bodies")
     i=0
     for id in ["astrid","bramm","dorrik","eydis","gorund","hrothgar","runa","svala","thyra"]:
         var actor=load("res://scripts/chapter/actor.gd").new();actor.identity=id;actor.controlled=false;actor.enabled=false
         root.add_child(actor);actor.face(Vector2.RIGHT);actor.show_frame(1);show_pose(actor.sprite,i,id);actor.queue_free();i+=1
     await shot("clan")
+    await page("Flint | consistent stature, all authored directions")
+    var beast_sprite=Sprite2D.new();panel.add_child(beast_sprite);beast_sprite.hide()
+    for row in 3:
+        for frame in 4:
+            preload("res://scripts/beast_art.gd").pose(beast_sprite,row,frame,135)
+            show_pose(beast_sprite,row*4+frame,str(row)+" / "+str(frame))
+    await shot("flint")
+    await page("Ridgeback | whole silhouettes, all twelve poses")
+    var hunt_sprite=Sprite2D.new();panel.add_child(hunt_sprite);hunt_sprite.hide()
+    for frame in 12:
+        Atlas.pose(hunt_sprite,"great_beast",frame,165);show_pose(hunt_sprite,frame,str(frame))
+    await shot("ridgeback")
     game.prepare_exit();game.queue_free();await process_frame;quit()

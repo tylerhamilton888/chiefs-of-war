@@ -1,3 +1,13 @@
+# Hearth and Hunger 0.8.9 — Quality pass, local checks complete; release pending
+
+The user requested a general pass before tomorrow's opening-chapter playtest. Fixed 12 reproduced story/framing/entrance failures, revised contextual objectives, and cleaned up beast poses, movement and paired-action overlays. Existing source art, blood settings, saves and Ogre-only menus are preserved. See docs/QUALITY_0_8_9.md and docs/RELEASE_0_8_9.md for scope and limits.
+
+Fresh Godot 4.4.1 checks: chapter 94, chapter quality 17, navigation 201, frontier systems 84, brutality 31, creator 22, animation 90, rendered dialogue/layout 100; all passed. Loading transitions and import passed. Reviewed actual OpenGL output, including all beast frames, chapter boundaries, dialogue, host, caravan and journals. The new checks are integrated into the standard Windows workflow.
+
+Next: sync this tested tree with the actual upstream parent, create release/v0.8.9 through the existing release workflow, verify all jobs and actual ZIP/checksum, then replace this pending header with exact source/run/download evidence. Do not treat local tests as a published release. Human playfeel remains pending; no new in-between poses or broad new systems are claimed.
+
+---
+
 # Hearth and Hunger 0.8.8 — Animation repair, published and verified
 
 The user reported broken animations. Reproduced the wrong-atlas return-to-walk bug (26 initial checks failed), fixed texture restoration and stature, and registered complete-pose geometry for 20 active atlases to prevent clipping/neighbor leakage. Improved log swing/carry sequencing, companion stopping/facing and champion gait cadence. Original art and combat gore remain. See docs/ANIMATION_QUALITY_0_8_8.md for evidence and remaining limited-pose animation constraints.

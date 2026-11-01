@@ -58,7 +58,7 @@ func run() -> void:
     check(p.sprite.texture==p.MOTION_TEXTURE,"releasing block returns to walking")
     # Every source revision must have matching complete-pose geometry, not old crops.
     var registrations=p.FrameArt.registrations
-    check(registrations.size()==20,"all twenty active Ogre/enemy sheets are registered")
+    check(registrations.size()==22,"all twenty-two active Ogre/enemy/beast sheets are registered")
     for path in registrations:
         var entry=registrations[path];var texture=load(path)
         check(FileAccess.get_sha256(path)==entry.source_sha256,"frame registration matches exact source: "+path)
@@ -90,5 +90,10 @@ func run() -> void:
     game.pet.set_physics_process(false);game.state.animal.command="stay"
     game.pet.facing=0;game.pet.sprite.flip_h=true;game.pet.phase=0.6;game.pet._physics_process(1.0/60.0)
     check(game.pet.sprite.flip_h and game.pet.phase==0,"Flint stops in idle without reversing direction")
+    var statures=[]
+    for row in 3:
+        preload("res://scripts/beast_art.gd").pose(game.pet.sprite,row,0,131)
+        statures.append(game.pet.sprite.region_rect.size.y*game.pet.sprite.scale.y)
+    check(statures.max()-statures.min()<8,"Flint keeps the same stature while turning")
     print("OGRE ANIMATION: %d checks, %d failures"%[checks,failures])
     game.prepare_exit();game.queue_free();await frames(3);quit(1 if failures else 0)

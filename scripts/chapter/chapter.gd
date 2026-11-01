@@ -4,6 +4,9 @@ const Actor=preload("res://scripts/chapter/actor.gd")
 const Story=preload("res://scripts/chapter/story.gd")
 const Wolf=preload("res://scripts/direwolf.gd")
 const Raider=preload("res://scripts/raider.gd")
+const OgreCamera=preload("res://scripts/ogre_camera.gd")
+const OgreTerrain=preload("res://scripts/ogre_terrain.gd")
+const BeastArt=preload("res://scripts/beast_art.gd")
 const NAMES={"crossing":"EMBERHIDE CROSSING","pines":"NORTHERN PINES","hollow":"WOLFSCAR HOLLOW","cairn":"GOBLIN CAIRN","pass":"SUNDERED PASS","host":"STONEBELLY HOST","trade":"BLACKSTONE TRADE POST"}
 const ROADS={"crossing":[["pines","north"],["host","east"]],"pines":[["crossing","south"],["hollow","north"],["cairn","east"]],"hollow":[["pines","south"]],"cairn":[["pines","west"],["trade","east"],["pass","north"]],"host":[["crossing","west"],["pass","north"],["trade","east"]],"pass":[["host","south"],["cairn","east"]],"trade":[["host","west"],["cairn","north"]]}
 var cast: Dictionary={}
@@ -61,12 +64,11 @@ func build_world() -> void:
         for x in range(44,70):
             for y in range(3,13):ground_state.terrain["%d,%d"%[x,y]]="water"
     ground_state.revision+=1
-    var terrain=Terrain.new();terrain.state=ground_state;region_root.add_child(terrain)
+    var terrain=OgreTerrain.new();terrain.state=ground_state;region_root.add_child(terrain)
     world=Node2D.new();world.y_sort_enabled=true;region_root.add_child(world)
     player=Actor.new();player.identity="player";player.game=self;player.position=state.player_position;player.hp=state.hp
     player.struck.connect(player_strike);player.felled.connect(player_felled);player.stepped.connect(func():play_sound("step"));world.add_child(player)
-    camera=Camera2D.new();camera.zoom=Vector2.ONE*0.77;camera.offset=Vector2(0,-170);camera.position_smoothing_enabled=true;camera.position_smoothing_speed=8
-    camera.limit_left=0;camera.limit_top=0;camera.limit_right=2260;camera.limit_bottom=1408;player.add_child(camera)
+    camera=OgreCamera.new();player.add_child(camera)
     var forest=state.region in ["pines","hollow","crossing"]
     for i in range(24):
         var x=140+(i%8)*270;var y=330+(i/8)*470
@@ -86,7 +88,7 @@ func build_world() -> void:
     if state.has("own_wagon") and not state.has("home_packed") and state.camp_region==state.region:build_home()
     if state.region=="crossing" and state.chapter==4:build_defense()
     if state.region=="crossing" and state.chapter==5:build_duel()
-    if state.region=="crossing" and state.chapter==2 and state.has("hunt_won"):station("feast",Vector2(990,1130),"Prepare the clan feast · 2 meat")
+    if state.region=="crossing" and state.chapter==2 and state.has("hunt_won"):station("feast",Vector2(990,1170),"Prepare the clan feast · 2 meat")
 func station(kind: String,at: Vector2,text: String,id: String="") -> void:
     stations.append({"kind":kind,"position":at,"text":"E  "+text,"id":id})
 func world_label(text: String,at: Vector2,color: Color=Color("e2c79d")) -> Label:
@@ -201,9 +203,7 @@ func build_pass() -> void:
 func add_beast(at: Vector2,factor: float) -> Node2D:
     var b=Node2D.new();b.position=at;world.add_child(b)
     if ResourceLoader.exists("res://assets/chapter/beast.png"):
-        var spr=Sprite2D.new();spr.texture=load("res://assets/chapter/beast.png");spr.region_enabled=true
-        var r=beast_frames.frames[0][0]
-        spr.region_rect=Rect2(r[0],r[1],r[2],r[3]);spr.scale=Vector2.ONE*factor;spr.position.y=-r[3]*factor/2;b.add_child(spr)
+        var spr=Sprite2D.new();b.add_child(spr);BeastArt.pose(spr,0,0,273*factor)
     return b
 func build_home() -> void:
     wagon(Vector2(1800,1230),0.46);hearth(Vector2(1940,1280));station("home",Vector2(1800,1310),"Your household · rest, improve, or take the road")
@@ -217,6 +217,7 @@ func rebuild() -> void:
     if is_instance_valid(region_root):remove_child(region_root);region_root.queue_free()
     build_world()
 func travel(region: String,spawn: Vector2=Vector2(1080,1000),forced: bool=false) -> void:
+    if not region in NAMES:return
     if not forced:
         if state.chapter in [4,5]:say("Your clan is still fighting. Finish what you can here.");return
         if region in ["host","trade","pass"] and state.chapter<6:say("Stonebelly warriors hold that road. Your family needs you at Emberhide Crossing.");return
@@ -226,6 +227,18 @@ func travel(region: String,spawn: Vector2=Vector2(1080,1000),forced: bool=false)
     state.hp=player.hp;state.region=region;state.player_position=spawn;rebuild();save_progress()
     say(NAMES[region].capitalize()+" · J opens your journal and the routes.")
     if state.chapter==4 and not state.has("burning_seen"):state.mark("burning_seen");dialogue("burning")
+func road_arrival(routes: Dictionary,destination: String) -> Vector2:
+    for road in routes[destination]:
+        if road[0]==state.region:
+            return {"north":Vector2(1080,280),"south":Vector2(1080,1150),"east":Vector2(1980,900),"west":Vector2(280,900)}[road[1]]
+    return Vector2(1080,1090)
+func interaction_available(entry: Dictionary) -> bool:
+    match entry.kind:
+        "wood","ore":return not entry.id in state.collected
+        "rescue":return state.chapter==4 and not state.has("saved_"+entry.id)
+        "feast":return state.chapter==2 and not state.has("feast")
+        "harvest":return not ("loot_"+entry.id) in state.collected
+    return true
 func build_ui() -> void:
     var layer=CanvasLayer.new();add_child(layer)
     var top=panel(Vector2(20,16),Vector2(1240,108));layer.add_child(top)
@@ -247,7 +260,7 @@ func _process(delta: float) -> void:
     player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT),get_global_mouse_position()-player.position)
     nearest={};var best=125.0
     for entry in stations+supplies:
-        if entry.kind in ["wood","ore"] and entry.id in state.collected:continue
+        if not interaction_available(entry):continue
         var distance=player.position.distance_to(entry.position)
         if distance<best:nearest=entry;best=distance
     for id in npcs:
@@ -265,6 +278,7 @@ func _process(delta: float) -> void:
     save_clock+=delta
     if save_clock>25:save_clock=0;save_progress()
 func _unhandled_input(event: InputEvent) -> void:
+    if leaving:return
     if event is InputEventMouseButton and event.pressed and not modal.visible:
         if event.button_index==MOUSE_BUTTON_LEFT:player.attack(get_global_mouse_position()-player.position)
     if not event is InputEventKey or not event.pressed or event.echo:return
@@ -295,14 +309,11 @@ func _unhandled_input(event: InputEvent) -> void:
             if state.has("home_packed") and state.region in ["host","crossing","trade"]:
                 state.camp_region=state.region;state.flags["home_packed"]=false;state.player_position=player.position;rebuild();save_progress();say("Your household is settled beside the road.")
 func interact(entry: Dictionary) -> void:
+    if not interaction_available(entry):return
     match entry.kind:
         "npc":story.talk(entry.id)
         "road":
-            var dest=entry.id;var spawn=Vector2(1080,1100)
-            if entry.position.x>2000:spawn=Vector2(260,900)
-            elif entry.position.x<300:spawn=Vector2(1980,900)
-            elif entry.position.y>1100:spawn=Vector2(1080,260)
-            travel(dest,spawn)
+            travel(entry.id,road_arrival(ROADS,entry.id))
         "wood","ore":
             if state.collect(entry.id,entry.kind,2):entry.node.data.state="collected";entry.node.refresh();say("Two %s added to your pack."%entry.kind);play_sound("gather")
         "provisions":
@@ -353,7 +364,7 @@ func interact(entry: Dictionary) -> void:
         "trade":dialogue("trade")
         "home":home_menu()
     if state.has("hunt_won") and state.chapter==2 and state.region=="crossing":
-        if not stations.any(func(e):return e.kind=="feast"):station("feast",Vector2(990,1130),"Prepare the clan feast · 2 meat")
+        if not stations.any(func(e):return e.kind=="feast"):station("feast",Vector2(990,1170),"Prepare the clan feast · 2 meat")
     save_progress()
 func finish_defense() -> void:
     if state.has("defense_ended"):return
@@ -369,7 +380,7 @@ func escort_tick(delta: float) -> void:
     if is_instance_valid(beast):
         beast.position=caravan.position+Vector2(280,15)
         if beast.get_child_count()>0:
-            var spr=beast.get_child(0);var r=beast_frames.frames[0][int(state.clock*5)%4];spr.region_rect=Rect2(r[0],r[1],r[2],r[3])
+            BeastArt.pose(beast.get_child(0),0,int((caravan.position.x-430)/160.0*4)%4,273*0.55)
     if caravan.position.x>=1810:
         caravan_active=false;state.mark("caravan_moved");state.chapter=maxi(8,state.chapter);state.inventory.coin+=8;state.change("thyra","admiration",2);say("The wagon clears the pass. Eight coin earned. Eydis has paid work at Blackstone, east of the Host.");save_progress()
 func has_line(from: Vector2,to: Vector2,_ignored=null) -> bool:
@@ -498,7 +509,7 @@ func choose(action: String) -> void:
     state.scene={};close_modal();story.action(action);save_progress()
 func save_progress() -> bool:
     if not is_instance_valid(player):return false
-    state.player_position=player.position;state.hp=player.hp
+    state.player_position=Vector2(clampf(player.position.x,60,2200),clampf(player.position.y,60,1330));state.hp=player.hp
     for foe in enemies:
         if is_instance_valid(foe):state.encounters[foe.get_meta("id","")]=foe.hp
     return state.save_game()

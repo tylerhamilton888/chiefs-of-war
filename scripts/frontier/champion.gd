@@ -16,13 +16,13 @@ func receive_hit(amount: float,source_direction: Vector2) -> void:
         if guard>0:return
         parried();game.say("The champion's guard broke. F to clinch while he is open.")
     hp=maxf(0,hp-amount);flash=0.13
-    if hp<=0:felled.emit(self)
+    if hp<=0:attack_time=0;vulnerable=0;stance="yielded";sprite.modulate=Color.WHITE;queue_redraw();felled.emit(self)
 func parried() -> void:
     stance="stagger";clock=0;vulnerable=1.8;attack_time=0;velocity=Vector2.ZERO
 func _physics_process(delta: float) -> void:
     if not enabled:return
     if hit_pause>0:hit_pause=maxf(0,hit_pause-delta);return
-    if hp<=0:action_pose(3);return
+    if hp<=0:action_pose(0);return
     clock+=delta;flash=maxf(0,flash-delta);grapple_cooldown=maxf(0,grapple_cooldown-delta)
     sprite.modulate=Color(1.5,0.75,0.6) if flash>0 else Color.WHITE
     var off=target.position-position
