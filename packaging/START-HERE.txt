@@ -1,30 +1,12 @@
-HEARTH AND HUNGER — SUNDERED FRONTIER PLAYTEST
+HEARTH AND HUNGER
 
-1. Use Windows "Extract All" on the downloaded ZIP.
-2. Open the extracted folder and double-click HearthAndHunger.exe.
-3. Choose an empty hearth and select "Create Ogre", or continue an existing Ogre.
+Extract the entire ZIP and run HearthAndHunger.exe. Select Begin Journey or
+Continue. Your journey opens at Emberhide Crossing with Bramm and the wagon.
 
-Name your Ogre and choose one of four beard colors on a new frontier save.
-For an existing frontier, press Esc and choose “Change your Ogre’s name and look.”
-The color selection uses the same illustrated body and hairstyle across animations.
+WASD moves. Aim with the mouse and left-click to swing the axe. Right-click
+to guard or parry. Space dodges. E interacts and Q eats a meal.
+J opens your objectives and routes. I opens belongings. F5 saves.
+Esc opens the pause menu, where you can save and return to the title.
 
-You are an Ogre with a wandering hearth. Fight, hunt, carry heavy loads, care
-for Flint and take contracts. This is an early playtest; balance and animation
-will benefit from your feedback.
-
-WASD: move     E: interact     LMB: light attack toward cursor
-R or Shift + LMB: heavy attack     RMB: hold to block / time a parry
-Space: dodge     Q: eat a meal     X: set a carried load down
-F: throw a staggered goblin or clinch a vulnerable Ogre champion
-G: bite a vulnerable goblin     Shift + G: swallow a vulnerable goblin
-J: journal/routes     I: belongings     F5: save     Esc: pause
-
-Earn Ferocity by landing attacks or parrying. Feed and throw cost Ferocity;
-stagger or critically wound the goblin first. Lift a whole trunk with E and
-use the attack controls to swing it, or take it to your wagon. Open the pause
-menu to select full or restrained blood effects.
-
-"The Fire We Carry · Ogre Story" is available on the title screen and keeps
-a separate save. Your original frontier save appears as the first Ogre hearth;
-the other two hearths are independent. Build/source information and engine
-notices are in Support.
+Your existing Fire We Carry save resumes automatically through Continue.
+Build information and engine notices are in Support.

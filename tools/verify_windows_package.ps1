@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$Archive, [string]$GameExecutable = 'ChiefsOfWar.exe')
+param([Parameter(Mandatory=$true)][string]$Archive, [string]$GameExecutable = 'HearthAndHunger.exe')
 $ErrorActionPreference = 'Stop'
 $root = Join-Path $env:RUNNER_TEMP 'Chiefs of War extracted playtest'
 Expand-Archive -LiteralPath $Archive -DestinationPath $root -Force
@@ -29,6 +29,5 @@ New-Item -ItemType Directory -Force -Path $saveDir | Out-Null
 $save = Join-Path $saveDir 'ancestral_hearth_v1.json'
 [System.IO.File]::WriteAllText($save, 'campaign sentinel - do not overwrite')
 Invoke-GameSmoke 'chapter-one' @('--chapter-one')
-Invoke-GameSmoke 'ogre-frontier' @('--ogre-frontier')
 if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'The Ogre game modified the legacy campaign sentinel.' }
-Write-Host 'WINDOWS PACKAGE VERIFIED: Ogre menu, Chapter One, frontier, legacy save isolation, path with spaces, external working directory.'
+Write-Host 'WINDOWS PACKAGE VERIFIED: Ogre menu, Chapter One, legacy save isolation, path with spaces, external working directory.'

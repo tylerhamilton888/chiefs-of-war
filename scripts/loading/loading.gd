@@ -1,30 +1,18 @@
 extends Control
 ## Scene changes load in a background thread while the player sees Ogre art and tips.
 static var destination=""
-static var context="frontier"
 # Cycle across visits so the hunter, feast and battle each get their turn.
 static var next_art=0
 const ARTWORK=["res://assets/loading/tracking_nordic.png","res://assets/loading/feast_clan_v2.png","res://assets/loading/frontier_nordic.png"]
 const SCREEN="res://scenes/loading.tscn"
-const VALID={"frontier":"res://scenes/ogre_frontier.tscn","story":"res://scenes/fire_we_carry.tscn"}
-const TIPS={
-    "frontier":[
-        "A whole trunk is a weapon as well as cargo. Lift it with E, then swing with your attack controls.",
-        "A well-timed block can parry an attack and create an opening for a counter.",
-        "Earn Ferocity through hits and parries. A staggered goblin can become a meal—or a thrown weapon.",
-        "Flint eats minerals. A fed and harnessed beast can carry a load to your wagon.",
-        "The ridgeback commits its weight to a charge. Lure it into an obstacle or a snare.",
-        "A hot meal restores health and helps you recover your guard for the next fight.",
-        "Choose the terms of a contract before accepting it. Provisions and rights can be worth more than coin."
-    ],
-    "story":[
+const VALID={"story":"res://scenes/fire_we_carry.tscn"}
+const TIPS=[
         "Block toward an attack, then time your guard for a parry and an opening to strike.",
         "Meals restore health and help keep your Ogre strong on the road.",
         "Talk to your kin at the hearth. Their skills and choices matter to the journey.",
         "A hearth is more than a place to rest: it is the beginning of a household.",
         "There is room to hunt, work and explore between the bigger moments of your story."
-    ]
-}
+]
 var displayed_art=""
 var progress_bar: ProgressBar
 var status_label: Label
@@ -33,7 +21,7 @@ var requested=false
 var completed=false
 static func start(tree: SceneTree,kind: String) -> bool:
     if not kind in VALID:return false
-    destination=VALID[kind];context=kind
+    destination=VALID[kind]
     return tree.change_scene_to_file(SCREEN)==OK
 func _ready() -> void:
     set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -54,8 +42,8 @@ func _ready() -> void:
     var style=StyleBoxFlat.new();style.bg_color=Color("1b1916ed");style.border_color=Color("b98b56");style.set_border_width_all(2);style.set_corner_radius_all(7)
     style.content_margin_left=24;style.content_margin_right=24;style.content_margin_top=15;style.content_margin_bottom=14;panel.add_theme_stylebox_override("panel",style);add_child(panel)
     var col=VBoxContainer.new();col.add_theme_constant_override("separation",8);panel.add_child(col)
-    var title=Label.new();title.text="THE FIRE WE CARRY" if context=="story" else "SUNDERED FRONTIER";title.add_theme_font_size_override("font_size",27);title.add_theme_color_override("font_color",Color("f2d29b"));col.add_child(title)
-    var tip=Label.new();tip.name="Tip";var choices: Array=TIPS.get(context,TIPS.frontier)
+    var title=Label.new();title.text="THE FIRE WE CARRY";title.add_theme_font_size_override("font_size",27);title.add_theme_color_override("font_color",Color("f2d29b"));col.add_child(title)
+    var tip=Label.new();tip.name="Tip";var choices: Array=TIPS
     tip.text=choices[int(Time.get_ticks_msec())%choices.size()];tip.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;tip.add_theme_font_size_override("font_size",20);tip.add_theme_color_override("font_color",Color("f2e2c4"));tip.custom_minimum_size.y=52;col.add_child(tip)
     var footer=HBoxContainer.new();col.add_child(footer)
     status_label=Label.new();status_label.text="Preparing your journey…";status_label.add_theme_font_size_override("font_size",15);status_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL;footer.add_child(status_label)

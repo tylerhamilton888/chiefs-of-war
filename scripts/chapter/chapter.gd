@@ -1,4 +1,6 @@
-extends "res://scripts/wandering_hearth.gd"
+extends Node2D
+const Menu = preload("res://scripts/main_menu.gd")
+const Prop = preload("res://scripts/camp_prop.gd")
 const Scale=preload("res://scripts/ogre_scale.gd")
 const ChapterState=preload("res://scripts/chapter/state.gd")
 const Actor=preload("res://scripts/chapter/actor.gd")
@@ -10,6 +12,27 @@ const OgreTerrain=preload("res://scripts/ogre_terrain.gd")
 const BeastArt=preload("res://scripts/beast_art.gd")
 const NAMES={"crossing":"EMBERHIDE CROSSING","pines":"NORTHERN PINES","hollow":"WOLFSCAR HOLLOW","cairn":"GOBLIN CAIRN","pass":"SUNDERED PASS","host":"STONEBELLY HOST","trade":"BLACKSTONE TRADE POST"}
 const ROADS={"crossing":[["pines","north"],["host","east"]],"pines":[["crossing","south"],["hollow","north"],["cairn","east"]],"hollow":[["pines","south"]],"cairn":[["pines","west"],["trade","east"],["pass","north"]],"host":[["crossing","west"],["pass","north"],["trade","east"]],"pass":[["host","south"],["cairn","east"]],"trade":[["host","west"],["cairn","north"]]}
+class GroundState:
+    var terrain: Dictionary = {}
+    var revision := 0
+
+var state = ChapterState.new()
+var player: CharacterBody2D
+var camera: Camera2D
+var world: Node2D
+var hud: Label
+var objective: Label
+var notice: Label
+var prompt: Label
+var modal: Control
+var stations: Array=[]
+var supplies: Array=[]
+var nearest: Dictionary={}
+var save_clock=0.0
+var leaving=false
+var sfx: AudioStreamPlayer
+var ambient: AudioStreamPlayer
+var helper=Menu.new()
 var cast: Dictionary={}
 var story
 var director
@@ -36,7 +59,7 @@ func _ready() -> void:
         if not InputMap.has_action(key):
             InputMap.add_action(key)
             var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
-    state=ChapterState.new();var loaded=state.load_game()
+    var loaded=state.load_game()
     director=preload("res://scripts/chapter/cinematic.gd").new();director.game=self;add_child(director)
     if FileAccess.file_exists("res://resources/chapter/beast.json"):beast_frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/beast.json"))
     cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"));story=Story.new(self)
@@ -52,7 +75,7 @@ func _ready() -> void:
 func build_world() -> void:
     stations.clear();supplies.clear();npcs.clear();enemies.clear();smoke_nodes.clear();caravan=null;beast=null;caravan_active=false
     region_root=Node2D.new();add_child(region_root)
-    ground_state=WorldState.new();ground_state.terrain.clear()
+    var ground_state = GroundState.new()
     for x in range(3,70):
         for y in range(26,30):ground_state.terrain["%d,%d"%[x,y]]="earth"
     for x in range(31,36):
@@ -519,7 +542,7 @@ func simple_menu(title: String,copy: String) -> VBoxContainer:
     var box=panel(Vector2(150,145),Vector2(980,520));modal.add_child(box);var col=VBoxContainer.new();col.add_theme_constant_override("separation",12);box.add_child(col)
     col.add_child(helper.words(title,27));var label=helper.words(copy,18);label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.custom_minimum_size.x=920;col.add_child(label);return col
 func pause_menu() -> void:
-    var col=simple_menu("THE FIRE WE CARRY","The chapter autosaves. Earlier campaigns and the first Ogre visit have separate saves.")
+    var col=simple_menu("THE FIRE WE CARRY","Your journey saves automatically. Press F5 to save on the road.")
     helper.action("Return to the fire",close_modal,col)
     helper.action("Journal and routes",journal,col)
     helper.action("Brutality: "+("full" if state.gore else "restrained"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
@@ -542,18 +565,55 @@ func home_menu() -> void:
     var col=simple_menu("YOUR HOUSEHOLD","A wagon, a fire, and a claim on your own future. Rest restores health. Add dry provision racks for six timber. You may settle in another safe region after traveling there.")
     helper.action("Rest beside your hearth",func():player.hp=160;state.hp=160;close_modal();save_progress(),col)
     helper.action("Build the provision racks · 6 timber",func():
-        if state.has("platform"):say("Your provision racks is already built.")
+        if state.has("platform"):say("Your provision racks are already built.")
         elif state.pay({"wood":6}):state.mark("platform");state.inventory.meals+=3;say("Dry provision racks and dry stores fitted. Three meals stocked.")
         else:say("Six timber needed.")
         state.player_position=player.position;close_modal();rebuild();save_progress(),col)
-    helper.action("Explore Sundered Frontier · gameplay expedition",func():
-        if not save_progress():return
-        prepare_exit();await get_tree().create_timer(0.15).timeout;preload("res://scripts/loading/loading.gd").start(get_tree(),"frontier"),col)
     helper.action("Pack for the road",func():state.mark("home_packed");state.player_position=player.position;close_modal();rebuild();say("Your household is packed. Press B in a safe region to settle it there.");save_progress(),col)
     helper.action("Return",close_modal,col)
 
 func prepare_exit() -> void:
-    director.finish();freeze(true);super.prepare_exit()
+    director.finish();freeze(true)
+    leaving=true;player.enabled=false;set_process(false)
+    # Reuse the legacy campaign's proven audio-mixer shutdown interval.
+    for child in get_children():
+        if child is AudioStreamPlayer:child.stop();child.stream=null
 
 func cinematic_texture_path() -> String:
     return "res://assets/chapter/cinematics_brutal_nordic.png" if state.gore else "res://assets/chapter/cinematics_nordic.png"
+
+func world_prop(kind: String,at: Vector2) -> Node2D:
+    var prop=Prop.new();prop.data={"kind":kind,"state":"intact","x":at.x,"y":at.y,"burning":false,"heat":0.0,"hp":100};prop.player=player;world.add_child(prop);return prop
+func camp_item(kind: String,at: Vector2,region: Rect2,size: float,collision: Vector2,offset: Vector2) -> void:
+    var body=StaticBody2D.new();body.name=kind;body.position=at
+    # Nonrectangular atlas boundaries exclude neighboring silhouettes at the
+    # wagon/hearth gutter. UVs select intact art; no texture pixels are edited.
+    var points=PackedVector2Array([region.position,region.position+Vector2(region.size.x,0),region.end,region.position+Vector2(0,region.size.y)])
+    if kind=="wagon":points=PackedVector2Array([Vector2(10,4),Vector2(810,4),Vector2(810,584),Vector2(450,584),Vector2(450,548),Vector2(350,548),Vector2(350,584),Vector2(10,584)])
+    if kind=="hearth":points=PackedVector2Array([Vector2(350,555),Vector2(450,555),Vector2(450,590),Vector2(700,590),Vector2(700,995),Vector2(140,995),Vector2(140,590),Vector2(350,590)])
+    var sprite=Polygon2D.new();sprite.texture=load("res://assets/ogre/traveling_camp.png");sprite.uv=points
+    var vertices=PackedVector2Array()
+    for point in points:vertices.append((point-region.position-Vector2(region.size.x*0.5,region.size.y))*size)
+    sprite.polygon=vertices;body.add_child(sprite)
+    var col=CollisionShape2D.new();var shape=RectangleShape2D.new();shape.size=collision;col.shape=shape;col.position=offset;body.add_child(col);world.add_child(body)
+func panel(at: Vector2,size: Vector2) -> PanelContainer:
+    var p=PanelContainer.new();p.position=at;p.size=size;p.add_theme_stylebox_override("panel",helper.style("211e19ed","93734a"));return p
+func say(text: String) -> void:notice.text=text
+func return_to_menu() -> void:
+    if leaving:return
+    if not state.unreadable and not save_progress():say("Could not save; staying here to preserve your progress.");close_modal();return
+    prepare_exit()
+    await get_tree().create_timer(0.15).timeout
+    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+func quit_game() -> void:
+    if leaving:return
+    if not state.unreadable and not save_progress():say("Could not save; staying here to preserve your progress.");close_modal();return
+    prepare_exit()
+    await get_tree().create_timer(0.15).timeout
+    get_tree().quit()
+func _notification(what: int) -> void:
+    if what==NOTIFICATION_WM_CLOSE_REQUEST and is_instance_valid(player):quit_game()
+func _exit_tree() -> void:
+    for child in get_children():
+        if child is AudioStreamPlayer:child.stop();child.stream=null
+    helper.free()

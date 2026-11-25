@@ -77,9 +77,4 @@ func run() -> void:
             var linked=game.stations.filter(func(e):return e.kind=="road" and e.id==region)
             check(linked.size()==1 and game.player.position.distance_to(linked[0].position)<=110,"arrival is beside the return road from "+road[0])
     game.prepare_exit();game.queue_free();await frames(3)
-    DirAccess.remove_absolute("user://ogre_frontier_v1.json")
-    game=load("res://scenes/ogre_frontier.tscn").instantiate();root.add_child(game);current_scene=game;await frames(3)
-    for region in game.TITLES:
-        game.player.mode="idle";game.travel(region,Vector2(1080,1090),true);await audit_region("frontier/"+region)
-    game.prepare_exit();game.queue_free();await frames(3)
     print("OGRE NAVIGATION: %d checks, %d failures"%[checks,failures]);quit(1 if failures else 0)

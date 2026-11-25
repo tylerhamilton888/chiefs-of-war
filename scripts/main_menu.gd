@@ -1,25 +1,22 @@
 extends Control
-const Slots=preload("res://scripts/save_slots.gd") # Legacy command-line regression entry only.
-const FrontierSlots=preload("res://scripts/frontier/slots.gd")
-const Loading=preload("res://scripts/loading/loading.gd")
+
+const CampaignState = preload("res://scripts/chapter/state.gd")
+const Loading = preload("res://scripts/loading/loading.gd")
+static var booted := false
 var content: VBoxContainer
 var status: Label
+
 func _ready() -> void:
-    get_tree().auto_accept_quit=true
-    var first_boot=not Slots.booted
-    Slots.booted=true
-    if first_boot and "--ogre-frontier" in OS.get_cmdline_user_args():
-        get_tree().change_scene_to_file.call_deferred("res://scenes/ogre_frontier.tscn");return
-    if first_boot and "--chapter-one" in OS.get_cmdline_user_args():
-        get_tree().change_scene_to_file.call_deferred("res://scenes/fire_we_carry.tscn");return
-    if first_boot and "--ogre-hearth" in OS.get_cmdline_user_args():
-        get_tree().change_scene_to_file.call_deferred("res://scenes/wandering_hearth.tscn");return
-    if first_boot and ("--combat-yard" in OS.get_cmdline_user_args() or "--fresh" in OS.get_cmdline_user_args()):
-        Slots.practice="--combat-yard" in OS.get_cmdline_user_args();Slots.fresh=true
-        get_tree().change_scene_to_file.call_deferred("res://scenes/opener.tscn");return
-    FrontierSlots.restore();Slots.practice=false;Slots.fresh=false
+    get_tree().auto_accept_quit = true
+    var direct_launch := not booted and "--chapter-one" in OS.get_cmdline_user_args()
+    booted = true
+    if direct_launch:
+        get_tree().change_scene_to_file.call_deferred("res://scenes/fire_we_carry.tscn")
+        return
     build()
-    if "--startup-smoke" in OS.get_cmdline_user_args(): get_tree().create_timer(2.0).timeout.connect(get_tree().quit)
+    if "--startup-smoke" in OS.get_cmdline_user_args():
+        get_tree().create_timer(2.0).timeout.connect(get_tree().quit)
+
 func style(bg: String,border: String) -> StyleBoxFlat:
     var s=StyleBoxFlat.new();s.bg_color=Color(bg);s.border_color=Color(border);s.set_border_width_all(2);s.set_corner_radius_all(5)
     s.content_margin_left=22;s.content_margin_right=22;s.content_margin_top=13;s.content_margin_bottom=13
@@ -38,30 +35,29 @@ func build() -> void:
     var panel=PanelContainer.new();panel.custom_minimum_size=Vector2(720,0);panel.add_theme_stylebox_override("panel",style("211e19ec","90734d"));center.add_child(panel)
     content=VBoxContainer.new();content.add_theme_constant_override("separation",10);panel.add_child(content)
     var title=words("HEARTH AND HUNGER",40);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(title)
-    var sub=words("A NOMADIC OGRE SANDBOX",16,"b99a66");sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;content.add_child(sub)
-    content.add_child(words("CHOOSE YOUR OGRE",18,"b99a66"))
-    var first_button: Button
-    for i in FrontierSlots.COUNT:
-        var info=FrontierSlots.info(i);var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);content.add_child(row)
-        var label_text="%d   %s"%[i+1,info.name]
-        if not info.empty and info.valid:label_text+="   ·   Day %d   ·   %s"%[info.day,info.region.replace("_"," ").capitalize()]
-        var l=words(label_text,17);l.clip_text=true;l.custom_minimum_size.x=420;l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(l)
-        var index=i;var empty=info.empty
-        var button=action("Create Ogre" if empty else "Continue",func():launch_frontier(index,empty),row)
-        button.custom_minimum_size.x=190;button.disabled=not info.valid
-        if first_button==null and not button.disabled:first_button=button
-    status=words("Each Ogre has a separate frontier and saved progress.",15,"b5ac98");content.add_child(status)
-    action("The Fire We Carry · Ogre Story",func():Loading.start(get_tree(),"story"),content)
-    content.add_child(words("A separate story of Emberhide and the Stonebelly Host",15,"b5ac98"))
-    var extras=HBoxContainer.new();extras.add_theme_constant_override("separation",12);content.add_child(extras)
-    for spec in [["Controls",controls],["Quit",func():get_tree().quit()]]:
-        var button=action(spec[0],spec[1],extras);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-    if first_button:first_button.grab_focus()
-func launch_frontier(index: int,new_character: bool) -> void:
-    var info=FrontierSlots.info(index)
-    if not info.valid or new_character!=info.empty:
-        status.text="That hearth is unavailable. Existing saves are preserved.";return
-    FrontierSlots.choose(index)
-    Loading.start(get_tree(),"frontier")
+    var subtitle = words("The Fire We Carry", 23, "d6b176")
+    subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    content.add_child(subtitle)
+    var saved := FileAccess.file_exists(CampaignState.SAVE)
+    var play = action("Continue" if saved else "Begin Journey", launch_campaign, content)
+    status = words("", 16, "ead9b9")
+    status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    content.add_child(status)
+    status.hide()
+    if saved and not CampaignState.new().load_game():
+        play.disabled = true
+        status.show()
+        status.text = "Your campaign save could not be read. Your progress has been preserved."
+    var controls_button = action("Controls", controls, content)
+    action("Quit", get_tree().quit, content)
+    if play.disabled:
+        controls_button.grab_focus()
+    else:
+        play.grab_focus()
+
+func launch_campaign() -> void:
+    Loading.start(get_tree(), "story")
+
 func controls() -> void:
-    status.text="WASD move · LMB attack · R heavy · RMB block/parry · Space dodge\nE interact · F throw/clinch · G bite · Shift+G swallow · Esc pause"
+    status.show()
+    status.text = "WASD move · LMB axe · RMB block or parry · Space dodge\nE interact · Q eat · J journal · I belongings · F5 save · Esc pause"

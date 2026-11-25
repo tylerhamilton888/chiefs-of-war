@@ -15,7 +15,7 @@ def package(exe: Path, output: Path, version: str, source: str) -> Path:
         raise ValueError('Expected the exact 40-character source commit')
     binary = exe.read_bytes()
     if binary[:2] != b'MZ':
-        raise ValueError('ChiefsOfWar.exe is not a Windows executable')
+        raise ValueError('HearthAndHunger.exe is not a Windows executable')
     pe = struct.unpack_from('<I', binary, 0x3c)[0]
     if binary[pe:pe + 4] != b'PE\0\0' or struct.unpack_from('<H', binary, pe + 4)[0] != 0x8664:
         raise ValueError('Expected a Windows x86-64 PE executable')
@@ -23,24 +23,19 @@ def package(exe: Path, output: Path, version: str, source: str) -> Path:
         raise ValueError('Expected a GUI game executable, not a console launcher')
     project = Path(__file__).resolve().parents[1]
     settings = json.loads((project / 'release.json').read_text())
-    game_exe = settings.get('executable', 'ChiefsOfWar.exe')
-    prefix = settings.get('archive_prefix', 'ChiefsOfWar')
+    game_exe = settings.get('executable', 'HearthAndHunger.exe')
+    prefix = settings.get('archive_prefix', 'HearthAndHunger')
     notices = project / 'builds/windows/THIRD_PARTY_NOTICES.txt'
     output.mkdir(parents=True, exist_ok=True)
     archive = output / f'{prefix}-Windows-{version}.zip'
     readme = (project / 'packaging/START-HERE.txt').read_text(encoding='utf-8')
-    practice = f'@echo off\r\ncd /d "%~dp0.."\r\nstart "" "{game_exe}" --combat-yard\r\n'
-    build = f"{settings.get('game_name', 'Chiefs of War')} {version}\nSource commit: {source}\nEngine: Godot 4.4.1\nPlatform: Windows x86-64\n"
+    build = f"{settings.get('game_name', 'Hearth and Hunger')} {version}\nSource commit: {source}\nEngine: Godot 4.4.1\nPlatform: Windows x86-64\n"
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         z.writestr(game_exe, binary)
         z.writestr('START HERE.txt', readme.replace('\n', '\r\n'))
-        if settings.get('package_layout') != 'ogre-only':
-            z.writestr('Extras/Combat Practice.bat', practice)
         z.writestr('Support/BUILD.txt', build)
         z.write(notices, 'Support/THIRD_PARTY_NOTICES.txt')
     expected = {game_exe, 'START HERE.txt', 'Support/BUILD.txt', 'Support/THIRD_PARTY_NOTICES.txt'}
-    if settings.get('package_layout') != 'ogre-only':
-        expected.add('Extras/Combat Practice.bat')
     with zipfile.ZipFile(archive) as z:
         if set(z.namelist()) != expected or z.testzip() is not None:
             raise ValueError('Distribution layout or ZIP integrity failed')

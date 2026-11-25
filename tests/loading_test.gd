@@ -9,7 +9,7 @@ func run() -> void:
     check(Loading.ARTWORK.size()==3 and Loading.ARTWORK[0].ends_with("tracking_nordic.png") and Loading.ARTWORK[1].ends_with("feast_clan_v2.png"),"tracking and clan feast are included in the rotation")
     for path in Loading.ARTWORK:check(ResourceLoader.exists(path),"loading art exists: "+path)
     Loading.next_art=0
-    Loading.destination="res://missing-journey.tscn";Loading.context="story"
+    Loading.destination="res://missing-journey.tscn"
     var broken=load("res://scenes/loading.tscn").instantiate();root.add_child(broken)
     await process_frame
     check("could not" in broken.status_label.text,"invalid path presents a recoverable error")
