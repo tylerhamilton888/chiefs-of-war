@@ -1,4 +1,5 @@
 extends SceneTree
+const Preview = preload("res://tools/art_preview.gd")
 const Loading=preload("res://scripts/loading/loading.gd")
 var output=OS.get_environment("CHIEFS_REVIEW_DIR")
 func _initialize() -> void:run.call_deferred()
@@ -11,7 +12,9 @@ func run() -> void:
         Loading.destination=Loading.VALID["story"]
         var screen=load("res://scenes/loading.tscn").instantiate();root.add_child(screen);screen.set_process(false)
         await frames(6);await RenderingServer.frame_post_draw
-        root.get_texture().get_image().save_png(output+"/loading-"+str(index)+".png")
+        if Preview.save(root.get_texture().get_image(), output+"/loading-"+str(index)+".webp") != OK:
+            quit(1)
+            return
         while ResourceLoader.load_threaded_get_status(Loading.destination)==ResourceLoader.THREAD_LOAD_IN_PROGRESS:
             await process_frame;OS.delay_msec(5)
         if ResourceLoader.load_threaded_get_status(Loading.destination)==ResourceLoader.THREAD_LOAD_LOADED:

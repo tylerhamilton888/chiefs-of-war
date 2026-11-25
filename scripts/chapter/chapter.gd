@@ -33,6 +33,7 @@ var leaving=false
 var sfx: AudioStreamPlayer
 var ambient: AudioStreamPlayer
 var helper=Menu.new()
+var portrait_data: Dictionary = preload("res://resources/chapter/portraits.json").data
 var cast: Dictionary={}
 var story
 var director
@@ -490,7 +491,7 @@ func dialogue(key: String,resume=false) -> void:
     var shade=ColorRect.new();shade.color=Color(0.03,0.025,0.02,0.25);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
     var illustration=line.get("art",scene.art)
     if illustration>=0:shade.color=Color(0.03,0.025,0.02,0.82)
-    if illustration>=0 and ResourceLoader.exists("res://assets/chapter/cinematics.png"):
+    if illustration>=0 and ResourceLoader.exists(cinematic_texture_path()):
         var art=TextureRect.new();var atlas=AtlasTexture.new();atlas.atlas=load(cinematic_texture_path())
         var width=atlas.atlas.get_width()/2.0;var height=atlas.atlas.get_height()/3.0;atlas.region=Rect2((int(illustration)%2)*width,int(illustration/2)*height,width,height)
         art.texture=atlas;art.position=Vector2(250,130);art.size=Vector2(780,350);art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;modal.add_child(art)
@@ -509,16 +510,23 @@ func dialogue(key: String,resume=false) -> void:
     if npcs.has(person):npcs[person].face(player.position-npcs[person].position);npcs[person].show_frame(0)
     save_progress()
 func portrait_texture(person: String,expression: String="neutral") -> Texture2D:
-    var path="res://resources/chapter/"+person+".json"
-    if not FileAccess.file_exists(path):return null
-    var data=JSON.parse_string(FileAccess.get_file_as_string(path));var r=data.frames[0][0]
-    var atlas=AtlasTexture.new();atlas.atlas=load("res://assets/chapter/"+person+".png")
-    atlas.region=Rect2(r[0],r[1],r[2],r[3]*0.48)
-    var expr_path="res://resources/chapter/portraits.json"
-    if FileAccess.file_exists(expr_path):
-        var expressions=JSON.parse_string(FileAccess.get_file_as_string(expr_path))
-        if expressions.has(person):
-            var e=expressions[person].get(expression,expressions[person].neutral);atlas.atlas=load(expressions[person].texture);atlas.region=Rect2(e[0],e[1],e[2],e[3])
+    var atlas = AtlasTexture.new()
+    if portrait_data.has(person):
+        var entry: Dictionary = portrait_data[person]
+        var rect: Array = entry.get(expression, entry.neutral)
+        atlas.atlas = load(entry.texture)
+        atlas.region = Rect2(rect[0], rect[1], rect[2], rect[3])
+        return atlas
+    var path = "res://resources/chapter/" + person + ".json"
+    if not FileAccess.file_exists(path):
+        return null
+    var data = JSON.parse_string(FileAccess.get_file_as_string(path))
+    var frame = data.frames[0][0]
+    var texture_path = "res://assets/chapter/" + person + "_nordic.png"
+    if not ResourceLoader.exists(texture_path):
+        texture_path = "res://assets/chapter/" + person + ".png"
+    atlas.atlas = load(texture_path)
+    atlas.region = Rect2(frame[0], frame[1], frame[2], frame[3] * 0.48)
     return atlas
 func advance_dialogue() -> void:
     if not dialog_mode:return

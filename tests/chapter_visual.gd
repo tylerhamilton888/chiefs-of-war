@@ -1,4 +1,5 @@
 extends SceneTree
+const Preview = preload("res://tools/art_preview.gd")
 var game
 var output="/tmp/hearth-review"
 func _initialize() -> void:run.call_deferred()
@@ -6,7 +7,9 @@ func frames(count: int) -> void:
     for i in count:await process_frame
 func shot(name: String) -> void:
     await frames(8);await RenderingServer.frame_post_draw
-    root.get_texture().get_image().save_png(output+"/chapter-"+name+".png")
+    if Preview.save(root.get_texture().get_image(), output+"/chapter-"+name+".webp") != OK:
+        quit(1)
+        return
 func run() -> void:
     if OS.has_environment("CHIEFS_REVIEW_DIR"):output=OS.get_environment("CHIEFS_REVIEW_DIR")
     DirAccess.make_dir_recursive_absolute(output)

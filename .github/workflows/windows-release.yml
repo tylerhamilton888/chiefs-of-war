@@ -62,6 +62,8 @@ jobs:
             timeout 300s "$@" 2>&1 | tee "$log"
             if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' "$log"; then return 1; fi
           }
+          python3 -m pip install Pillow
+          python3 tools/check_art.py
           check_godot import Godot_v4.4.1-stable_linux.x86_64 --headless --editor --import --quit
           for suite in chapter_test chapter_quality_test ogre_scale_test ogre_navigation_test loading_test menu_flow_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
@@ -75,6 +77,7 @@ jobs:
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-chapter" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/chapter_visual.gd -- --test 2>&1 | tee builds/logs/render-chapter.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-loading" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/loading_visual.gd -- --test 2>&1 | tee builds/logs/render-loading.log
           CHIEFS_REVIEW_DIR="$RUNNER_TEMP/review" XDG_DATA_HOME="$RUNNER_TEMP/render-quality" xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 60 --script tests/ogre_quality_visual.gd -- --test 2>&1 | tee builds/logs/render-quality.log
+          python3 tools/check_art.py --previews "$RUNNER_TEMP/review"
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/render-*.log; then exit 1; fi
       - name: Export and package Windows
         if: steps.release.outputs.complete != 'true'
@@ -87,10 +90,10 @@ jobs:
           XDG_DATA_HOME="$RUNNER_TEMP/chapter-pack-smoke" Godot_v4.4.1-stable_linux.x86_64 --headless --audio-driver Dummy --main-pack builds/windows/HearthAndHunger.exe -- --chapter-one --startup-smoke 2>&1 | tee builds/logs/chapter-pack-smoke.log
           Godot_v4.4.1-stable_linux.x86_64 --headless --script tools/engine_notices.gd 2>&1 | tee builds/logs/notices.log
           if grep -E '(^|[[:space:]])(SCRIPT ERROR:|ERROR:)' builds/logs/*.log; then exit 1; fi
-          cp "$RUNNER_TEMP/review/chapter-crossing.png" builds/chapter-crossing.png
-          cp "$RUNNER_TEMP/review/chapter-host.png" builds/chapter-host.png
-          cp "$RUNNER_TEMP"/review/loading-*.png builds/
-          cp "$RUNNER_TEMP"/review/quality-*.png builds/
+          cp "$RUNNER_TEMP/review/chapter-crossing.webp" builds/chapter-crossing.webp
+          cp "$RUNNER_TEMP/review/chapter-host.webp" builds/chapter-host.webp
+          cp "$RUNNER_TEMP"/review/loading-*.webp builds/
+          cp "$RUNNER_TEMP"/review/quality-*.webp builds/
           python3 tools/package_windows.py --exe builds/windows/HearthAndHunger.exe --output builds --version "$RELEASE_VERSION" --source "$GITHUB_SHA"
       - name: Preserve build before publication
         if: steps.release.outputs.complete != 'true'
@@ -103,10 +106,10 @@ jobs:
           path: |
             builds/*.zip
             builds/SHA256SUMS-*.txt
-            builds/chapter-crossing.png
-            builds/chapter-host.png
-            builds/loading-*.png
-            builds/quality-*.png
+            builds/chapter-crossing.webp
+            builds/chapter-host.webp
+            builds/loading-*.webp
+            builds/quality-*.webp
       - name: Preserve diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4

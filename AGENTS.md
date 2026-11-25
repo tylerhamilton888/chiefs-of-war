@@ -5,3 +5,5 @@ Work in the existing Godot 4.4.1 Ogre project. Start with README.md, docs/state/
 Use docs/design/chapter-one.md and docs/engineering/chapter-one.md for the playable campaign. Current ARPG direction is in docs/state/decisions.md. Reuse individual Ogre actors and their artwork where appropriate. The previous complete Frontier implementation and Orc prototype can be inspected in Git history. A development arena must use disposable state and the campaign combat implementation.
 
 Run relevant checks with Godot 4.4.1 in a disposable XDG_DATA_HOME. See docs/BUILD.md. Verify player-facing changes through their normal entry points. Keep commits recoverable and preserve published release history. When a release is requested, use the Windows workflow and validate the packaged launch before reporting publication.
+
+Follow the artwork and review-image instructions in docs/BUILD.md. Use tools/art_preview.gd for review copies, including chat previews. Check dimensions and encoded file sizes before delivering them.

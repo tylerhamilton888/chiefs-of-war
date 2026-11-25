@@ -1,4 +1,5 @@
 extends SceneTree
+const Preview = preload("res://tools/art_preview.gd")
 var game
 var output=OS.get_environment("CHIEFS_REVIEW_DIR")
 var checks=0
@@ -11,7 +12,9 @@ func check(value: bool,message: String) -> void:
     if not value:failures+=1;push_error("OGRE VISUAL: "+message)
 func shot(name: String) -> void:
     await frames(5);await RenderingServer.frame_post_draw
-    root.get_texture().get_image().save_png(output+"/quality-"+name+".png")
+    if Preview.save(root.get_texture().get_image(), output+"/quality-"+name+".webp") != OK:
+        quit(1)
+        return
 func run() -> void:
     DirAccess.make_dir_recursive_absolute(output)
     DirAccess.remove_absolute("user://fire_we_carry_v1.json")
