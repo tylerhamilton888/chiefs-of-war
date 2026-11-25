@@ -3,18 +3,18 @@
     "lines": [
       {
         "speaker": "bramm",
-        "text": "A fine pair of shoulders. Let us find out whether they carry anything. Six lengths of sound timber. Our rear axle will not mend itself.",
+        "text": "See how the wheel leans? I heard the axle split from the far side of camp. Bring me six lengths of timber and we'll have her rolling by supper.",
         "expression": "neutral"
       }
     ],
     "choices": [
       [
-        "I will mend the wagon.",
+        "I’ll fetch them, Father.",
         "work"
       ],
       [
-        "Show me how to fight.",
-        "train"
+        "Where did you stack the timber?",
+        "woodpile"
       ]
     ],
     "art": -1
@@ -91,18 +91,18 @@
     "lines": [
       {
         "speaker": "svala",
-        "text": "Two cuts of meat, one length for the fire. Eat a portion yourself, then set one aside for Sava. We do not ask the hearth to keep us while feeding it nothing.",
+        "text": "Two cuts from the stores, a stick for the fire. There's room in the pot for both. Set a portion on Sava's stone while it's still hot.",
         "expression": "neutral"
       }
     ],
     "choices": [
       [
-        "I will tend the pot.",
+        "I'll put the pot on.",
         "close"
       ],
       [
-        "Remind me of the controls.",
-        "train"
+        "Does Sava mind which cut she gets?",
+        "sava"
       ]
     ],
     "art": -1
@@ -159,7 +159,7 @@
     "lines": [
       {
         "speaker": "gorund",
-        "text": "Stonebelly asks for the crossing, the northern hunt, and our bowed heads. He may have the answer carried to him: Emberhide kneels only to lift its dead.",
+        "text": "Stonebelly asks for the crossing, the northern hunt, and our bowed heads. He may have the answer carried to him: {clan} kneels only to lift its dead.",
         "expression": "neutral"
       }
     ],
@@ -344,7 +344,7 @@
         "close"
       ]
     ],
-    "art": 0
+    "art": -1
   },
   "challenge": {
     "lines": [
@@ -359,8 +359,7 @@
         "speaker": "hrothgar",
         "text": "And you. Still standing, still swinging. Come, then. Show me what his hearth raised.",
         "expression": "amused",
-        "art": 2,
-        "brutal_text": "You have his blood on your boots and my men's blood on your axe. Still standing. Good. Come show me what his hearth raised."
+        "brutal_text": "You have his blood on your boots and my men's blood on your hands. Still standing. Good. Come show me what his hearth raised."
       }
     ],
     "choices": [
@@ -369,7 +368,7 @@
         "duel"
       ]
     ],
-    "art": 2
+    "art": -1
   },
   "mercy": {
     "lines": [
@@ -397,7 +396,7 @@
         "join"
       ]
     ],
-    "art": 3
+    "art": -1
   },
   "victory": {
     "lines": [
@@ -418,7 +417,7 @@
         "join"
       ]
     ],
-    "art": 2
+    "art": -1
   },
   "host_arrival": {
     "lines": [
@@ -439,7 +438,7 @@
         "close"
       ]
     ],
-    "art": 4
+    "art": -1
   },
   "hrothgar_idle": {
     "lines": [
@@ -742,7 +741,7 @@
       },
       {
         "speaker": "hrothgar",
-        "text": "Your hearth, young Emberhide. Stay with my host or take the road. What you build next is yours to answer for.",
+        "text": "Your hearth, young {clan}. Stay with my host or take the road. What you build next is yours to answer for.",
         "expression": "proud"
       }
     ],
@@ -752,7 +751,7 @@
         "close"
       ]
     ],
-    "art": 5
+    "art": -1
   },
   "trade": {
     "lines": [
@@ -773,6 +772,38 @@
       ],
       [
         "Leave the stall",
+        "close"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_timber": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "Just left of the wagon, down by the wheel. I bound the straight pieces in pairs. Three bundles will do us.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I see them.",
+        "work"
+      ]
+    ],
+    "art": -1
+  },
+  "svala_hearth": {
+    "lines": [
+      {
+        "speaker": "svala",
+        "text": "She gets what we eat. Your grandfather once left her a knuckle he'd already sucked clean. My mother made him give up the marrow from his own bowl.",
+        "expression": "neutral"
+      }
+    ],
+    "choices": [
+      [
+        "I'll give her a proper share.",
         "close"
       ]
     ],

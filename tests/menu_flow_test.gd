@@ -41,10 +41,31 @@ func run() -> void:
         quit(1)
         return
     actions["Begin Journey"].pressed.emit()
+    var creator = current_scene.content.get_child(0)
+    check(not FileAccess.file_exists(State.SAVE), "Opening the creator does not claim a save")
+    creator.cancelled.emit()
+    await process_frame
+    check(buttons().has("Begin Journey"), "Cancel restores the title")
+    buttons()["Begin Journey"].pressed.emit()
+    creator = current_scene.content.get_child(0)
+    creator.name_edit.text = "   "
+    creator.refresh()
+    check(creator.start.disabled, "A blank name cannot start a journey")
+    creator.name_edit.text = "Tore"
+    creator.clan_edit.text = "Frostgate"
+    creator.hair_select.select(3)
+    creator.hair_select.item_selected.emit(3)
+    creator.background_select.select(2)
+    creator.refresh()
+    check(creator.preview.sprite.material.get_shader_parameter("palette") == 3, "The live Ogre receives the selected color")
+    creator.start.pressed.emit()
     if not await wait_for_scene("res://scenes/fire_we_carry.tscn"):
         push_error("Campaign did not launch from the menu")
         quit(1)
         return
+    var expected := {"ogre_name": "Tore", "clan_name": "Frostgate", "hair": "silver", "background": "smith"}
+    check(current_scene.state.profile == expected and current_scene.state.inventory.ore == 2, "Identity and smith supplies enter the game")
+    check(current_scene.player.sprite.material != null and current_scene.player.sprite.material.get_shader_parameter("palette") == 3, "The campaign matches the preview")
     current_scene.choose("work")
     current_scene.state.inventory.meat = 37
     current_scene.return_to_menu()
@@ -59,10 +80,18 @@ func run() -> void:
         quit(1)
         return
     check(current_scene.state.inventory.meat == 37, "Continue resumes the same inventory")
+    check(current_scene.state.profile == expected and current_scene.state.inventory.ore == 2, "Continue preserves the Ogre and grants starting supplies once")
     current_scene.home_menu()
     check(buttons().has("Pack for the road") and buttons().size() == 4, "Wagon offers only household actions")
     current_scene.return_to_menu()
     await wait_for_scene(MENU)
+    var legacy = JSON.parse_string(FileAccess.get_file_as_string(State.SAVE))
+    legacy.erase("profile")
+    var file := FileAccess.open(State.SAVE, FileAccess.WRITE)
+    file.store_string(JSON.stringify(legacy))
+    file.close()
+    var restored := State.new()
+    check(restored.load_game() and restored.profile == State.DEFAULT_PROFILE and restored.inventory.meat == 37, "Pre-creator saves retain progress and receive the original appearance")
     var corrupt := FileAccess.open(State.SAVE, FileAccess.WRITE)
     corrupt.store_string("damaged")
     corrupt.close()

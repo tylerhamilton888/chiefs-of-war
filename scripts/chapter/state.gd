@@ -4,6 +4,14 @@ const SAVE="user://fire_we_carry_v1.json"
 const REGIONS=["crossing","pines","hollow","cairn","pass","host","trade"]
 const PEOPLE=["bramm","svala","gorund","dorrik","astrid","hrothgar","thyra","runa","eydis"]
 const AXES=["friendship","admiration","rivalry","loyalty","interest"]
+const HAIR = ["copper", "umber", "gold", "silver"]
+const BACKGROUNDS = {
+    "hunter": {"label": "Hunter", "item": "meat", "amount": 2},
+    "drover": {"label": "Drover", "item": "hide", "amount": 2},
+    "smith": {"label": "Smith", "item": "ore", "amount": 2},
+}
+const DEFAULT_PROFILE = {"ogre_name": "Hald", "clan_name": "Emberhide", "background": "hunter", "hair": "copper"}
+var profile: Dictionary = DEFAULT_PROFILE.duplicate()
 var region="crossing"
 var player_position=Vector2(960,920)
 var chapter=0
@@ -46,7 +54,7 @@ func eat() -> bool:
 func eligible(id: String) -> bool:
     return id in ["astrid","runa","eydis"] and has(id+"_activity") and relationships[id].admiration>=2
 func pack() -> Dictionary:
-    return {"version":1,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region,"encounters":encounters,"escort_x":escort_x}
+    return {"version":1,"profile":profile,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region,"encounters":encounters,"escort_x":escort_x}
 func save_game() -> bool:
     if unreadable:return false
     var f=FileAccess.open(SAVE+".tmp",FileAccess.WRITE)
@@ -60,6 +68,7 @@ func load_game() -> bool:
     if parser.parse(FileAccess.get_file_as_string(SAVE))!=OK:unreadable=true;return false
     var d=parser.data
     if not valid(d):unreadable=true;return false
+    profile = d.get("profile", DEFAULT_PROFILE).duplicate()
     region=d.region;player_position=Vector2(d.position[0],d.position[1]);chapter=int(d.chapter)
     flags=d.flags;inventory=d.inventory;relationships=d.relationships;scene=d.scene
     collected=d.collected;defeated=d.defeated;hp=d.hp;fed=d.fed;clock=d.clock;defense_left=d.defense_left;gore=d.gore;camp_region=d.camp_region;encounters=d.encounters;escort_x=d.escort_x
@@ -69,7 +78,8 @@ func number(value,low: float,high: float) -> bool:
 func valid(d) -> bool:
     if not d is Dictionary:return false
     for key in pack():
-        if not d.has(key):return false
+        if key != "profile" and not d.has(key):return false
+    if d.has("profile") and not valid_profile(d.profile):return false
     if d.version!=1 or not d.region in REGIONS or not d.camp_region in REGIONS or not number(d.chapter,0,10) or d.chapter!=int(d.chapter):return false
     if not d.position is Array or d.position.size()!=2 or not number(d.position[0],60,2200) or not number(d.position[1],60,1330):return false
     if not d.inventory is Dictionary or not d.flags is Dictionary or not d.relationships is Dictionary or not d.scene is Dictionary:return false
@@ -93,3 +103,24 @@ func valid(d) -> bool:
     if not d.scene.is_empty():
         if not d.scene.get("key",null) is String or not number(d.scene.get("cursor",-1),0,20):return false
     return number(d.hp,0,160) and number(d.fed,0,180) and number(d.clock,0,10000000) and number(d.defense_left,0,100) and d.gore is bool
+
+
+static func valid_profile(value: Variant) -> bool:
+    if not value is Dictionary:
+        return false
+    for key in ["ogre_name", "clan_name"]:
+        var label = value.get(key)
+        if not label is String or label.is_empty() or label.length() > 28 or label != label.strip_edges():
+            return false
+        for index in label.length():
+            if label.unicode_at(index) < 32:
+                return false
+    return value.get("hair") in HAIR and value.get("background") in BACKGROUNDS
+
+func create_journey(identity: Dictionary) -> bool:
+    if FileAccess.file_exists(SAVE) or not valid_profile(identity):
+        return false
+    profile = identity.duplicate()
+    var gift: Dictionary = BACKGROUNDS[profile.background]
+    inventory[gift.item] += gift.amount
+    return save_game()

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c4ijevfnk5b2m"
-path="res://.godot/imported/player_maul_nordic.png-af8680b37cb770defa05753881f9e70b.ctex"
+path="res://.godot/imported/player_maul_nordic.png-40993b77f9c947ffbeb7037a6b9e1bfd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/frontier/player_maul_nordic.png"
-dest_files=["res://.godot/imported/player_maul_nordic.png-af8680b37cb770defa05753881f9e70b.ctex"]
+source_file="res://assets/chapter/player_maul_nordic.png"
+dest_files=["res://.godot/imported/player_maul_nordic.png-40993b77f9c947ffbeb7037a6b9e1bfd.ctex"]
 
 [params]
 

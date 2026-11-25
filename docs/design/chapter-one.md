@@ -1,5 +1,7 @@
 # Chapter One — The Fire We Carry
 
+**Historical design record.** The November [Game Design Bible](GAME_DESIGN_BIBLE.md) and [opening outline](OPENING_OUTLINE.md) govern current work.
+
 Canonical source: `docs/source/FIRE_WE_CARRY_DIRECTIVE.txt`, the user's October 31 attachment. This extends the Ogre pivot in the same Godot project and keeps our established bright, chunky, outlined 2D style. The concept boards guide anatomy, culture and identity; they do not replace the rendering style.
 
 Ogres never weaken merely through aging. Youth grows rapidly, adult growth slows but continues; ancient men and women may be their people's largest, strongest members. Injury, training, equipment and individual variation remain meaningful. Cast heights make this visible: young adults 155–168 units, mature adults 164–177, Thyra 205, Gorund 220, Hrothgar 242. These are present art-scale decisions, not a completed aging simulation.

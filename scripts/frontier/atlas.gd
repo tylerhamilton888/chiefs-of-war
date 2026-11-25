@@ -6,6 +6,7 @@ static func pose(sprite: Sprite2D,id: String,index: int,height: float,mirror: bo
         var path="res://resources/frontier/"+id+".json"
         if not FileAccess.file_exists(path):return
         var texture_path="res://assets/frontier/"+id+"_nordic.png"
+        if id=="player_maul":texture_path="res://assets/chapter/player_maul_nordic.png"
         if not ResourceLoader.exists(texture_path):texture_path="res://assets/frontier/"+id+".png"
         cache[id]={"data":JSON.parse_string(FileAccess.get_file_as_string(path)),"texture":load(texture_path)}
     var art=cache[id];var d=art.data;var r=d.frames[clampi(index,0,d.frames.size()-1)]

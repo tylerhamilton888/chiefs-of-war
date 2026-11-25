@@ -42,10 +42,11 @@ func run() -> void:
     check(game.state.has("contest_won") and game.state.inventory.meals==1,"contest pays once")
     interact("repair");check(game.state.inventory.meals==1,"repair not farmable")
     interact("provisions");check(game.state.inventory.meat==8,"family provisions")
-    game.interact(game.supplies[0]);interact("hearth");check(game.state.inventory.meals==4,"cooked usable food")
+    var firewood = game.supplies.filter(func(entry): return game.interaction_available(entry) and entry.kind == "wood")
+    game.interact(firewood[0]);interact("hearth");check(game.state.inventory.meals==4,"cooked usable food")
     game.player.hp=90;game.state.hp=90;check(game.state.eat(),"can eat");game.player.hp=game.state.hp
     check(game.player.hp==155 and game.state.fed>0,"food heals and buffs")
-    interact("offering");await frames(2);check(game.state.chapter==2,"first portion advances")
+    interact("offering");await frames(2);check(game.state.chapter==2 and game.offering_stone.offered,"first portion appears on the stone and advances the hunt")
     game.story.action("hunt");game.travel("pines");await frames(2)
     check(game.npcs.has("dorrik"),"companion comes to hunt")
     for i in 3:interact("track",str(i))
@@ -112,10 +113,15 @@ func run() -> void:
     game.choose("close")
     # Independent defense edge cases: front timed parry, sustained block, back hit, dodge.
     var actor=game.player;actor.position=Vector2(1080,1200);actor.hp=160;actor.attack_time=0;actor.cooldown=0;actor.stun=0
+    actor.guard=0 # Legacy Frontier guard data cannot gate campaign actions.
     actor.block(true,Vector2.RIGHT);actor.receive_hit(30,Vector2.LEFT);check(actor.hp==160,"timed front parry")
-    actor.guard_age=0.5;actor.receive_hit(30,Vector2.LEFT);check(actor.hp==160 and actor.guard<100,"held block spends guard")
+    actor.guard_age=0.5;actor.receive_hit(30,Vector2.LEFT);check(actor.hp==160 and actor.guarding,"held block covers a frontal strike at zero legacy guard")
     actor.receive_hit(30,Vector2.RIGHT);check(actor.hp==130,"rear hit bypasses block")
     actor.block(false,Vector2.RIGHT);actor.stun=0;actor.dodge(Vector2.RIGHT);actor.receive_hit(30,Vector2.LEFT);check(actor.hp==130,"dodge avoids contact")
+    actor.dodge_time=0;actor.block(true,Vector2.RIGHT);actor.guard_age=1.0
+    actor.receive_hit(42,Vector2.LEFT,true)
+    check(actor.hp==88 and not actor.guarding and actor.stun>0,"heavy Ogre attack breaks a held block")
+    actor.stun=0;check(actor.attack(Vector2.RIGHT),"ordinary attack remains available at zero legacy guard")
     # Valid exceptional victory follows the alternate scene, never invulnerable story armor.
     game.state.chapter=5;game.travel("crossing",Vector2(1100,950),true);await frames(2)
     boss=game.npcs.hrothgar;boss.enabled=false;boss.receive_hit(620,Vector2.RIGHT);check(game.state.has("duel_won") and game.state.scene.key=="victory","alternate victory resolution")

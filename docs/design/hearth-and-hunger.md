@@ -1,5 +1,7 @@
 # Hearth and Hunger — governing pivot
 
+**Historical design record.** The November [Game Design Bible](GAME_DESIGN_BIBLE.md) and [opening outline](OPENING_OUTLINE.md) govern current work.
+
 The user's October 30 directive in ../source/HEARTH_AND_HUNGER_DIRECTIVE.txt supersedes the older Orc-centered vision for new development. Preserve the older implementation and its save files. The same Git repository remains in use; do not create a replacement project or rename the remote as a side effect.
 
 ## Visual acceptance

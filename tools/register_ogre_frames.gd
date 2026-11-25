@@ -12,7 +12,8 @@ func _initialize() -> void:
     for name in ["astrid","bramm","dorrik","eydis","gorund","hrothgar","runa","svala","thyra","player_combat","hrothgar_combat"]:
         register(entries,"res://assets/chapter/"+name+"_nordic.png","res://resources/chapter/"+name+".json","chapter")
     register(entries,"res://assets/chapter/beast.png","res://resources/chapter/beast.json","chapter")
-    for name in ["carry_log","carry_spoils","work","log_attack","player_maul","overpower","clinch","spearmen","great_beast"]:
+    register(entries,"res://assets/chapter/player_maul_nordic.png","res://resources/frontier/player_maul.json","frontier")
+    for name in ["carry_log","carry_spoils","work","log_attack","overpower","clinch","spearmen","great_beast"]:
         var path="res://assets/frontier/"+name+"_nordic.png"
         if not FileAccess.file_exists(path):path="res://assets/frontier/"+name+".png"
         register(entries,path,"res://resources/frontier/"+name+".json","frontier")

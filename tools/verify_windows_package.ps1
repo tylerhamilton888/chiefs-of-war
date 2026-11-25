@@ -29,5 +29,6 @@ New-Item -ItemType Directory -Force -Path $saveDir | Out-Null
 $save = Join-Path $saveDir 'ancestral_hearth_v1.json'
 [System.IO.File]::WriteAllText($save, 'campaign sentinel - do not overwrite')
 Invoke-GameSmoke 'chapter-one' @('--chapter-one')
+Invoke-GameSmoke 'developer-arena' @('--developer-arena')
 if ([System.IO.File]::ReadAllText($save) -ne 'campaign sentinel - do not overwrite') { throw 'The Ogre game modified the legacy campaign sentinel.' }
 Write-Host 'WINDOWS PACKAGE VERIFIED: Ogre menu, Chapter One, legacy save isolation, path with spaces, external working directory.'

@@ -7,8 +7,27 @@ func _init(owner) -> void:
     scenes=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/dialogue.json"))
 func objective() -> String:
     match s.chapter:
-        0:return "AN OGRE EARNS HIS SUPPER · Bramm needs 6 timber at the damaged wagon"
-        1:return "THE FIRST PORTION · Cook, eat [Q], and give Sava the first portion"
+        0:
+            if s.region != "crossing":
+                return "The family wagon · Return to Bramm at Emberhide Crossing"
+            if s.inventory.wood >= 6:
+                return "The family wagon · Fit the axle at the leaning wagon"
+            return "The family wagon · Gather timber beside the leaning wagon (%d/6)" % s.inventory.wood
+        1:
+            if s.region != "crossing":
+                return "The first portion · Return to the family cookfire at Emberhide Crossing"
+            if s.inventory.meals > 0:
+                if not s.has("offering"):
+                    return "The first portion · Set one meal on Sava’s hearth stone, beside the fire"
+                if not s.has("eaten"):
+                    return "The first portion · Eat a meal (Q)"
+            if s.inventory.meat < 2:
+                if "family_provisions" in s.collected:
+                    return "The first portion · Bring two cuts of meat from the Pines for the pot"
+                return "The first portion · Take meat from the family stores, below the wagon"
+            if s.inventory.wood < 1:
+                return "The first portion · Gather a length of timber for the cookfire"
+            return "The first portion · Cook at Svala’s fire (2 meat and 1 timber)"
         2:return "BLOOD IN THE PINES · Return to the Crossing and prepare the feast" if s.has("hunt_won") else "BLOOD IN THE PINES · Read three signs, hunt the wolf, bring home its trophy"
         3:
             if s.has("departed"):return "THE NORTHERN TRAIL · Return to Emberhide Crossing when you are ready"
@@ -49,7 +68,9 @@ func talk(id: String) -> void:
     game.dialogue(key)
 func action(id: String) -> void:
     match id:
-        "work":s.mark("work");game.say("Gather fallen wood nearby. Carry six timber to the damaged family wagon.")
+        "work":s.mark("work");game.say("Gather six timber beside the family wagon. Press E near a bundle.")
+        "woodpile":game.dialogue("bramm_timber")
+        "sava":game.dialogue("svala_hearth")
         "contest":
             if s.chapter==0 and not s.has("contest"):s.mark("contest");s.change("dorrik","rivalry",1);game.say("Dorrik wagers a meal: carry six timber to the wagon before you repair it.")
         "hunt":s.mark("companion");game.say("Dorrik will meet you in the Pines. Look for tracks beside the north trail.")

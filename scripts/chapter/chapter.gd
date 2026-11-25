@@ -8,6 +8,8 @@ const Story=preload("res://scripts/chapter/story.gd")
 const Wolf=preload("res://scripts/direwolf.gd")
 const Raider=preload("res://scripts/raider.gd")
 const OgreCamera=preload("res://scripts/ogre_camera.gd")
+const OfferingStone = preload("res://scripts/chapter/offering_stone.gd")
+const CampGround = preload("res://scripts/chapter/camp_ground.gd")
 const OgreTerrain=preload("res://scripts/ogre_terrain.gd")
 const BeastArt=preload("res://scripts/beast_art.gd")
 const NAMES={"crossing":"EMBERHIDE CROSSING","pines":"NORTHERN PINES","hollow":"WOLFSCAR HOLLOW","cairn":"GOBLIN CAIRN","pass":"SUNDERED PASS","host":"STONEBELLY HOST","trade":"BLACKSTONE TRADE POST"}
@@ -27,6 +29,8 @@ var prompt: Label
 var modal: Control
 var stations: Array=[]
 var supplies: Array=[]
+var family_wagon: Node2D
+var offering_stone: OfferingStone
 var nearest: Dictionary={}
 var save_clock=0.0
 var leaving=false
@@ -56,14 +60,15 @@ var smoke_nodes: Array=[]
 var defeat_pending=false
 func _ready() -> void:
     get_tree().auto_accept_quit=false
-    for key in {"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}:
-        if not InputMap.has_action(key):
-            InputMap.add_action(key)
-            var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
+    configure_movement()
     var loaded=state.load_game()
     director=preload("res://scripts/chapter/cinematic.gd").new();director.game=self;add_child(director)
     if FileAccess.file_exists("res://resources/chapter/beast.json"):beast_frames=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/beast.json"))
-    cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"));story=Story.new(self)
+    cast=JSON.parse_string(FileAccess.get_file_as_string("res://resources/chapter/cast.json"))
+    for person in cast.values():
+        if person.name.ends_with(" Emberhide"):
+            person.name = person.name.trim_suffix(" Emberhide") + " " + state.profile.clan_name
+    story=Story.new(self)
     build_world();build_ui()
     sfx=AudioStreamPlayer.new();sfx.volume_db=-16;add_child(sfx)
     ambient=AudioStreamPlayer.new();ambient.stream=load("res://assets/opener/ambient.wav");ambient.volume_db=-24;add_child(ambient)
@@ -73,26 +78,37 @@ func _ready() -> void:
     if not state.scene.is_empty() and state.scene.key in story.scenes:dialogue(state.scene.key,true)
     elif not state.has("introduced"):state.mark("introduced");dialogue("bramm_work")
     if "--startup-smoke" in OS.get_cmdline_user_args():get_tree().create_timer(2.0).timeout.connect(quit_game)
+func configure_movement() -> void:
+    for key in {"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}:
+        if not InputMap.has_action(key):
+            InputMap.add_action(key)
+            var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
+
 func build_world() -> void:
     stations.clear();supplies.clear();npcs.clear();enemies.clear();smoke_nodes.clear();caravan=null;beast=null;caravan_active=false
     region_root=Node2D.new();add_child(region_root)
     var ground_state = GroundState.new()
-    for x in range(3,70):
-        for y in range(26,30):ground_state.terrain["%d,%d"%[x,y]]="earth"
-    for x in range(31,36):
-        for y in range(2,42):ground_state.terrain["%d,%d"%[x,y]]="earth"
-    if state.region in ["crossing","host","trade"]:
-        for x in range(13,61):
-            for y in range(18,37):
-                if Vector2((x-37)/26.0,(y-27)/13.0).length()<1:ground_state.terrain["%d,%d"%[x,y]]="earth"
+    if state.region == "crossing":
+        CampGround.mark_crossing(ground_state.terrain)
+    else:
+        for x in range(3,70):
+            for y in range(26,30):ground_state.terrain["%d,%d"%[x,y]]="earth"
+        for x in range(31,36):
+            for y in range(2,42):ground_state.terrain["%d,%d"%[x,y]]="earth"
+        if state.region in ["host","trade"]:
+            for x in range(13,61):
+                for y in range(18,37):
+                    if Vector2((x-37)/26.0,(y-27)/13.0).length()<1:ground_state.terrain["%d,%d"%[x,y]]="earth"
     if state.region=="crossing":
         for x in range(44,70):
             for y in range(3,13):ground_state.terrain["%d,%d"%[x,y]]="water"
     ground_state.revision+=1
-    var terrain=OgreTerrain.new();terrain.state=ground_state;region_root.add_child(terrain)
+    var terrain=OgreTerrain.new();terrain.state=ground_state;terrain.z_index=-2;region_root.add_child(terrain)
     world=Node2D.new();world.y_sort_enabled=true;region_root.add_child(world)
     player=Actor.new();player.identity="player";player.game=self;player.position=state.player_position;player.hp=state.hp
     player.struck.connect(player_strike);player.felled.connect(player_felled);player.stepped.connect(func():play_sound("step"));world.add_child(player)
+    player.set_hair_palette(state.profile.hair)
+    player.equip_weapon("iron_maul" if state.has("equipped_iron_maul") else "hunting_axe")
     camera=OgreCamera.new();player.add_child(camera)
     var forest=state.region in ["pines","hollow","crossing"]
     for i in range(24):
@@ -126,17 +142,30 @@ func hearth(at: Vector2) -> void:camp_item("hearth",at,Rect2(140,555,560,440),0.
 func build_camp() -> void:
     var host=state.region=="host"
     var w=wagon(Vector2(740,690),0.76 if host else 0.65)
-    if not host and not state.has("repaired"):w.modulate=Color("b7a38b")
+    if not host:
+        family_wagon = w
+        if not state.has("repaired"):
+            family_wagon.rotation = deg_to_rad(-4)
+            family_wagon.modulate = Color("b7a38b")
     if not host and state.chapter>=4:w.modulate=Color("554a41")
     tent(Vector2(1300,710));hearth(Vector2(1050,1050))
     camp_item("provisions",Vector2(650,1000),Rect2(804,665,710,325),0.28,Vector2(150,40),Vector2(0,-16))
     station("hearth",Vector2(1050,1100),"Cook · 2 meat + 1 timber")
-    station("offering",Vector2(1170,1110),"Sava's first portion · 1 meal")
+    offering_stone = OfferingStone.new()
+    offering_stone.position = Vector2(1190, 1080)
+    offering_stone.offered = state.has("offering")
+    world.add_child(offering_stone)
+    station("offering",Vector2(1190,1115),"Look at Sava's offering" if offering_stone.offered else "Set a meal on Sava's stone")
     if not host:
-        station("repair",Vector2(740,770),"Repair the family wagon · 6 timber")
+        station("repair",Vector2(740,770),"Inspect the repaired axle" if state.has("repaired") else "Fit the wagon axle · 6 timber")
         station("provisions",Vector2(650,1050),"Take the family's cooking supplies")
         if state.chapter<4:
-            for id in ["bramm","svala","gorund","dorrik","astrid"]:npc(id)
+            for id in ["bramm","svala","gorund","dorrik","astrid"]:
+                npc(id)
+            if not state.has("repaired"):
+                npcs.bramm.position = Vector2(590, 735)
+                npcs.bramm.route = []
+                npcs.bramm.face(Vector2.RIGHT)
         elif state.chapter>=6:
             station("pendant",Vector2(790,800),"Search Astrid's family coffer")
             world_label("THE EMBERHIDE HEARTH",Vector2(1050,1000))
@@ -169,8 +198,14 @@ func build_trade() -> void:
     world_label("BLACKSTONE EXCHANGE",Vector2(1370,810));station("hearth",Vector2(1160,1100),"Cook at the trade hearth")
 func build_resources() -> void:
     var cycle=int(state.clock/480)
-    for i in range(8):
-        var pos=[Vector2(400,850),Vector2(885,810),Vector2(1475,900),Vector2(1880,800),Vector2(500,1220),Vector2(960,1180),Vector2(1500,1260),Vector2(1940,1170)][i]
+    var wood_positions = [Vector2(400,850),Vector2(885,810),Vector2(1475,900),Vector2(1880,800),Vector2(500,1220),Vector2(960,1180),Vector2(1500,1260),Vector2(1940,1170)]
+    if state.region == "crossing":
+        # The first three bundles belong to the family's wagon yard.
+        wood_positions[0] = Vector2(635,860)
+        wood_positions[1] = Vector2(530,820)
+        wood_positions[2] = Vector2(445,885)
+    for i in wood_positions.size():
+        var pos: Vector2 = wood_positions[i]
         var id="%s_wood_%d_%d"%[state.region,i,cycle]
         if not id in state.collected:
             var node=world_prop("log",pos);supplies.append({"kind":"wood","id":id,"position":pos,"text":"E  Gather 2 timber","node":node})
@@ -209,7 +244,13 @@ func add_wolf(id: String,at: Vector2,alpha: bool) -> void:
 func add_raider(id: String,at: Vector2,kind: String) -> void:
     if id in state.defeated:return
     var foe=Raider.new();foe.ogre_world=true;foe.kind=kind;foe.position=at;foe.game=self;foe.target=player;foe.set_meta("id",id)
-    foe.strike.connect(enemy_strike);foe.slain.connect(enemy_slain);world.add_child(foe);foe.hp=state.encounters.get(id,foe.hp);enemies.append(foe)
+    foe.strike.connect(enemy_strike)
+    foe.slain.connect(enemy_slain)
+    world.add_child(foe)
+    if kind == "goblin":
+        foe.maximum = 28.0
+    foe.hp = minf(foe.maximum, state.encounters.get(id, foe.maximum))
+    enemies.append(foe)
 func build_defense() -> void:
     for i in range(4):add_raider("defense_%d"%i,Vector2(680+(i%2)*700,880+(i/2)*170),"orc")
     if not state.has("saved_bramm"):npc("bramm",Vector2(500,870));station("rescue",Vector2(500,900),"Get Bramm out · clear the western blades","bramm")
@@ -266,17 +307,21 @@ func interaction_available(entry: Dictionary) -> bool:
     return true
 func build_ui() -> void:
     var layer=CanvasLayer.new();add_child(layer)
-    var top=panel(Vector2(20,16),Vector2(1240,108));layer.add_child(top)
+    var top=panel(Vector2(514,16),Vector2(746,84));layer.add_child(top)
     var box=VBoxContainer.new();box.add_theme_constant_override("separation",5);top.add_child(box)
-    hud=helper.words("",18);box.add_child(hud);objective=helper.words("",17,"e3bb78");box.add_child(objective)
-    var controls=helper.words("WASD move   LMB axe   RMB block / parry   Space dodge   E interact   Q eat   J journal   I belongings   Esc pause",14,"b5ad98");box.add_child(controls)
-    var bottom=panel(Vector2(20,698),Vector2(1240,86));layer.add_child(bottom)
-    var lines=VBoxContainer.new();bottom.add_child(lines);prompt=helper.words("",20);lines.add_child(prompt);notice=helper.words("",15,"ccb68f");notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;notice.custom_minimum_size.x=1180;lines.add_child(notice)
+    hud=helper.words("",18);box.add_child(hud);objective=helper.words("",17,"e3bb78");objective.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;box.add_child(objective)
+    var bottom=panel(Vector2(20,688),Vector2(795,88));layer.add_child(bottom)
+    var lines=VBoxContainer.new();bottom.add_child(lines);prompt=helper.words("",20);lines.add_child(prompt);notice=helper.words("",15,"ccb68f");notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;notice.custom_minimum_size.x=720;lines.add_child(notice)
     modal=Control.new();modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);layer.add_child(modal);modal.hide()
+    modal.visibility_changed.connect(func():
+        top.visible = not modal.visible
+        bottom.visible = not modal.visible)
 func _process(delta: float) -> void:
     if leaving:return
     objective.text=story.objective()
-    hud.text="%s   ·   Health %d / 160   ·   Guard %d   ·   Meals %d   ·   %s"%[NAMES[state.region],int(player.hp),int(player.guard),state.inventory.meals,"Well fed: %ds"%int(state.fed) if state.fed>0 else "A hungry road"]
+    hud.text = "%s   ·   Health %d / 160   ·   Meals %d" % [NAMES[state.region], int(player.hp), state.inventory.meals]
+    if state.fed > 0:
+        hud.text += "   ·   Well fed %ds" % int(state.fed)
     if dialog_mode:
         reveal+=delta*48;dialog_text.visible_characters=int(reveal)
         return
@@ -293,7 +338,7 @@ func _process(delta: float) -> void:
         if actor.hostile or actor.hp<=0:continue
         var distance=player.position.distance_to(actor.position)
         if distance<best:nearest={"kind":"npc","id":id,"position":actor.position,"text":"E  Speak with "+cast[id].name};best=distance
-    prompt.text=nearest.get("text","Follow the worn paths · J shows regional exits and your next task")
+    prompt.text=nearest.get("text","WASD move   ·   Shift stride   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
     if state.chapter==4:
         state.defense_left=maxf(0,state.defense_left-delta)
         if state.defense_left<=0:finish_defense()
@@ -324,7 +369,7 @@ func _unhandled_input(event: InputEvent) -> void:
         KEY_SPACE:player.dodge(Input.get_vector("move_left","move_right","move_up","move_down"))
         KEY_Q:
             state.hp=player.hp
-            if state.eat():player.hp=state.hp;say("A warm meal: +65 health, three minutes of strength (+6 axe damage).");play_sound("success")
+            if state.eat():player.hp=state.hp;say("A warm meal: +65 health, three minutes of strength (+6 weapon damage).");play_sound("success")
             else:say("No meals. Cook two meat and one timber at a hearth.")
             save_progress()
         KEY_F5:say("Chapter saved." if save_progress() else "Save unavailable; your previous save is preserved.")
@@ -340,7 +385,13 @@ func interact(entry: Dictionary) -> void:
         "road":
             travel(entry.id,road_arrival(ROADS,entry.id))
         "wood","ore":
-            if state.collect(entry.id,entry.kind,2):entry.node.data.state="collected";entry.node.refresh();say("Two %s added to your pack."%entry.kind);play_sound("gather")
+            if state.collect(entry.id, entry.kind, 2):
+                entry.node.data.state = "collected"
+                entry.node.refresh()
+                play_sound("gather")
+                say("Two lengths of timber." if entry.kind == "wood" else "Two pieces of ore.")
+                if state.chapter == 0 and entry.kind == "wood":
+                    say("That's enough timber. Take it to the family wagon." if state.inventory.wood >= 6 else "Timber for Bramm: %d of 6." % state.inventory.wood)
         "provisions":
             if state.collect("family_provisions","meat",8):say("Eight cuts from the family stores. Svala expects you to make them useful.")
             else:say("The family provisions are already in your pack.")
@@ -349,14 +400,28 @@ func interact(entry: Dictionary) -> void:
             elif state.pay({"wood":6}):
                 state.mark("repaired");state.chapter=1;state.change("bramm","admiration",2)
                 if state.has("contest"):state.inventory.meals+=1;state.change("dorrik","friendship",2);state.mark("contest_won")
-                state.player_position=player.position;rebuild();say("The new axle is fitted. Bramm nods. Svala is waiting at the cooking hearth.");play_sound("success")
-            else:say("Six timber to repair the axle. Fallen logs lie along the camp trails.")
+                if npcs.has("bramm"):
+                    npcs.bramm.route = cast.bramm.route
+                var settle = family_wagon.create_tween().set_parallel(true)
+                settle.tween_property(family_wagon, "rotation", 0.0, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+                settle.tween_property(family_wagon, "modulate", Color.WHITE, 0.55)
+                for station_info in stations:
+                    if station_info.kind == "repair":
+                        station_info.text = "E  Inspect the repaired axle"
+                play_sound("gather")
+                say("The wheel takes the weight. Svala calls you over to the cookfire.")
+            else:say("Bring six lengths of timber to fit the axle. Look just left of the wagon.")
         "hearth":
             if state.cook():say("Three hearty meals prepared. Q eats one; the carved hearth stone takes Sava's portion.");play_sound("success")
             else:say("Two meat and one timber for three meals. Take the family provisions or hunt in the Pines.")
         "offering":
             if state.has("offering"):say("Sava has received the first portion. The fire is tended.")
-            elif state.pay({"meals":1}):state.mark("offering");state.change("svala","loyalty",2);say("A portion for Sava. Svala presses a coal into the traveling ember-pot.")
+            elif state.pay({"meals":1}):
+                state.mark("offering")
+                offering_stone.offered = true
+                entry.text = "E  Look at Sava's offering"
+                state.change("svala","loyalty",2)
+                say("A portion for Sava. Svala presses a coal into the traveling ember-pot.")
             else:say("Cook a meal first. Sava's portion comes from the same pot as yours.")
         "track":
             state.mark("track_"+entry.id);say(["Deep claw marks above your head. Bramm points toward the blood on the next tree.","Fresh blood, thick gray fur. The trail turns north through the needles.","Heavy tracks enter Wolfscar Hollow. The predator is close; ready your axe."][int(entry.id)])
@@ -424,7 +489,7 @@ func player_strike(actor) -> void:
         var off=foe.position-player.position
         if off.length()<121+Scale.body_radius(foe) and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
             impact(foe.position)
-            foe.receive_hit((36 if state.has("honed_axe") else 28)+(6 if state.fed>0 else 0),off.normalized());hit=true
+            foe.receive_hit(actor.weapon_damage(state.has("honed_axe"))+(6 if state.fed>0 else 0),off.normalized());hit=true
     if hit:play_sound("hit")
     else:play_sound("swing")
 func impact(at: Vector2) -> void:
@@ -438,7 +503,7 @@ func enemy_strike(foe) -> void:
     var reach=220 if foe is Actor else 115 if foe is Wolf else 120
     var direction=foe.locked if foe is Actor else foe.locked_direction
     if off.length()>reach or direction.dot(off.normalized())<0.1 or not has_line(foe.position,player.position):return
-    last_attacker=foe;play_sound("hit");player.receive_hit(42 if foe is Actor else 22 if foe is Wolf else 18,off.normalized());state.hp=player.hp
+    last_attacker=foe;play_sound("hit");player.receive_hit(42 if foe is Actor else 22 if foe is Wolf else 18,off.normalized(),foe is Actor);state.hp=player.hp
 func parry(_actor) -> void:
     if is_instance_valid(last_attacker):last_attacker.parried()
     say("Parried — strike while the weapon is checked.");play_sound("block")
@@ -462,7 +527,7 @@ func resolve_defeat() -> void:
     else:
         state.hp=110;state.player_position=Vector2(1080,1120);rebuild();say("You drag yourself out of danger. Your stores are intact. Eat, then try another approach.")
     defeat_pending=false
-func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F from the side","Staggered — follow through with your axe"))
+func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F from the side","Staggered — follow through"))
 func play_sound(kind: String) -> void:
     var files={"hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
     if not leaving and kind in files and is_instance_valid(sfx):sfx.stream=load("res://assets/"+files[kind]+".wav");sfx.play()
@@ -500,7 +565,8 @@ func dialogue(key: String,resume=false) -> void:
     var portrait=TextureRect.new();portrait.custom_minimum_size=Vector2(170,210);portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;portrait.texture=portrait_texture(person,line.expression);row.add_child(portrait)
     var column=VBoxContainer.new();column.size_flags_horizontal=Control.SIZE_EXPAND_FILL;column.add_theme_constant_override("separation",8);row.add_child(column)
     column.add_child(helper.words(cast[person].name.to_upper()+"  ·  "+cast[person].role,19,"efc580"))
-    dialog_text=helper.words(line.get("brutal_text",line.text) if state.gore else line.text,21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
+    var spoken: String = line.get("brutal_text",line.text) if state.gore else line.text
+    dialog_text=helper.words(spoken.replace("{clan}",state.profile.clan_name),21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
     dialog_buttons=HBoxContainer.new();dialog_buttons.add_theme_constant_override("separation",10);column.add_child(dialog_buttons)
     if index<scene.lines.size()-1:helper.action("Continue  ·  Space",advance_dialogue,dialog_buttons)
     else:
@@ -557,10 +623,47 @@ func pause_menu() -> void:
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)
 func belongings() -> void:
-    var text=""
-    for item in state.inventory:text+="%s  %d     "%[item.capitalize(),state.inventory[item]]
-    text+="\n\nHunting axe: %d damage. Well fed adds 6. A meal restores 65 health.\nGuard recovers while you are neither attacking nor blocking. Dodge costs 25 guard."%(36 if state.has("honed_axe") else 28)
-    var col=simple_menu("BELONGINGS",text);helper.action("Return",close_modal,col)
+    var supplies := PackedStringArray()
+    for item in state.inventory:
+        supplies.append("%s  %d" % [item.capitalize(), state.inventory[item]])
+    var col = simple_menu("BELONGINGS", "%s  ·  %s\n%s" % [state.profile.ogre_name, state.profile.clan_name, "     ".join(supplies)])
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 20)
+    col.add_child(row)
+    var view := Control.new()
+    view.custom_minimum_size = Vector2(220, 165)
+    row.add_child(view)
+    var mount := Node2D.new()
+    mount.position = Vector2(100, 152)
+    view.add_child(mount)
+    var pose := Sprite2D.new()
+    pose.material = player.sprite.material
+    mount.add_child(pose)
+    Actor.FrameArt.pose(pose, player.action_art, 0, 137, false)
+    var gear = VBoxContainer.new()
+    gear.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    gear.add_theme_constant_override("separation", 7)
+    row.add_child(gear)
+    var weapon: Dictionary = Actor.WEAPONS.data[player.equipped_weapon]
+    gear.add_child(helper.words(weapon.label, 24, "efc580"))
+    gear.add_child(helper.words("%d damage  ·  %.2f s per swing" % [player.weapon_damage(state.has("honed_axe")), weapon.swing_seconds], 17))
+    gear.add_child(helper.words(weapon.description, 16))
+    var next_id = "iron_maul" if player.equipped_weapon == "hunting_axe" else "hunting_axe"
+    var swap = helper.action("Equip " + Actor.WEAPONS.data[next_id].label.to_lower(), func():change_weapon(next_id), gear)
+    swap.disabled = player.attack_time > 0 or player.dodge_time > 0 or player.stun > 0
+    if swap.disabled:
+        gear.add_child(helper.words("Finish your current action to change weapons.", 15))
+    col.add_child(helper.words("Well fed adds 6 weapon damage. A meal restores 65 health.", 16))
+    helper.action("Return", close_modal, col)
+
+func change_weapon(id: String) -> void:
+    player.equip_weapon(id)
+    state.flags["equipped_iron_maul"] = player.equipped_weapon == "iron_maul"
+    player.ready_time = 0.85
+    if not save_progress():
+        say("Weapon changed for this visit. Your previous save is preserved.")
+    belongings()
+
 func journal() -> void:
     var text=story.objective()+"\n\nROADS FROM HERE\n"
     for road in ROADS[state.region]:text+="%s: %s     "%[road[1].capitalize(),NAMES[road[0]].capitalize()]
@@ -603,6 +706,7 @@ func camp_item(kind: String,at: Vector2,region: Rect2,size: float,collision: Vec
     var vertices=PackedVector2Array()
     for point in points:vertices.append((point-region.position-Vector2(region.size.x*0.5,region.size.y))*size)
     sprite.polygon=vertices;body.add_child(sprite)
+    CampGround.add_shadow(body, region.size.x * size, maxf(30.0, collision.y * 1.4))
     var col=CollisionShape2D.new();var shape=RectangleShape2D.new();shape.size=collision;col.shape=shape;col.position=offset;body.add_child(col);world.add_child(body)
 func panel(at: Vector2,size: Vector2) -> PanelContainer:
     var p=PanelContainer.new();p.position=at;p.size=size;p.add_theme_stylebox_override("panel",helper.style("211e19ed","93734a"));return p

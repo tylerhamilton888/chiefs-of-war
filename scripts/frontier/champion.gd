@@ -8,7 +8,7 @@ var grapple_cooldown=5.0
 func _ready() -> void:
     identity="hrothgar";height=235;hostile=true;controlled=false
     super._ready();maximum=650;hp=maximum
-func receive_hit(amount: float,source_direction: Vector2) -> void:
+func receive_hit(amount: float,source_direction: Vector2,_breaks_block: bool=false) -> void:
     if hp<=0:return
     var front=direction().dot(-source_direction)>0.3
     if stance=="guard" and front:

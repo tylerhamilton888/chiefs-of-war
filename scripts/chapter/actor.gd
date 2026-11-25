@@ -10,6 +10,7 @@ var route_index=0
 var rest=2.0
 var hp=160.0
 var maximum=160.0
+# Retained for the archived Frontier actor, which derives from this class.
 var guard=100.0
 var guarding=false
 var guard_age=10.0
@@ -24,6 +25,9 @@ var hostile=false
 var companion=false
 var ai_time=0.0
 var target: Node2D
+const WEAPONS = preload("res://resources/chapter/weapons.json")
+var equipped_weapon := "hunting_axe"
+var ready_time := 0.0
 var combat_art: Dictionary={}
 var walking_art: Texture2D
 var action_art: Texture2D
@@ -54,6 +58,16 @@ func show_frame(index: int) -> void:
 func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> void:
     sprite.texture=texture;sprite.region_rect=Rect2(r[0],r[1],r[2],r[3]);sprite.flip_h=mirror
     sprite.scale=Vector2.ONE*factor;sprite.position=Vector2((r[4] if r.size()>4 else 0)*factor*(-1 if mirror else 1),-r[3]*factor/2.0+3)
+func equip_weapon(id: String) -> void:
+    if identity != "player" or not WEAPONS.data.has(id):
+        return
+    equipped_weapon = id
+    action_art = load(WEAPONS.data[id].texture)
+
+func weapon_damage(honed_axe := false) -> float:
+    var base_damage := float(WEAPONS.data[equipped_weapon].damage)
+    return base_damage + (8.0 if honed_axe and equipped_weapon == "hunting_axe" else 0.0)
+
 func action_pose(index: int) -> void:
     if combat_art.is_empty():show_frame(1 if index==1 else 0);return
     var row=0 if facing==0 else 2 if facing==3 else 1
@@ -62,22 +76,24 @@ func action_pose(index: int) -> void:
 func direction() -> Vector2:return [Vector2.DOWN,Vector2.LEFT,Vector2.RIGHT,Vector2.UP][facing]
 func attack(aim: Vector2) -> bool:
     if not enabled or hp<=0 or attack_time>0 or dodge_time>0 or stun>0 or cooldown>0:return false
-    face(aim);locked=aim.normalized();attack_time=0.6 if not hostile else 1.15;attack_done=false;guarding=false;return true
+    face(aim);locked=aim.normalized()
+    attack_time = 1.15 if hostile else float(WEAPONS.data[equipped_weapon].swing_seconds)
+    attack_done=false;guarding=false
+    return true
 func dodge(aim: Vector2) -> bool:
-    if not enabled or hp<=0 or dodge_time>0 or attack_time>0.35 or guard<25 or stun>0:return false
-    locked=aim.normalized() if aim.length()>0.1 else direction();dodge_time=0.3;guard-=25;guarding=false;attack_time=0;return true
+    if not enabled or hp<=0 or dodge_time>0 or attack_time>0.35 or stun>0:return false
+    locked=aim.normalized() if aim.length()>0.1 else direction();dodge_time=0.3;guarding=false;attack_time=0;return true
 func block(value: bool,aim: Vector2) -> void:
     if value and not guarding:guard_age=0
-    guarding=value and enabled and hp>0 and stun<=0 and attack_time<=0 and dodge_time<=0 and guard>0
+    guarding=value and enabled and hp>0 and stun<=0 and attack_time<=0 and dodge_time<=0
     if guarding:face(aim)
-func receive_hit(amount: float,source_direction: Vector2) -> void:
+func receive_hit(amount: float,source_direction: Vector2,breaks_block: bool=false) -> void:
     if hp<=0 or dodge_time>0.07:return
     if guarding and direction().dot(-source_direction)>0.2:
         if guard_age<0.18:
-            game.parry(self);guard=minf(100,guard+12);return
-        guard=maxf(0,guard-amount*1.2)
+            game.parry(self);return
         game.sound("block")
-        if guard>0:return
+        if not breaks_block:return
         guarding=false;stun=0.7;game.say("Guard broken — move out and recover.")
     hp=maxf(0,hp-amount);flash=0.14;velocity=source_direction*180
     if not hostile:stun=maxf(stun,0.1)
@@ -89,7 +105,6 @@ func _physics_process(delta: float) -> void:
     flash=maxf(0,flash-delta);cooldown=maxf(0,cooldown-delta);guard_age+=delta;stun=maxf(0,stun-delta)
     sprite.modulate=Color(1.6,0.75,0.65) if flash>0 else Color.WHITE
     if hp<=0:velocity=Vector2.ZERO;action_pose(3);return
-    if not guarding and attack_time<=0 and dodge_time<=0:guard=minf(100,guard+22*delta)
     if hostile and is_instance_valid(target) and stun<=0:
         var off=target.position-position
         drive=off.normalized() if off.length()>145 else Vector2.ZERO
@@ -109,13 +124,22 @@ func _physics_process(delta: float) -> void:
         dodge_time=maxf(0,dodge_time-delta);velocity=locked*590;move_and_slide();action_pose(3)
     elif attack_time>0:
         var before=attack_time;attack_time=maxf(0,attack_time-delta)
-        var contact=0.32 if not hostile else 0.35
+        var contact = 0.35 if hostile else float(WEAPONS.data[equipped_weapon].follow_through_seconds)
         velocity=Vector2.ZERO
         action_pose(1 if attack_time>contact else 2)
         if before>contact and attack_time<=contact and not attack_done:attack_done=true;struck.emit(self)
-        if attack_time<=0:cooldown=0.08 if not hostile else 0.65
+        if attack_time<=0:
+            cooldown=0.08 if not hostile else 0.65
+            if controlled:ready_time=0.65
     elif guarding:velocity=Vector2.ZERO;action_pose(3)
-    else:super._physics_process(delta)
+    else:
+        super._physics_process(delta)
+        if controlled and ready_time > 0:
+            if velocity.length_squared() > 1:
+                ready_time = 0
+            else:
+                ready_time = maxf(0, ready_time - delta)
+                action_pose(0)
     queue_redraw()
 func _draw() -> void:
     super._draw()
@@ -126,3 +150,14 @@ func _draw() -> void:
         if attack_time>0.35:
             var a=locked.angle()
             draw_arc(Vector2.ZERO,205,a-0.55,a+0.55,20,Color("eeb668"),4)
+
+
+func set_hair_palette(hair: String) -> void:
+    var palette: int = preload("res://scripts/chapter/state.gd").HAIR.find(hair)
+    if palette <= 0:
+        sprite.material = null
+        return
+    var shader_material := ShaderMaterial.new()
+    shader_material.shader = preload("res://shaders/ogre_palette.gdshader")
+    shader_material.set_shader_parameter("palette", palette)
+    sprite.material = shader_material

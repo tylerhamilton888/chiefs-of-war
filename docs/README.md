@@ -1,7 +1,5 @@
 # Project documentation
 
-- [Playable chapter](design/chapter-one.md) and [implementation](engineering/chapter-one.md)
-- [Current state](state/current.md), [design decisions](state/decisions.md) and [next milestone](SESSION_HANDOFF.md)
-- [Development order](ROADMAP.md) and [build instructions](BUILD.md)
+Begin with [Start here](../START_HERE.md). The [Game Design Bible](design/GAME_DESIGN_BIBLE.md), [Art & Animation Bible](art/ART_AND_ANIMATION_BIBLE.md), [opening outline](design/OPENING_OUTLINE.md) and [roadmap](ROADMAP.md) describe the direction of the game.
 
-Dated release and art records describe their original builds. The Git tag v0.8.10 contains the complete pre-consolidation tree.
+[Chapter implementation](engineering/chapter-one.md) and [build instructions](BUILD.md) describe the existing Godot project. Older design shards and dated release records retain useful history. The original multi-mode build is archived at Git tag `v0.8.10`.

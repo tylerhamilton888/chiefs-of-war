@@ -4,6 +4,7 @@ static var destination=""
 # Cycle across visits so the hunter, feast and battle each get their turn.
 static var next_art=0
 const ARTWORK=["res://assets/loading/tracking_nordic.png","res://assets/loading/feast_clan_v2.png","res://assets/loading/frontier_nordic.png"]
+const ART_CAPTIONS = ["The clan trackers", "A feast at the Wandering Hearth", "The clan's warband"]
 const SCREEN="res://scenes/loading.tscn"
 const VALID={"story":"res://scenes/fire_we_carry.tscn"}
 const TIPS=[
@@ -26,7 +27,9 @@ static func start(tree: SceneTree,kind: String) -> bool:
 func _ready() -> void:
     set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
     var bg=TextureRect.new();bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-    displayed_art=ARTWORK[posmod(next_art,ARTWORK.size())];next_art+=1
+    var art_index = posmod(next_art, ARTWORK.size())
+    displayed_art = ARTWORK[art_index]
+    next_art += 1
     bg.texture=load(displayed_art) if ResourceLoader.exists(displayed_art) else load("res://assets/ogre/menu_camp.png")
     bg.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;bg.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;add_child(bg)
     # The feast is extra wide: show the whole clan above the tip panel while
@@ -42,7 +45,7 @@ func _ready() -> void:
     var style=StyleBoxFlat.new();style.bg_color=Color("1b1916ed");style.border_color=Color("b98b56");style.set_border_width_all(2);style.set_corner_radius_all(7)
     style.content_margin_left=24;style.content_margin_right=24;style.content_margin_top=15;style.content_margin_bottom=14;panel.add_theme_stylebox_override("panel",style);add_child(panel)
     var col=VBoxContainer.new();col.add_theme_constant_override("separation",8);panel.add_child(col)
-    var title=Label.new();title.text="THE FIRE WE CARRY";title.add_theme_font_size_override("font_size",27);title.add_theme_color_override("font_color",Color("f2d29b"));col.add_child(title)
+    var title=Label.new();title.text=ART_CAPTIONS[art_index];title.add_theme_font_size_override("font_size",27);title.add_theme_color_override("font_color",Color("f2d29b"));col.add_child(title)
     var tip=Label.new();tip.name="Tip";var choices: Array=TIPS
     tip.text=choices[int(Time.get_ticks_msec())%choices.size()];tip.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;tip.add_theme_font_size_override("font_size",20);tip.add_theme_color_override("font_color",Color("f2e2c4"));tip.custom_minimum_size.y=52;col.add_child(tip)
     var footer=HBoxContainer.new();col.add_child(footer)

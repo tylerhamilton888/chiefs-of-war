@@ -6,7 +6,7 @@ From the repository root, use a temporary user-data directory for every test. Th
 
 ```sh
 godot --headless --editor --import --quit
-for suite in menu_flow_test loading_test chapter_test chapter_quality_test ogre_scale_test ogre_navigation_test; do
+for suite in menu_flow_test hearth_walk_test developer_arena_test chapter_equipment_test loading_test chapter_test chapter_quality_test ogre_scale_test ogre_navigation_test; do
   XDG_DATA_HOME="$(mktemp -d)" godot --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test || exit 1
 done
 python3 -m unittest discover -s tools -p test_release.py

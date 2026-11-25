@@ -64,7 +64,7 @@ func start_action(kind: String,seconds: float,callback: Callable,contact: float=
     mode="action";action_kind=kind;elapsed=0;duration=seconds;action_callback=callback;action_committed=false;action_contact=contact;guarding=false;buffered="";face(Vector2.RIGHT);return true
 func interrupt_action() -> void:
     action_callback=Callable();action_kind="";action_committed=false
-func receive_hit(amount: float,source_direction: Vector2) -> void:
+func receive_hit(amount: float,source_direction: Vector2,_breaks_block: bool=false) -> void:
     if hp<=0 or game.execution_busy:return
     if mode=="dodge" and elapsed<0.20:return
     if guarding and direction().dot(-source_direction)>0.25:

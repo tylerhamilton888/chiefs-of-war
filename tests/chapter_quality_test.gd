@@ -16,7 +16,18 @@ func settle() -> void:
 func run() -> void:
     DirAccess.remove_absolute(State.SAVE)
     game=load("res://scenes/fire_we_carry.tscn").instantiate();root.add_child(game);current_scene=game;await frames(3)
+    game.choose("woodpile")
+    check(game.state.scene.key == "bramm_timber", "Father can point out the nearby timber")
     game.choose("work")
+    check("(0/6)" in game.story.objective(), "Opening objective shows timber still needed")
+    check(game.family_wagon.rotation < 0, "Damaged wagon leans on its axle")
+    for i in 3:
+        game.interact(game.supplies[i])
+    check("Fit the axle" in game.story.objective(), "Gathered timber points the player back to the wagon")
+    game.interact({"kind":"repair"})
+    await frames(40)
+    check(is_zero_approx(game.family_wagon.rotation), "Repaired wagon settles level")
+    check("Take meat" in game.story.objective(), "Supper offers one immediate next job")
     # A second visit must not consume another feast or rewind the chapter.
     game.state.chapter=2;game.state.mark("hunt_won");game.state.inventory.meat=10
     game.story.action("feast");game.choose("close")

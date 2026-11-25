@@ -1,0 +1,18 @@
+{
+  "hunting_axe": {
+    "label": "Hunting axe",
+    "description": "A quick edge for a close fight.",
+    "texture": "res://assets/chapter/player_combat_nordic.png",
+    "damage": 28,
+    "swing_seconds": 0.60,
+    "follow_through_seconds": 0.32
+  },
+  "iron_maul": {
+    "label": "Iron maul",
+    "description": "A square iron head on a two-handed haft.",
+    "texture": "res://assets/chapter/player_maul_nordic.png",
+    "damage": 42,
+    "swing_seconds": 0.88,
+    "follow_through_seconds": 0.43
+  }
+}

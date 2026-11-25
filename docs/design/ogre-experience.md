@@ -1,5 +1,7 @@
 # The Ogre Experience — governing gameplay direction
 
+**Historical design record.** The November [Game Design Bible](GAME_DESIGN_BIBLE.md) and [opening outline](OPENING_OUTLINE.md) govern current work.
+
 Source: the user's October 31, 2026 major gameplay directive, “Combat, Hunting, Mercenary Work & Living World.” This is an implementation record of that directive, not a verbatim transcription. It supersedes further narrative/dynasty expansion as the immediate priority. Preserve the released chapter and all earlier saves in the existing Godot project.
 
 ## Creative foundation
