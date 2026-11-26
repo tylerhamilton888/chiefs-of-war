@@ -1,5 +1,9 @@
 # Project state
 
+## Ogre movement playtest
+
+In the Practice Yard, aim at the armored raider and hold Shift as you approach. The armed Ogre advances at 188 units per second and can run forward at 255. Backing away and sidestepping have shorter steps. The cleaver reaches contact 0.20 seconds into the swing and takes 0.33 seconds to follow through. The measurements are playtest settings.
+
 ## Cleaver playtest
 
 Enter **Practice Yard** and swing past the goblin, then strike him cleanly. Compare that fall with the armored raider’s planted recoil. The same cleaver step and target reactions run in the campaign. The yard has a cuttable sapling beside the pot, a combat effects toggle on **V** and a HUD toggle on **F2**. The current attack uses the existing front, rear and profile drawings mirrored to cover eight aim sectors. [Replay the encounter](docs/BUILD.md#practice-yard-combat-capture)

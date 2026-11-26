@@ -286,10 +286,13 @@ func track_combat_aim(aim: Vector2, threat_nearby: bool) -> void:
 func armed_move(delta: float) -> void:
     face(cursor_direction)
     var intent := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-    var forward := direction().dot(intent)
+    var forward := cursor_direction.dot(intent)
     # A shorter backward or lateral step keeps the striking side presented.
-    var speed := 145.0 if forward > 0.5 else 116.0 if forward < -0.5 else 128.0
-    velocity = velocity.move_toward(intent * speed, 1450.0 * delta)
+    var advancing := forward > 0.5
+    var running := advancing and Input.is_key_pressed(KEY_SHIFT)
+    var speed := RUN_SPEED if running else 188.0 if advancing else 120.0 if forward < -0.5 else 140.0
+    var stride := RUN_STRIDE if running else 128.0 if advancing else ArmedGait.STRIDE
+    velocity = velocity.move_toward(intent * speed, 1900.0 * delta)
     var before := position
     move_and_slide()
     var movement := position - before
@@ -299,10 +302,10 @@ func armed_move(delta: float) -> void:
         distance_since_step = 0.0
         action_pose(0)
         return
-    phase = fposmod(phase + distance / ArmedGait.STRIDE, 1.0)
+    phase = fposmod(phase + distance / stride, 1.0)
     distance_since_step += distance
-    if distance_since_step >= ArmedGait.STRIDE * 0.5:
-        distance_since_step -= ArmedGait.STRIDE * 0.5
+    if distance_since_step >= stride * 0.5:
+        distance_since_step -= stride * 0.5
         stepped.emit()
     ArmedGait.pose(self, movement.normalized(), phase)
 

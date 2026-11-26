@@ -5,7 +5,7 @@ const REACH := 96.0
 const EDGE_WIDTH := 24.0
 
 static func distance_at(elapsed: float) -> float:
-    return STEP * smoothstep(0.16, 0.32, elapsed)
+    return STEP * smoothstep(0.105, 0.235, elapsed)
 
 static func reaches(offset: Vector2, aim: Vector2, radius: float) -> bool:
     var forward := offset.dot(aim)

@@ -56,6 +56,24 @@ func run() -> void:
             player.track_combat_aim(Vector2.RIGHT, true)
             await physics_frame
         verify(player.sprite.texture == player.action_art, "Stopping returns to equipped ready stance")
+    var shift := InputEventKey.new()
+    shift.keycode = KEY_SHIFT
+    shift.pressed = true
+    Input.parse_input_event(shift)
+    Input.flush_buffered_events()
+    Input.action_press("move_right")
+    for tick in 18:
+        player.track_combat_aim(Vector2.RIGHT, true)
+        await physics_frame
+    verify(is_equal_approx(player.velocity.x, player.RUN_SPEED), "Forward run carries into engagement")
+    for tick in 18:
+        player.track_combat_aim(Vector2.LEFT, true)
+        await physics_frame
+    verify(player.velocity.x < player.WALK_SPEED and player.facing == 1, "Retreat keeps its braced gait")
+    Input.action_release("move_right")
+    shift.pressed = false
+    Input.parse_input_event(shift)
+    Input.flush_buffered_events()
     for tick in 180:
         player.track_combat_aim(Vector2.RIGHT, false)
         await physics_frame

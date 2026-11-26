@@ -35,7 +35,7 @@ func run() -> void:
         check(not Stroke.reaches(aim * -12, aim, 16), "Target behind Ogre")
         check(not Stroke.reaches(aim * 72 + aim.orthogonal() * 45, aim, 16), "Target outside sweep")
         check(not Stroke.reaches(aim * 150, aim, 16), "Target out of reach")
-        player.update_swing(0.15)
+        player.update_swing(0.10)
         check(player.position.is_equal_approx(origin), "Feet planted in anticipation")
         player.update_swing(0.18)
         var finish: Vector2 = player.position
