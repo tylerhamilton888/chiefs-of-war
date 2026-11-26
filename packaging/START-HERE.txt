@@ -4,7 +4,7 @@ Extract the entire ZIP and run HearthAndHunger.exe. Select Begin Journey or
 Continue. On a new journey, name your Ogre and clan, choose a background and
 hair color, then join Bramm at the damaged wagon in Emberhide Crossing.
 
-WASD walks. Hold Shift to move briskly. Aim with the mouse and left-click to swing the axe. Right-click
+WASD walks. Hold Shift to run while traveling. Aim with the mouse and left-click to swing your weapon. Right-click
 to guard or parry. Space dodges. E interacts and Q eats a meal.
 J opens your objectives and routes. I opens belongings and lets you switch your weapon. F5 saves.
 Esc opens the pause menu, where you can save and return to the title.
@@ -12,5 +12,5 @@ Esc opens the pause menu, where you can save and return to the title.
 Your existing Fire We Carry save resumes automatically through Continue.
 Build information and engine notices are in Support.
 
-Optional developer practice: run HearthAndHunger.exe -- --developer-arena
+Choose Practice Yard on the title screen to try both weapons in a disposable encounter.
 Tab changes weapon, R resets the yard, and Esc returns to the title.

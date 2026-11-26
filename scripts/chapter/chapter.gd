@@ -34,6 +34,8 @@ var offering_stone: OfferingStone
 var nearest: Dictionary={}
 var save_clock=0.0
 var leaving=false
+# The dummy device has no listener; Godot Movie Maker is its one real consumer.
+var audio_output_enabled := AudioServer.get_driver_name() != "Dummy" or not Engine.get_write_movie_path().is_empty()
 var sfx: AudioStreamPlayer
 var ambient: AudioStreamPlayer
 var helper=Menu.new()
@@ -50,7 +52,8 @@ var reveal=0.0
 var dialog_buttons: HBoxContainer
 var dialog_mode=false
 var map_mode=false
-var dismember_enabled=false
+var dismember_enabled: bool:
+    get: return state.gore
 var caravan: Node2D
 var beast: Node2D
 var caravan_active=false
@@ -72,7 +75,7 @@ func _ready() -> void:
     build_world();build_ui()
     sfx=AudioStreamPlayer.new();sfx.volume_db=-16;add_child(sfx)
     ambient=AudioStreamPlayer.new();ambient.stream=load("res://assets/opener/ambient.wav");ambient.volume_db=-24;add_child(ambient)
-    if not "--test" in OS.get_cmdline_user_args():ambient.play()
+    if audio_output_enabled and not "--test" in OS.get_cmdline_user_args():ambient.play()
     say("WASD move · Follow the paths. J opens your journal and regional routes.")
     if not loaded:say("This chapter save could not be read. It is preserved; this visit cannot overwrite it.")
     if not state.scene.is_empty() and state.scene.key in story.scenes:dialogue(state.scene.key,true)
@@ -327,7 +330,10 @@ func _process(delta: float) -> void:
         return
     if modal.visible:return
     state.clock+=delta;state.fed=maxf(0,state.fed-delta);state.hp=player.hp
-    player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT),get_global_mouse_position()-player.position)
+    var aim := get_global_mouse_position() - player.position
+    var threat := enemies.any(func(foe): return is_instance_valid(foe) and foe.hp > 0 and player.position.distance_squared_to(foe.position) <= 350.0 * 350.0)
+    player.track_combat_aim(aim, threat)
+    player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT), aim)
     nearest={};var best=125.0
     for entry in stations+supplies:
         if not interaction_available(entry):continue
@@ -338,7 +344,7 @@ func _process(delta: float) -> void:
         if actor.hostile or actor.hp<=0:continue
         var distance=player.position.distance_to(actor.position)
         if distance<best:nearest={"kind":"npc","id":id,"position":actor.position,"text":"E  Speak with "+cast[id].name};best=distance
-    prompt.text=nearest.get("text","WASD move   ·   Shift stride   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
+    prompt.text=nearest.get("text","WASD move   ·   Shift run   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
     if state.chapter==4:
         state.defense_left=maxf(0,state.defense_left-delta)
         if state.defense_left<=0:finish_defense()
@@ -489,7 +495,12 @@ func player_strike(actor) -> void:
         var off=foe.position-player.position
         if off.length()<121+Scale.body_radius(foe) and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
             impact(foe.position)
-            foe.receive_hit(actor.weapon_damage(state.has("honed_axe"))+(6 if state.fed>0 else 0),off.normalized());hit=true
+            var amount: float = actor.weapon_damage(state.has("honed_axe")) + (6 if state.fed > 0 else 0)
+            if foe is Raider:
+                foe.receive_weapon_hit(amount, off.normalized(), actor.equipped_weapon == "hunting_axe")
+            else:
+                foe.receive_hit(amount, off.normalized())
+            hit = true
     if hit:play_sound("hit")
     else:play_sound("swing")
 func impact(at: Vector2) -> void:
@@ -529,6 +540,8 @@ func resolve_defeat() -> void:
     defeat_pending=false
 func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F from the side","Staggered — follow through"))
 func play_sound(kind: String) -> void:
+    if not audio_output_enabled:
+        return
     var files={"hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
     if not leaving and kind in files and is_instance_valid(sfx):sfx.stream=load("res://assets/"+files[kind]+".wav");sfx.play()
 func sound(kind: String) -> void:play_sound(kind)

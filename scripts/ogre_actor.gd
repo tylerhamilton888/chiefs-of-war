@@ -3,10 +3,13 @@ extends CharacterBody2D
 signal stepped
 const FrameArt=preload("res://scripts/ogre_frame_art.gd")
 const MOTION_TEXTURE=preload("res://assets/ogre/hearthlord_motion_nordic.png")
+const RUN_TEXTURE = preload("res://assets/ogre/hearthlord_run.png")
 const Scale=preload("res://scripts/ogre_scale.gd")
 const SPECIES="ogre"
 const WALK_SPEED := 155.0
-const BRISK_SPEED := 205.0
+const NPC_SPEED := 205.0
+const RUN_SPEED := 255.0
+const RUN_STRIDE := 168.0
 const STRIDE := 142.0
 # Profile row 2 has the near arm forward. Row 1 has the opposite contact.
 const PROFILE_POSES := [8, 9, 10, 7]
@@ -49,10 +52,24 @@ func show_frame(index: int) -> void:
     sprite.flip_h = mirror
     sprite.scale=Vector2.ONE*motion_height()/280.0
     sprite.position=Vector2(0,-float(r[3])*sprite.scale.y*0.5+3)
+func show_run_frame(index: int) -> void:
+    frame_index = clampi(index, 0, 3)
+    var row := 1
+    if facing == 0:
+        row = 0
+    elif facing == 3:
+        row = 2
+    # Every drawing has a centered ground anchor at (160, 282).
+    var frame := [frame_index * 320, row * 288, 320, 288, 160, 282]
+    FrameArt.cell(sprite, RUN_TEXTURE, frame, motion_height() / 280.0, facing == 1)
+
 func _physics_process(delta: float) -> void:
     if not enabled:velocity=Vector2.ZERO;return
     var direction=Input.get_vector("move_left","move_right","move_up","move_down") if controlled else drive.limit_length()
-    var speed := WALK_SPEED if controlled and not Input.is_key_pressed(KEY_SHIFT) else BRISK_SPEED
+    var running: bool = controlled and Input.is_key_pressed(KEY_SHIFT) and not direction.is_zero_approx()
+    var speed := WALK_SPEED if controlled else NPC_SPEED
+    if running:
+        speed = RUN_SPEED
     velocity=velocity.move_toward(direction*speed,1900*delta)
     var before := position
     move_and_slide()
@@ -67,11 +84,16 @@ func _physics_process(delta: float) -> void:
             else:
                 movement.x = 0.0
         face(movement)
-        phase=fposmod(phase+traveled/STRIDE,1.0)
+        var stride := RUN_STRIDE if running else STRIDE
+        phase=fposmod(phase+traveled/stride,1.0)
         distance_since_step+=traveled
-        if distance_since_step>STRIDE*0.5:
-            distance_since_step-=STRIDE*0.5;stepped.emit()
-        show_frame([1,2,3,0][mini(3,int(phase*4))])
+        if distance_since_step>stride*0.5:
+            distance_since_step-=stride*0.5;stepped.emit()
+        var step := mini(3, int(phase * 4))
+        if running:
+            show_run_frame(step)
+        else:
+            show_frame([1, 2, 3, 0][step])
     else:
         phase=0.0;distance_since_step=0;show_frame(0)
 func _draw() -> void:

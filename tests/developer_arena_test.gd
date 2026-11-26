@@ -43,8 +43,17 @@ func run() -> void:
         foe.active = false
     yard.player.position = yard.enemies[0].position + Vector2(80, 0)
     check(yard.player.attack(Vector2.LEFT), "Campaign attack accepted")
+    check(yard.player.sprite.texture.resource_path == "res://assets/chapter/player_axe_side_swing.png", "First arena strike uses authored axe drawings before any weapon swap")
     await settle(50)
     check(yard.enemies[0].hp == 0, "One clean axe strike fells exposed target")
+    var goblin = yard.enemies[0]
+    check(goblin.cleaved and goblin.sprite.region_rect == goblin.RECTS[1][2], "A clean axe hit selects the illustrated split at contact")
+    goblin.active = true
+    await settle(25)
+    check(goblin.sprite.region_rect == goblin.RECTS[1][5], "The severed target finishes its fall")
+    yard.state.gore = false
+    await settle(2)
+    check(goblin.sprite.region_rect == goblin.RECTS[0][5], "Restrained presentation uses the intact fall")
     check(yard.enemies[1].hp == yard.enemies[1].maximum, "Distant target untouched")
     key(KEY_TAB)
     check(yard.player.equipped_weapon == "iron_maul", "Practice loadout swaps to the campaign maul")
@@ -59,6 +68,12 @@ func run() -> void:
         yard = current_scene
         check(yard.player.position == yard.START and yard.enemies.size() == 2, "Reset restores encounter")
         check(yard.player.equipped_weapon == "hunting_axe" and yard.enemies[0].hp == 28 and yard.enemies[1].hp == yard.enemies[1].maximum, "Reset restores loadout and foes")
+    yard.enemies[0].active = false
+    yard.player.position = yard.enemies[0].position + Vector2(80, 0)
+    key(KEY_TAB)
+    check(yard.player.attack(Vector2.LEFT), "Maul swing at the unarmored target starts")
+    await settle(60)
+    check(yard.enemies[0].hp <= 0 and not yard.enemies[0].cleaved, "Blunt contact uses the intact fall")
     key(KEY_ESCAPE)
     await settle(8)
     check(current_scene.scene_file_path == "res://scenes/main_menu.tscn", "Exit returns to title")

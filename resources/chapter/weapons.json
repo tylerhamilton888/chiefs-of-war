@@ -4,8 +4,13 @@
     "description": "A quick edge for a close fight.",
     "texture": "res://assets/chapter/player_combat_nordic.png",
     "damage": 28,
-    "swing_seconds": 0.60,
-    "follow_through_seconds": 0.32
+    "swing_seconds": 0.6,
+    "follow_through_seconds": 0.32,
+    "swing_views": {
+      "side": "res://resources/chapter/player_axe_side_swing.json",
+      "front": "res://resources/chapter/player_axe_front_swing.json",
+      "rear": "res://resources/chapter/player_axe_back_swing.json"
+    }
   },
   "iron_maul": {
     "label": "Iron maul",
@@ -13,6 +18,11 @@
     "texture": "res://assets/chapter/player_maul_nordic.png",
     "damage": 42,
     "swing_seconds": 0.88,
-    "follow_through_seconds": 0.43
+    "follow_through_seconds": 0.43,
+    "swing_views": {
+      "front": "res://resources/chapter/player_maul_front_swing.json",
+      "side": "res://resources/chapter/player_maul_side_swing.json",
+      "rear": "res://resources/chapter/player_maul_rear_swing.json"
+    }
   }
 }

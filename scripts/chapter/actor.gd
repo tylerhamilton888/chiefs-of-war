@@ -26,8 +26,14 @@ var companion=false
 var ai_time=0.0
 var target: Node2D
 const WEAPONS = preload("res://resources/chapter/weapons.json")
+const ORIGINAL_SWING_POSES := [0, 1, 1, 2, 2, 3]
+var swing_drawings := {}
+var swing_phase := 0
 var equipped_weapon := "hunting_axe"
+const ArmedGait = preload("res://scripts/chapter/armed_gait.gd")
+const READY_SECONDS := 2.4
 var ready_time := 0.0
+var cursor_direction := Vector2.DOWN
 var combat_art: Dictionary={}
 var walking_art: Texture2D
 var action_art: Texture2D
@@ -46,6 +52,8 @@ func _ready() -> void:
         var action_texture="res://assets/chapter/"+identity+"_combat_nordic.png"
         if not ResourceLoader.exists(action_texture):action_texture="res://assets/chapter/"+identity+"_combat.png"
         action_art=load(action_texture)
+    if identity == "player":
+        equip_weapon(equipped_weapon)
     collision_layer=2;collision_mask=1
     show_frame(0)
 func show_frame(index: int) -> void:
@@ -61,8 +69,14 @@ func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> voi
 func equip_weapon(id: String) -> void:
     if identity != "player" or not WEAPONS.data.has(id):
         return
+    if equipped_weapon == id and not swing_drawings.is_empty():
+        return
     equipped_weapon = id
     action_art = load(WEAPONS.data[id].texture)
+    swing_drawings.clear()
+    for view in WEAPONS.data[id].swing_views:
+        var drawing: Dictionary = load(WEAPONS.data[id].swing_views[view]).data
+        swing_drawings[view] = {"frames": drawing.frames, "texture": load(drawing.texture), "height": drawing.height}
 
 func weapon_damage(honed_axe := false) -> float:
     var base_damage := float(WEAPONS.data[equipped_weapon].damage)
@@ -73,12 +87,45 @@ func action_pose(index: int) -> void:
     var row=0 if facing==0 else 2 if facing==3 else 1
     if FrameArt.pose(sprite,action_art,row*4+index,height,facing==1):return
     apply_region(combat_art.frames[row][index],action_art,facing==1,height/float(combat_art.height))
+func show_swing(phase_index: int) -> void:
+    swing_phase = phase_index
+    var view := "front" if facing == 0 else "rear" if facing == 3 else "side"
+    var drawing: Dictionary = swing_drawings.get(view, {})
+    if drawing.is_empty() or drawing.frames[phase_index] == null:
+        action_pose(ORIGINAL_SWING_POSES[phase_index])
+        return
+    FrameArt.cell(sprite, drawing.texture, drawing.frames[phase_index], height / float(drawing.height), facing == 1)
+
+func update_swing(delta: float) -> void:
+    var contact_remaining := 0.35 if hostile else float(WEAPONS.data[equipped_weapon].follow_through_seconds)
+    attack_time = maxf(0.0, attack_time - delta)
+    velocity = Vector2.ZERO
+    if hostile:
+        action_pose(1 if attack_time > contact_remaining else 2)
+    elif attack_time > contact_remaining:
+        var duration := float(WEAPONS.data[equipped_weapon].swing_seconds)
+        var windup: float = (duration - attack_time) / (duration - contact_remaining)
+        show_swing(0 if windup < 0.25 else 1 if windup < 0.69 else 2)
+    else:
+        var after_contact: float = 1.0 - attack_time / contact_remaining
+        # Always show the contacting drawing on the tick that resolves the hit.
+        show_swing(3 if not attack_done or after_contact < 0.27 else 4 if after_contact < 0.68 else 5)
+    if attack_time <= contact_remaining and not attack_done:
+        attack_done = true
+        struck.emit(self)
+    if attack_time <= 0.0:
+        cooldown = 0.65 if hostile else 0.08
+        if controlled:
+            ready_time = READY_SECONDS
+
 func direction() -> Vector2:return [Vector2.DOWN,Vector2.LEFT,Vector2.RIGHT,Vector2.UP][facing]
 func attack(aim: Vector2) -> bool:
     if not enabled or hp<=0 or attack_time>0 or dodge_time>0 or stun>0 or cooldown>0:return false
     face(aim);locked=aim.normalized()
     attack_time = 1.15 if hostile else float(WEAPONS.data[equipped_weapon].swing_seconds)
     attack_done=false;guarding=false
+    if not hostile:
+        show_swing(0)
     return true
 func dodge(aim: Vector2) -> bool:
     if not enabled or hp<=0 or dodge_time>0 or attack_time>0.35 or stun>0:return false
@@ -123,24 +170,43 @@ func _physics_process(delta: float) -> void:
     elif dodge_time>0:
         dodge_time=maxf(0,dodge_time-delta);velocity=locked*590;move_and_slide();action_pose(3)
     elif attack_time>0:
-        var before=attack_time;attack_time=maxf(0,attack_time-delta)
-        var contact = 0.35 if hostile else float(WEAPONS.data[equipped_weapon].follow_through_seconds)
-        velocity=Vector2.ZERO
-        action_pose(1 if attack_time>contact else 2)
-        if before>contact and attack_time<=contact and not attack_done:attack_done=true;struck.emit(self)
-        if attack_time<=0:
-            cooldown=0.08 if not hostile else 0.65
-            if controlled:ready_time=0.65
+        update_swing(delta)
     elif guarding:velocity=Vector2.ZERO;action_pose(3)
+    elif controlled and ready_time > 0.0:
+        ready_time = maxf(0.0, ready_time - delta)
+        armed_move(delta)
     else:
         super._physics_process(delta)
-        if controlled and ready_time > 0:
-            if velocity.length_squared() > 1:
-                ready_time = 0
-            else:
-                ready_time = maxf(0, ready_time - delta)
-                action_pose(0)
     queue_redraw()
+func track_combat_aim(aim: Vector2, threat_nearby: bool) -> void:
+    if aim.length_squared() > 0.0001:
+        cursor_direction = aim.normalized()
+    if threat_nearby or guarding or attack_time > 0.0:
+        ready_time = READY_SECONDS
+
+func armed_move(delta: float) -> void:
+    face(cursor_direction)
+    var intent := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+    var forward := direction().dot(intent)
+    # A shorter backward or lateral step keeps the striking side presented.
+    var speed := 145.0 if forward > 0.5 else 116.0 if forward < -0.5 else 128.0
+    velocity = velocity.move_toward(intent * speed, 1450.0 * delta)
+    var before := position
+    move_and_slide()
+    var movement := position - before
+    var distance := movement.length()
+    if distance < 0.04:
+        phase = 0.0
+        distance_since_step = 0.0
+        action_pose(0)
+        return
+    phase = fposmod(phase + distance / ArmedGait.STRIDE, 1.0)
+    distance_since_step += distance
+    if distance_since_step >= ArmedGait.STRIDE * 0.5:
+        distance_since_step -= ArmedGait.STRIDE * 0.5
+        stepped.emit()
+    ArmedGait.pose(self, movement.normalized(), phase)
+
 func _draw() -> void:
     super._draw()
     draw_set_transform(Vector2.ZERO)
@@ -161,3 +227,24 @@ func set_hair_palette(hair: String) -> void:
     shader_material.shader = preload("res://shaders/ogre_palette.gdshader")
     shader_material.set_shader_parameter("palette", palette)
     sprite.material = shader_material
+
+## Only the playable Ogre's steady exploration rest gets the subtle chest motion.
+## Authored weapon, cinematic and moving poses own the complete drawing elsewhere.
+var idle_breath: Polygon2D
+
+func _process(delta: float) -> void:
+    if identity != "player" or not controlled or not is_instance_valid(sprite):
+        if is_instance_valid(idle_breath):
+            idle_breath.stop(sprite)
+        return
+    var resting: bool = enabled and hp > 0.0 and sprite.texture == MOTION_TEXTURE \
+        and frame_index == 0 and velocity.length_squared() < 0.01 \
+        and attack_time <= 0.0 and dodge_time <= 0.0 and stun <= 0.0 \
+        and not guarding and ready_time <= 0.0
+    if resting:
+        if not is_instance_valid(idle_breath):
+            idle_breath = preload("res://scripts/chapter/idle_breath.gd").new()
+            add_child(idle_breath)
+        idle_breath.breathe(sprite, delta)
+    elif is_instance_valid(idle_breath):
+        idle_breath.stop(sprite)

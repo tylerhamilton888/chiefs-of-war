@@ -1,6 +1,7 @@
 extends SceneTree
 const State = preload("res://scripts/chapter/state.gd")
 var failed := false
+var contact_phases: Array[int] = []
 
 func _initialize() -> void:
     run.call_deferred()
@@ -45,7 +46,27 @@ func run() -> void:
             verify(game.player.sprite.flip_h == (facing == 1), "Weapon follows the facing direction")
     verify(game.player.weapon_damage(true) == 42, "Honing applies to the axe only")
     verify(game.player.attack(Vector2.RIGHT) and is_equal_approx(game.player.attack_time, 0.88), "Maul attack timing")
+    game.player.attack_time = 0
+    game.player.struck.connect(func(actor): contact_phases.append(actor.swing_phase))
+    for weapon in ["hunting_axe", "iron_maul"]:
+        game.player.equip_weapon(weapon)
+        for aim in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
+            game.player.cooldown = 0
+            contact_phases.clear()
+            verify(game.player.attack(aim), "Strike starts")
+            var phases: Array[int] = [game.player.swing_phase]
+            var poses := {}
+            while game.player.attack_time > 0:
+                game.player.update_swing(1.0 / 60)
+                if game.player.swing_phase != phases.back():
+                    phases.append(game.player.swing_phase)
+                poses[[game.player.sprite.texture.resource_path, game.player.sprite.region_rect]] = true
+                verify(game.player.sprite.flip_h == (aim == Vector2.LEFT), "Pose holds swing direction")
+            verify(phases == [0, 1, 2, 3, 4, 5], "All six authored beats play")
+            verify(poses.size() >= 6, "Each beat supplies its own silhouette")
+            verify(contact_phases == [3], "One damage event on the contacting drawing")
     game.prepare_exit()
+    await create_timer(0.2).timeout
     game.queue_free()
     await process_frame
     print("Chapter equipment: ", "FAIL" if failed else "PASS")

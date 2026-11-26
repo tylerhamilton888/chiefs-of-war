@@ -53,6 +53,33 @@ func run() -> void:
     Input.action_release("move_left")
     Input.action_release("move_up")
     check(steady, "An even diagonal should hold the last viewing angle throughout the step")
+    for tick in 12:
+        await physics_frame
+    var shift := InputEventKey.new()
+    shift.keycode = KEY_SHIFT
+    shift.physical_keycode = KEY_SHIFT
+    shift.pressed = true
+    Input.parse_input_event(shift)
+    for action in ["move_right", "move_down", "move_left", "move_up"]:
+        Input.action_press(action)
+        var poses := {}
+        start = player.position
+        for tick in 60:
+            await physics_frame
+            if player.sprite.texture == player.RUN_TEXTURE:
+                poses[player.sprite.region_rect.position] = true
+        check(poses.size() == 4, action + " plays all four authored running poses")
+        check(start.distance_to(player.position) > 220, action + " moves at run speed")
+        check(player.sprite.flip_h == (action == "move_left"), "Mirror the side atlas only for west")
+        check(player.sprite.self_modulate.a == 1, "Run sprite visible after registered walk")
+        for polygon in player.sprite.get_children():
+            check(not polygon.visible, "No previous walk polygons over the running figure")
+        Input.action_release(action)
+        for tick in 12:
+            await physics_frame
+    shift.pressed = false
+    Input.parse_input_event(shift)
+    check(player.sprite.texture == player.MOTION_TEXTURE and player.frame_index == 0, "Run settles into normal idle")
     print("HEARTH WALK: %d failures" % failures)
     player.queue_free()
     await process_frame

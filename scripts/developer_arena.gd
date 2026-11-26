@@ -58,7 +58,9 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
     hud.text = "Developer Arena   ·   %s   ·   Health %d / 160" % [player.equipped_weapon.replace("_", " ").capitalize(), ceili(player.hp)]
-    player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT), get_global_mouse_position() - player.position)
+    var aim := get_global_mouse_position() - player.position
+    player.track_combat_aim(aim, true)
+    player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT), aim)
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:

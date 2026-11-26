@@ -36,7 +36,20 @@ func run() -> void:
     change_scene_to_file(MENU)
     await wait_for_scene(MENU)
     var actions := buttons()
-    check(actions.keys().size() == 3 and actions.has("Begin Journey"), "Only one campaign can start")
+    check(actions.size() == 4 and actions.has("Practice Yard") and actions.has("Begin Journey"), "Title offers one campaign and a practice yard")
+    if actions.has("Practice Yard"):
+        actions["Practice Yard"].pressed.emit()
+        if not await wait_for_scene("res://scenes/developer_arena.tscn"):
+            push_error("Practice Yard failed to open")
+            quit(1)
+            return
+        var back := InputEventKey.new()
+        back.keycode = KEY_ESCAPE
+        back.pressed = true
+        current_scene._unhandled_input(back)
+        await wait_for_scene(MENU)
+        check(not FileAccess.file_exists(State.SAVE), "Trying the practice yard before starting preserves the empty slot")
+        actions = buttons()
     if not actions.has("Begin Journey"):
         quit(1)
         return

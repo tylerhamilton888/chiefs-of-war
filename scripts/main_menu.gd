@@ -55,6 +55,7 @@ func build() -> void:
         play.disabled = true
         status.show()
         status.text = "Your campaign save could not be read. Your progress has been preserved."
+    action("Practice Yard", func(): get_tree().change_scene_to_file("res://scenes/developer_arena.tscn"), content)
     var controls_button = action("Controls", controls, content)
     action("Quit", get_tree().quit, content)
     if play.disabled:
@@ -76,4 +77,4 @@ func launch_campaign() -> void:
 
 func controls() -> void:
     status.show()
-    status.text = "WASD move · Shift stride · LMB attack · RMB block or parry · Space dodge\nE interact · Q eat · J journal · I belongings · F5 save · Esc pause"
+    status.text = "WASD move · Shift run · LMB attack · RMB block or parry · Space dodge\nE interact · Q eat · J journal · I belongings · F5 save · Esc pause"

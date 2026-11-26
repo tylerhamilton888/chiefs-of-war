@@ -7,10 +7,7 @@ static func pose(sprite: Sprite2D,texture: Texture2D,index: int,height: float,mi
     if registrations.is_empty():registrations=JSON.parse_string(FileAccess.get_file_as_string("res://resources/ogre_frame_registration.json"))
     var path=texture.resource_path
     if not registrations.has(path):
-        sprite.self_modulate=Color.WHITE
-        for child in sprite.get_children():
-            if child is Polygon2D:child.hide()
-        if sprite.has_meta("registered_pose"):sprite.remove_meta("registered_pose")
+        use_sprite_region(sprite)
         return false
     var data=registrations[path];var frame=data.frames[index];var r=frame.rect
     var rect=Rect2(r[0],r[1],r[2],r[3]);var anchor=Vector2(frame.anchor[0],frame.anchor[1])
@@ -43,3 +40,25 @@ static func pose(sprite: Sprite2D,texture: Texture2D,index: int,height: float,mi
             polygon.texture=texture;polygon.polygon=parts[i].vertices;polygon.uv=parts[i].uv
     sprite.set_meta("registered_pose",key)
     return true
+
+static func use_sprite_region(sprite: Sprite2D) -> void:
+    if not sprite.has_meta("registered_pose"):
+        return
+    sprite.self_modulate = Color.WHITE
+    for child in sprite.get_children():
+        if child is Polygon2D:
+            child.hide()
+    sprite.remove_meta("registered_pose")
+
+
+## Rectangular full-body drawings with an explicit foot anchor in frame pixels.
+static func cell(sprite: Sprite2D, texture: Texture2D, frame: Array, factor: float, mirror: bool) -> void:
+    use_sprite_region(sprite)
+    sprite.texture = texture
+    sprite.region_enabled = true
+    sprite.region_filter_clip_enabled = true
+    sprite.region_rect = Rect2(frame[0], frame[1], frame[2], frame[3])
+    sprite.flip_h = mirror
+    sprite.scale = Vector2.ONE * factor
+    var offset := (sprite.region_rect.size * 0.5 - Vector2(frame[4], frame[5])) * factor
+    sprite.position = Vector2(-offset.x if mirror else offset.x, offset.y + 3.0)

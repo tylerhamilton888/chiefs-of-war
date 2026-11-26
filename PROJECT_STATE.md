@@ -1,5 +1,19 @@
 # Project state
 
+## Ogre in Motion · 0.9.2
+
+The Ogre breathes when he comes to rest at Emberhide Crossing. His dedicated run has twelve full-body drawings across front, rear and profile, with the west view mirrored. The hunting axe and iron maul stay visible while he advances, retreats and sidesteps facing the cursor. Each swing has six silhouette changes, and resolves damage when its contact drawing appears. An unarmored goblin has an illustrated cleave and fall for an edged killing strike in full brutality. The maul and restrained presentation use the intact fall. Field butchery, eating individual pieces, and depositing them in the pot are still open.
+
+Choose **Practice Yard** from the title screen to play the live encounter. These normal-speed Godot recordings use the ordinary camera. The comparison uses stationary opponents to expose the contact frame. The live fight keeps both enemies' pursuit and attacks active.
+
+- [Campaign movement and matched weapon test](docs/review/animation-playtest/animation-pass.mp4)
+- [Live fight with default enemies](docs/review/animation-playtest/live-yard.mp4)
+- [Same movement and weapon test in 0.9.1](docs/review/animation-playtest/release-0.9.1.mp4)
+
+Godot 4.4.1 passed all ten gameplay suites, including 179 armed-movement checks and 22 arena checks. All 56 runtime textures passed the size audit.
+
+The Ogre currently has four facing directions. Retreat plays the forward step in reverse, and the lateral hunting-axe step has two drawings. Guard and dodge still reuse an existing braced pose.
+
 ## Verified starting point
 
 The preparation build is commit `b89b3b3cf445f24808af4a7a7f050a647501207e` on the Ogre lineage of `tylerhamilton888/chiefs-of-war`. The historical Frontier world remains available at tag `v0.8.10`. The baseline's campaign opens or resumes The Fire We Carry through `scenes/main_menu.tscn`. It has seven connected regions, nine named principal characters, family work, hunting, cooking, rescue outcomes, a duel, contracts and a personal wagon. The main save is `user://fire_we_carry_v1.json`.

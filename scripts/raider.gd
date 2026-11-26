@@ -22,6 +22,7 @@ var sprite := Sprite2D.new()
 var flash := 0.0
 var recoil := Vector2.ZERO
 var death_clock := 0.0
+var recoiling := false
 var cleaved := false
 var held := false
 var fear := 0.0
@@ -64,16 +65,29 @@ func pose(index: int,cleave_row: bool=false) -> void:
 func eligible() -> bool:
  return hp>0 and vulnerable>0 and not held and active
 func receive_hit(amount: float,direction: Vector2) -> void:
+ receive_weapon_hit(amount, direction, false)
+
+func receive_weapon_hit(amount: float, direction: Vector2, edged: bool) -> void:
  if hp<=0 or held:return
  hp=maxf(0,hp-amount);flash=0.12;posture+=1;recoil=direction*100
- if hp<=0: die(false);return
+ if hp<=0: die(edged);return
  state="recover";clock=0;cooldown=0.65
+ recoiling=true;pose(4)
  if vulnerable_cooldown<=0 and (posture>=2 or hp<=maximum*0.35):
   vulnerable=1.65;posture=0;state="vulnerable";game.toast("Staggered • F from the side",position-Vector2(0,65))
 func die(dismember: bool) -> void:
  if state=="dead":return
  hp=0;state="dead";cleaved=dismember and kind=="goblin";death_clock=0;velocity=Vector2.ZERO
- collision_layer=0;slain.emit(self)
+ collision_layer=0
+ show_death_frame()
+ slain.emit(self)
+func show_death_frame() -> void:
+ if cleaved and game.dismember_enabled:
+  var index := 2 if death_clock < 0.08 else 3 if death_clock < 0.18 else 4 if death_clock < 0.35 else 5
+  pose(index, true)
+ else:
+  pose(4 if death_clock < 0.22 else 5)
+
 func _physics_process(delta: float) -> void:
  if not active:return
  flash=maxf(0,flash-delta);cooldown=maxf(0,cooldown-delta);fear=maxf(0,fear-delta)
@@ -81,13 +95,12 @@ func _physics_process(delta: float) -> void:
  if held:return
  if hp<=0:
   death_clock+=delta
-  var show_cleave: bool=cleaved and game.dismember_enabled
-  pose((2 if death_clock<0.08 else 3 if death_clock<0.18 else 4 if death_clock<0.35 else 5) if show_cleave else (4 if death_clock<0.22 else 5),show_cleave)
+  show_death_frame()
   queue_redraw();return
  vulnerable_cooldown=maxf(0,vulnerable_cooldown-delta)
  if vulnerable>0:
   vulnerable=maxf(0,vulnerable-delta);velocity=recoil;recoil=recoil.move_toward(Vector2.ZERO,delta*1000);move_and_slide();pose(3)
-  if vulnerable<=0:state="recover";clock=0;posture=0;vulnerable_cooldown=2.0
+  if vulnerable<=0:recoiling=false;state="recover";clock=0;posture=0;vulnerable_cooldown=2.0
   queue_redraw();return
  if not is_instance_valid(target):return
  var off: Vector2=target.position-position
@@ -101,8 +114,8 @@ func _physics_process(delta: float) -> void:
   velocity=Vector2.ZERO;pose(2)
   if clock>=0.18:state="recover";clock=0;cooldown=0.8
  elif state=="recover":
-  velocity=recoil;recoil=recoil.move_toward(Vector2.ZERO,delta*1000);pose(0)
-  if clock>=0.45:state="idle";clock=0
+  velocity=recoil;recoil=recoil.move_toward(Vector2.ZERO,delta*1000);pose(4 if recoiling and clock < 0.17 else 0)
+  if clock>=0.45:recoiling=false;state="idle";clock=0
  else:
   var chase:=off.length()<260 and target.position.distance_to(home)<430
   var dest: Vector2=target.position if chase else home

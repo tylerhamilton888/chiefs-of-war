@@ -1,0 +1,26 @@
+{
+  "texture": "res://assets/chapter/player_maul_swing.png",
+  "height": 300,
+  "frames": [
+    null,
+    null,
+    [
+      752,
+      424,
+      316,
+      403,
+      128,
+      399
+    ],
+    null,
+    [
+      1127,
+      424,
+      287,
+      290,
+      104,
+      286
+    ],
+    null
+  ]
+}
