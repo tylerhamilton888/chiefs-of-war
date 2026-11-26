@@ -15,13 +15,15 @@ const BACKGROUNDS = {
     "smith": {"label": "Smith", "item": "ore", "amount": 2},
 }
 const DEFAULT_PROFILE = {"ogre_name": "Hald", "clan_name": "Emberhide", "background": "hunter", "hair": "copper"}
+const Treasure = preload("res://scripts/chapter/treasure.gd")
+var treasure := Treasure.new()
 var equipment: Dictionary = DEFAULT_EQUIPMENT.duplicate()
 var profile: Dictionary = DEFAULT_PROFILE.duplicate()
 var region="crossing"
 var player_position=Vector2(960,920)
 var chapter=0
 var flags: Dictionary={}
-var inventory={"wood":0,"meat":0,"meals":0,"hide":0,"ore":0,"coin":0,"trophy":0,"goblin_meat":0}
+var inventory={"wood":0,"meat":0,"meals":0,"hide":0,"ore":0,"coin":0,"trophy":0,"goblin_meat":0,"amber":0}
 var relationships: Dictionary={}
 var scene: Dictionary={}
 var encounters: Dictionary={}
@@ -69,7 +71,7 @@ func eat() -> bool:
 func eligible(id: String) -> bool:
     return id in ["astrid","runa","eydis"] and has(id+"_activity") and relationships[id].admiration>=2
 func pack() -> Dictionary:
-    return {"version":1,"profile":profile,"equipment":equipment,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region,"encounters":encounters,"escort_x":escort_x,"field_cuts":field_cuts,"pot_servings":pot_servings}
+    return {"treasure":treasure.pack(),"version":1,"profile":profile,"equipment":equipment,"region":region,"position":[player_position.x,player_position.y],"chapter":chapter,"flags":flags,"inventory":inventory,"relationships":relationships,"scene":scene,"collected":collected,"defeated":defeated,"hp":hp,"fed":fed,"clock":clock,"defense_left":defense_left,"gore":gore,"camp_region":camp_region,"encounters":encounters,"escort_x":escort_x,"field_cuts":field_cuts,"pot_servings":pot_servings}
 func save_game() -> bool:
     if unreadable:return false
     var f=FileAccess.open(SAVE+".tmp",FileAccess.WRITE)
@@ -87,6 +89,9 @@ func load_game() -> bool:
     region=d.region;player_position=Vector2(d.position[0],d.position[1]);chapter=int(d.chapter)
     flags=d.flags;inventory=d.inventory;relationships=d.relationships;scene=d.scene
     inventory.goblin_meat = int(inventory.get("goblin_meat", 0))
+    inventory.amber = int(inventory.get("amber", 0))
+    if d.has("treasure"):
+        treasure.restore(d.treasure)
     field_cuts = d.get("field_cuts", {})
     pot_servings = d.get("pot_servings", {})
     if d.has("equipment"):
@@ -103,19 +108,20 @@ func number(value,low: float,high: float) -> bool:
 func valid(d) -> bool:
     if not d is Dictionary:return false
     for key in pack():
-        if key not in ["profile", "equipment", "field_cuts", "pot_servings"] and not d.has(key):return false
+        if key not in ["profile", "equipment", "field_cuts", "pot_servings", "treasure"] and not d.has(key):return false
     if d.has("equipment"):
         var gear = d.equipment
         if not gear is Dictionary or not WEAPONS.data.has(gear.get("weapon")) or not HEADGEAR.has(gear.get("head")):
             return false
         if not BODYGEAR.has(gear.get("body", DEFAULT_EQUIPMENT.body)):
             return false
+    if d.has("treasure") and not Treasure.valid(d.treasure, d.get("equipment", DEFAULT_EQUIPMENT)):return false
     if d.has("profile") and not valid_profile(d.profile):return false
     if d.version!=1 or not d.region in REGIONS or not d.camp_region in REGIONS or not number(d.chapter,0,10) or d.chapter!=int(d.chapter):return false
     if not d.position is Array or d.position.size()!=2 or not number(d.position[0],60,2200) or not number(d.position[1],60,1330):return false
     if not d.inventory is Dictionary or not d.flags is Dictionary or not d.relationships is Dictionary or not d.scene is Dictionary:return false
     for item in inventory:
-        if item == "goblin_meat" and not d.inventory.has(item):continue
+        if item in ["goblin_meat","amber"] and not d.inventory.has(item):continue
         if not d.inventory.has(item) or not number(d.inventory[item],0,100000) or d.inventory[item]!=int(d.inventory[item]):return false
     if not d.encounters is Dictionary or d.encounters.size()>200 or not number(d.escort_x,430,1810):return false
     for key in d.encounters:
@@ -154,6 +160,7 @@ func create_journey(identity: Dictionary) -> bool:
     if FileAccess.file_exists(SAVE) or not valid_profile(identity):
         return false
     profile = identity.duplicate()
+    mark("earn_hunt_armor")
     var gift: Dictionary = BACKGROUNDS[profile.background]
     inventory[gift.item] += gift.amount
     return save_game()

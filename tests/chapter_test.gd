@@ -95,6 +95,11 @@ func run() -> void:
     for foe in game.enemies:await kill(foe)
     check(game.contract_done(),"three actual goblin combats")
     game.travel("trade");game.story.action("payment");check(game.state.chapter==9,"contract paid")
+    var crown: Dictionary = game.state.treasure.items.get("eydis_hart",{})
+    check(crown.get("special")=="red_hart" and game.state.treasure.level()>=int(crown.get("level",99)),"Contract guarantees an eligible Red Hart crown")
+    var payment: int = game.state.inventory.coin
+    game.story.action("payment")
+    check(game.state.inventory.coin==payment and game.state.treasure.items.eydis_hart==crown,"Contract reward is not rolled or paid twice")
     game.choose("close");var coins=game.state.inventory.coin;game.story.action("payment");check(game.state.inventory.coin==coins,"payment idempotent")
     for i in range(4):game.interact(game.supplies[i])
     game.story.action("wagon");check(game.state.chapter==10 and game.state.has("own_wagon"),"earned personal wagon opens sandbox")

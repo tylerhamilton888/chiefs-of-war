@@ -1,0 +1,29 @@
+{
+  "bases": {
+    "road_helm": {"label":"Road helm","slot":"head","visual":"iron_helm","stat":"guard","base":1},
+    "ring_mantle": {"label":"Ring mantle","slot":"body","visual":"scale_mantle","stat":"guard","base":1},
+    "trail_axe": {"label":"Trail axe","slot":"weapon","visual":"hunting_axe","stat":"damage","base":1},
+    "iron_breaker": {"label":"Quarry maul","slot":"weapon","visual":"iron_maul","stat":"damage","base":2}
+  },
+  "rarities": {
+    "common":{"label":"Common","color":"e0d9c9","rank":0},
+    "fine":{"label":"Fine","color":"88bdff","rank":1},
+    "rare":{"label":"Rare","color":"ffdf68","rank":2},
+    "set":{"label":"Set","color":"8ae88e","rank":3},
+    "legendary":{"label":"Legendary","color":"ffae68","rank":4}
+  },
+  "affixes": {
+    "stout":{"label":"Stout","stat":"guard"},
+    "keen":{"label":"Battleworn","stat":"damage"}
+  },
+  "specials": {
+    "watch_helm":{"label":"Cairnwatch Helm","base":"road_helm","rarity":"set","level":2,"mark":"watch"},
+    "watch_mantle":{"label":"Cairnwatch Mantle","base":"ring_mantle","rarity":"set","level":2,"mark":"watch"},
+    "red_hart":{"label":"Crown of the Red Hart","base":"road_helm","rarity":"legendary","level":3,"mark":"hart"}
+  },
+  "tables":{
+    "wolf":{"gear_chance":0.20,"bases":["road_helm","trail_axe"]},
+    "alpha":{"gear_chance":1.0,"bases":["road_helm","ring_mantle"]},
+    "raider":{"gear_chance":0.35,"bases":["road_helm","ring_mantle","trail_axe","iron_breaker"]}
+  }
+}

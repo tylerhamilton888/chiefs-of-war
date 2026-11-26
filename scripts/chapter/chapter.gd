@@ -28,6 +28,7 @@ var notice: Label
 var prompt: Label
 const FITTING_VIEWS := [Vector2.DOWN, Vector2.RIGHT, Vector2.UP, Vector2.LEFT]
 var fitting_angle := 0
+var loot_menu = preload("res://scripts/chapter/loot_menu.gd").new(self)
 var modal: Control
 var stations: Array=[]
 var supplies: Array=[]
@@ -123,6 +124,7 @@ func build_world() -> void:
     player.equip_weapon(state.equipment.weapon)
     player.equip_body(state.equipment.body)
     player.equip_head(state.equipment.head)
+    fit_insignia(player)
     camera=OgreCamera.new();player.add_child(camera)
     var forest=state.region in ["pines","hollow","crossing"]
     for i in range(24):
@@ -140,6 +142,10 @@ func build_world() -> void:
     if state.region=="pass":build_pass()
     if state.region in ["pines","hollow","cairn"]:build_wilds()
     build_resources()
+    for id in state.treasure.items:
+        var find: Dictionary = state.treasure.items[id]
+        if find.place == "field" and find.region == state.region:
+            place_find(id)
     if state.has("own_wagon") and not state.has("home_packed") and state.camp_region==state.region:build_home()
     if state.region=="crossing" and state.chapter==4:build_defense()
     if state.region=="crossing" and state.chapter==5:build_duel()
@@ -251,6 +257,8 @@ func svala_at_hearth(action: String, kettle) -> void:
 
 func build_camp() -> void:
     var host=state.region=="host"
+    if hearth_access():
+        station("chest",Vector2(840,770),"Open the wagon chest")
     var w=wagon(Vector2(740,690),0.76 if host else 0.65)
     if not host:
         family_wagon = w
@@ -309,6 +317,7 @@ func npc(id: String,at: Vector2=Vector2.ZERO) -> Node2D:
     world.add_child(actor);npcs[id]=actor
     return actor
 func build_trade() -> void:
+    station("chest",Vector2(990,790),"Open the caravan chest")
     # Reuse the old settlement's timber buildings for the smaller peoples' fixed post.
     for i in range(3):
         var building=preload("res://scripts/building.gd").new();building.kind=i;building.settlement_scale=Scale.SETTLEMENT_SCALE;building.position=[Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)][i];world.add_child(building)
@@ -415,6 +424,8 @@ func travel(region: String,spawn: Vector2=Vector2(1080,1000),forced: bool=false)
     save_progress()
     state.hp=player.hp;state.region=region;state.player_position=spawn;rebuild();save_progress()
     say(NAMES[region].capitalize()+" · J opens your journal and the routes.")
+    if region == "crossing" and state.has("hunt_won") and state.chapter == 2:
+        say("Svala needs two cuts for the feast. Bramm can trade your amber or sew the hides into more pack slots at the wagon chest.")
     if state.chapter==4 and not state.has("burning_seen"):state.mark("burning_seen");dialogue("burning")
 func road_arrival(routes: Dictionary,destination: String) -> Vector2:
     for road in routes[destination]:
@@ -423,6 +434,7 @@ func road_arrival(routes: Dictionary,destination: String) -> Vector2:
     return Vector2(1080,1090)
 func interaction_available(entry: Dictionary) -> bool:
     match entry.kind:
+        "field_find":return state.treasure.items.get(entry.id,{}).get("place","") == "field"
         "wood","ore":return not entry.id in state.collected
         "rescue":return state.chapter==4 and not state.has("saved_"+entry.id)
         "feast":return state.chapter==2 and not state.has("feast")
@@ -517,6 +529,16 @@ func _unhandled_input(event: InputEvent) -> void:
 func interact(entry: Dictionary) -> void:
     if not interaction_available(entry):return
     match entry.kind:
+        "chest":
+            loot_menu.message = ""
+            loot_menu.show_menu(true)
+        "field_find":
+            if state.treasure.move(entry.id,"field","pack"):
+                loot_menu.selected = entry.id
+                entry.label.hide()
+                say("Packed %s. Press I to compare." % state.treasure.name_of(state.treasure.items[entry.id]))
+            else:
+                say("Your gear slots are full. Make room at the wagon chest.")
         "npc":story.talk(entry.id)
         "road":
             travel(entry.id,road_arrival(ROADS,entry.id))
@@ -583,7 +605,19 @@ func interact(entry: Dictionary) -> void:
             if state.collect("loot_"+entry.id,"meat",6):
                 state.inventory.hide+=2
                 if entry.id=="hollow_alpha":state.inventory.trophy+=1;state.mark("hunt_won");state.change("bramm","admiration",3);state.change("dorrik","admiration",2)
-                say("Six meat, two hides%s. Return to Emberhide and prepare the feast."%(" and the great wolf's trophy" if entry.id=="hollow_alpha" else ""))
+                var first: String = ""
+                var alpha: bool = entry.id == "hollow_alpha"
+                if not state.has("first_hunt_find"):
+                    first = "ring_mantle" if state.equipment.head == "iron_helm" else "road_helm"
+                    state.mark("first_hunt_find")
+                var bead: bool = alpha or first != "" or state.treasure.rng.randf() < 0.3
+                if bead:
+                    state.inventory.amber += 1
+                var found := grant_find(entry.id,"alpha" if alpha else "wolf",Vector2(entry.position) if entry.has("position") else player.position,first)
+                var spoils := "Six cuts and two hides"
+                if alpha: spoils += ", the wolf's trophy"
+                if bead: spoils += ", a bead of amber"
+                say(spoils + ". " + ("A torn hunter's pack lies beside the kill. " + found if found != "" else "Take the meat home."))
         "feast":story.action("feast")
         "rescue":
             var ids=["defense_0","defense_2"] if entry.id=="bramm" else ["defense_1","defense_3"]
@@ -646,7 +680,7 @@ func player_strike(actor) -> void:
             var contact_height := Scale.LARGE_HEIGHT * 0.55 if protected_target else Scale.SMALL_HEIGHT * 0.54
             var contact_point: Vector2 = foe.position - Vector2(0, contact_height) - off.normalized() * 10.0
             impact(contact_point, actor.locked, protected_target)
-            var amount: float = actor.weapon_damage(state.has("honed_axe")) + (6 if state.fed > 0 else 0)
+            var amount: float = actor.weapon_damage(state.has("honed_axe")) + int(state.treasure.totals().damage) + (6 if state.fed > 0 else 0)
             if foe is Raider:
                 foe.receive_weapon_hit(amount, off.normalized(), actor.equipped_weapon == "hunting_axe")
             else:
@@ -673,7 +707,7 @@ func enemy_strike(foe) -> void:
     var reach=220 if foe is Actor else 115 if foe is Wolf else 120
     var direction=foe.locked if foe is Actor else foe.locked_direction
     if off.length()>reach or direction.dot(off.normalized())<0.1 or not has_line(foe.position,player.position):return
-    last_attacker=foe;play_sound("hit");player.receive_hit(42 if foe is Actor else 22 if foe is Wolf else 18,off.normalized(),foe is Actor);state.hp=player.hp
+    last_attacker=foe;play_sound("hit");player.receive_hit(maxi(1, (42 if foe is Actor else 22 if foe is Wolf else 18) - int(state.treasure.totals().guard)),off.normalized(),foe is Actor);state.hp=player.hp
 func parry(_actor) -> void:
     if is_instance_valid(last_attacker):last_attacker.parried()
     say("Parried — strike while the weapon is checked.");play_sound("block")
@@ -683,6 +717,8 @@ func enemy_slain(foe) -> void:
         state.mark("duel_won");state.change("hrothgar","admiration",5);dialogue("victory");return
     if id in state.defeated:return
     state.defeated.append(id)
+    if not str(id).begins_with("practice_"):
+        state.treasure.xp += 3 if id == "hollow_alpha" else 1
     if foe is Wolf:station("harvest",foe.position,"Harvest meat, hide and trophy",id)
     elif foe is Raider and foe.kind == "goblin":
         if id.begins_with("cairn"):
@@ -692,6 +728,14 @@ func enemy_slain(foe) -> void:
             state.field_cuts[id] = [clampf(at.x, 60, 2200), clampf(at.y, 60, 1330)]
             spawn_cut(id)
             say("Fresh goblin meat. Move close to carry the cut or eat it here.")
+    if foe is Raider and not str(id).begins_with("practice_"):
+        if not state.has("first_raider_spoils"):
+            state.mark("first_raider_spoils")
+            state.inventory.amber += 1
+            say("Amber from the raider’s purse. Worth four coin at the wagon chest." + (" E carries the cut; F eats it." if foe.cleaved else ""))
+        var found := grant_find(id,"raider",foe.position)
+        if found != "":
+            say(found + (" E carries the cut; F eats it." if foe.cleaved else ""))
     save_progress()
 func player_felled(_actor) -> void:
     if defeat_pending:return
@@ -826,32 +870,43 @@ func pause_menu() -> void:
     helper.action("Brutality: "+("full" if state.gore else "restrained"),toggle_brutality,col)
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)
-func belongings() -> void:
-    var supplies := PackedStringArray()
-    for item in state.inventory:
-        supplies.append("%s  %d" % [item.capitalize(), state.inventory[item]])
-    var col = simple_menu("BELONGINGS", "%s  ·  %s\n%s" % [state.profile.ogre_name, state.profile.clan_name, "     ".join(supplies)])
-    var row := HBoxContainer.new()
-    row.add_theme_constant_override("separation", 20)
-    col.add_child(row)
+func fitting_preview(parent: Control, width: int, height: int, candidate: Dictionary = {}) -> Node2D:
     var view := Control.new()
-    view.custom_minimum_size = Vector2(250, 205)
-    row.add_child(view)
+    view.custom_minimum_size = Vector2(width,height + 27)
+    view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    parent.add_child(view)
     var preview := Actor.new()
     preview.name = "EquippedOgre"
-    preview.position = Vector2(115, 197)
-    preview.height = 178
+    preview.position = Vector2(width * 0.47,height + 19)
+    preview.height = height
     preview.enabled = false
     preview.controlled = false
     view.add_child(preview)
     preview.collision_layer = 0
     preview.collision_mask = 0
     preview.set_hair_palette(state.profile.hair)
-    preview.equip_weapon(player.equipped_weapon)
+    var look: Dictionary = state.equipment.duplicate()
+    if not candidate.is_empty():
+        var base: Dictionary = state.treasure.base_of(candidate)
+        look[base.slot] = base.visual
+    preview.equip_weapon(look.weapon)
     preview.face(FITTING_VIEWS[fitting_angle])
     preview.action_pose(0)
-    preview.equip_body(player.equipped_body)
-    preview.equip_head(player.equipped_head)
+    preview.equip_body(look.body)
+    preview.equip_head(look.head)
+    fit_insignia(preview,candidate)
+    return preview
+
+func belongings() -> void:
+    var supplies := PackedStringArray()
+    for item in state.inventory:
+        if state.inventory[item] > 0:
+            supplies.append("%s  %d" % [item.capitalize(), state.inventory[item]])
+    var col = simple_menu("BELONGINGS", "%s  ·  %s\n%s" % [state.profile.ogre_name, state.profile.clan_name, "     ".join(supplies)])
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 20)
+    col.add_child(row)
+    var preview = fitting_preview(row,250,178)
     var gear = VBoxContainer.new()
     gear.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     gear.add_theme_constant_override("separation", 7)
@@ -859,7 +914,8 @@ func belongings() -> void:
     var weapon: Dictionary = Actor.WEAPONS.data[player.equipped_weapon]
     gear.add_child(helper.words(weapon.label, 24, "efc580"))
     gear.add_child(helper.words("%s  ·  %s" % [ChapterState.HEADGEAR[player.equipped_head], ChapterState.BODYGEAR[player.equipped_body]], 17))
-    gear.add_child(helper.words("%d damage  ·  %.2f s per swing" % [player.weapon_damage(state.has("honed_axe")), weapon.swing_seconds], 17))
+    var bonuses: Dictionary = state.treasure.totals()
+    gear.add_child(helper.words("%d damage  ·  %.2f s per swing  ·  %d armor" % [player.weapon_damage(state.has("honed_axe")) + bonuses.damage + (6 if state.fed > 0 else 0), weapon.swing_seconds, bonuses.guard], 17))
     gear.add_child(helper.words(weapon.description, 16))
     var next_id = "iron_maul" if player.equipped_weapon == "hunting_axe" else "hunting_axe"
     var choices := HBoxContainer.new()
@@ -879,12 +935,18 @@ func belongings() -> void:
     var body_id := "scale_mantle" if player.equipped_body == "fur" else "fur"
     var body_button = helper.action("Equip " + ChapterState.BODYGEAR[body_id].to_lower(),
         func(): change_equipment("body", body_id), armor)
+    if state.has("earn_hunt_armor"):
+        head_button.visible = helmet
+        body_button.visible = body_id == "fur"
     var locked := not can_change_equipment()
     for button: Button in [weapon_button, head_button, body_button]:
         button.disabled = locked
     if locked:
         gear.add_child(helper.words("Finish your current action to change equipment.", 15))
-    col.add_child(helper.words("Well fed adds 6 weapon damage. A meal restores 65 health.", 16))
+    if not state.treasure.items.is_empty() or state.has("first_hunt_find"):
+        helper.action("Compare hunt spoils",func(): loot_menu.message = ""; loot_menu.show_menu(),col)
+    else:
+        col.add_child(helper.words("Hunt for equipment, provisions and valuables.",16))
     if state.inventory.get("goblin_meat", 0) > 0:
         helper.action("Eat a goblin cut (+25 health)", func(): eat_carried_cut(); belongings(), col)
     helper.action("Return", close_modal, col)
@@ -895,6 +957,18 @@ func can_change_equipment() -> bool:
 func change_equipment(slot: String, id: String) -> void:
     if not can_change_equipment():
         return
+    if state.has("earn_hunt_armor") and slot in ["head","body"] and id != ChapterState.DEFAULT_EQUIPMENT[slot]:
+        return
+    var old: String = state.treasure.worn(slot)
+    if old != "" and not state.treasure.move(old,"worn","pack"):
+        say("Free a gear slot before removing that piece.")
+        return
+    apply_equipment(slot,id)
+    if not save_progress():
+        say("Equipment changed for this visit. Your previous save is preserved.")
+    belongings()
+
+func apply_equipment(slot: String, id: String) -> void:
     match slot:
         "weapon":
             player.equip_weapon(id)
@@ -908,12 +982,49 @@ func change_equipment(slot: String, id: String) -> void:
             state.equipment.body = player.equipped_body
         _:
             return
-    if not save_progress():
-        say("Equipment changed for this visit. Your previous save is preserved.")
-    belongings()
+    fit_insignia(player)
+
+func hearth_access() -> bool:
+    return (state.region == "crossing" and state.chapter < 4) or state.region in ["host","trade"] or (state.has("own_wagon") and not state.has("home_packed") and state.camp_region == state.region)
+
+func grant_find(id: String, source: String, at: Vector2, first := "", promised := "") -> String:
+    if state.treasure.award(id,source,state.region,at,first,promised) == "":
+        return ""
+    var item: Dictionary = state.treasure.items[id]
+    var title: String = state.treasure.name_of(item)
+    if item.place == "field":
+        place_find(id)
+        return "%s is on the ground. Your gear slots are full." % title
+    loot_menu.selected = id
+    return "%s · %s. Press I to compare." % [state.treasure.DATA.data.rarities[item.rarity].label,title]
+
+func place_find(id: String) -> void:
+    var item: Dictionary = state.treasure.items[id]
+    var at := Vector2(item.at[0],item.at[1])
+    var title: String = state.treasure.name_of(item)
+    var label := world_label(title,at-Vector2(0,36),Color(state.treasure.DATA.data.rarities[item.rarity].color))
+    stations.append({"kind":"field_find","id":id,"position":at,"text":"E  Take "+title,"label":label})
+
+func fit_insignia(actor, candidate: Dictionary = {}) -> void:
+    for slot in ["head","body"]:
+        var layer = actor.head_gear if slot == "head" else actor.body_gear
+        if layer == null: continue
+        var id: String = state.treasure.worn(slot)
+        var mark := ""
+        var item: Dictionary = state.treasure.items.get(id,{})
+        if not candidate.is_empty() and state.treasure.base_of(candidate).slot == slot:
+            item = candidate
+        if not item.is_empty():
+            var special: String = item.special
+            if special != "":
+                mark = state.treasure.DATA.data.specials[special].mark
+        layer.set_insignia(mark)
 
 func journal() -> void:
-    var text=story.objective()+"\n\nROADS FROM HERE\n"
+    var text=story.objective()+"\n\nAdventure level %d  ·  %d XP" % [state.treasure.level(),state.treasure.xp]
+    if state.treasure.level() < 3:
+        text += "  ·  Next level at %d XP" % (3 if state.treasure.level()==1 else 8)
+    text += "\n\nROADS FROM HERE\n"
     for road in ROADS[state.region]:text+="%s: %s     "%[road[1].capitalize(),NAMES[road[0]].capitalize()]
     text+="\n\nEmberhide → Pines → Wolfscar Hollow. Pines → Goblin Cairn.\nStonebelly Host → Sundered Pass / Blackstone. Blackstone → Goblin Cairn.\n\n"
     if state.chapter>=6:text+="Bramm: %s. Dorrik: %s. Svala and Astrid escaped. Gorund fell in single combat.\n"%["escaped" if state.has("saved_bramm") else "fell defending the crossing","escaped" if state.has("saved_dorrik") else "fell holding the eastern path"]
@@ -922,6 +1033,7 @@ func journal() -> void:
     var col=simple_menu("JOURNAL · CHAPTER ONE",text);helper.action("Return to the road",close_modal,col)
 func home_menu() -> void:
     var col=simple_menu("YOUR HOUSEHOLD","A wagon, a fire, and a claim on your own future. Rest restores health. Add dry provision racks for six timber. You may settle in another safe region after traveling there.")
+    helper.action("Open the wagon chest",func(): loot_menu.show_menu(true),col)
     helper.action("Rest beside your hearth",func():player.hp=160;state.hp=160;close_modal();save_progress(),col)
     helper.action("Build the provision racks · 6 timber",func():
         if state.has("platform"):say("Your provision racks are already built.")

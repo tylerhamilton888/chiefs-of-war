@@ -95,7 +95,7 @@ func run() -> void:
     check(current_scene.state.inventory.meat == 37, "Continue resumes the same inventory")
     check(current_scene.state.profile == expected and current_scene.state.inventory.ore == 2, "Continue preserves the Ogre and grants starting supplies once")
     current_scene.home_menu()
-    check(buttons().has("Pack for the road") and buttons().size() == 4, "Wagon offers only household actions")
+    check(buttons().has("Pack for the road") and buttons().has("Open the wagon chest") and buttons().size() == 5, "Wagon offers only household actions")
     current_scene.return_to_menu()
     await wait_for_scene(MENU)
     var legacy = JSON.parse_string(FileAccess.get_file_as_string(State.SAVE))

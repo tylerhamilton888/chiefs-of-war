@@ -1,5 +1,7 @@
 # Continue Life at the Hearth
 
+For the loot playtest, follow the first hunt through the feast. Try the find in Belongings, trade or stockpile at the wagon chest, and compare the value of keeping gear against salvage. Test the XP gates, duplicate frequency, upgrade prices and the Red Hart contract with players before extending the pool. [Loot and equipment](docs/design/LOOT_AND_EQUIPMENT.md)
+
 Run `project.godot` in Godot 4.4.1. Start with a disposable save, go through the ordinary title and creation flow, then play Bramm's first household job at Emberhide Crossing. Repeat with a prior chapter save. Review the Ogre at the actual gameplay zoom with his equipment visible.
 
 Before extending the hunt, verify what changes on the Ogre when the player changes an appearance or equipment option. Check relaxed travel, a turn, a stop and a restart, then cursor-facing movement, a strike and recovery. Look for clear alternating steps, stable floor contact, a consistent grip and torso size. Record normal-speed engine footage and flag missing poses or directions individually. Compare the active Nordic sheet against the earlier master when selecting poses to refine.

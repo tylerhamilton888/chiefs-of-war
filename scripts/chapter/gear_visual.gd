@@ -146,3 +146,38 @@ func show_foreground(body: Sprite2D, contours: Array, side: float) -> void:
         part.polygon = vertices
         part.uv = uv
         part.show()
+
+# Only named pieces receive heraldry. Ordinary qualities share the original fitted sheet.
+const BADGES = {"watch":preload("res://assets/equipment/cairnwatch_badge.svg"),"hart":preload("res://assets/equipment/red_hart_badge.svg")}
+static var marked_sheets := {}
+
+func set_insignia(mark: String) -> void:
+    if item_id == SLOTS[slot].default:
+        return
+    var definition: Dictionary = load(SLOTS[slot].items[item_id]).data
+    var plain: Texture2D = load(definition.texture)
+    if mark.is_empty():
+        piece.texture = plain
+        return
+    var key := item_id + "/" + mark
+    if not marked_sheets.has(key):
+        var image := plain.get_image()
+        if image.is_compressed(): image.decompress()
+        image.convert(Image.FORMAT_RGBA8)
+        if image.has_mipmaps(): image.clear_mipmaps()
+        var original: Image = BADGES[mark].get_image()
+        original.convert(Image.FORMAT_RGBA8)
+        for view in definition.views:
+            var r: Array = definition.views[view]
+            var width := 32 if slot == "head" else 38
+            var badge := original.duplicate() as Image
+            badge.resize(width,roundi(float(width)*original.get_height()/original.get_width()),Image.INTERPOLATE_LANCZOS)
+            var anchors := [Vector2(.5,.56)]
+            if slot == "body":
+                anchors = {"front":[Vector2(.19,.26),Vector2(.81,.26)],"side":[Vector2(.67,.23)],"rear":[Vector2(.50,.48)]}[view]
+            for anchor in anchors:
+                var center := Vector2(r[0],r[1])+Vector2(r[2],r[3])*Vector2(anchor)
+                image.blend_rect(badge,Rect2i(Vector2i.ZERO,badge.get_size()),Vector2i(center)-badge.get_size()/2)
+        if slot == "head": image.generate_mipmaps()
+        marked_sheets[key] = ImageTexture.create_from_image(image)
+    piece.texture = marked_sheets[key]

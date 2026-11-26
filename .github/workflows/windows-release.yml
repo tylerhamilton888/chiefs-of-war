@@ -65,7 +65,7 @@ jobs:
           python3 -m pip install Pillow
           python3 tools/check_art.py
           check_godot import Godot_v4.4.1-stable_linux.x86_64 --headless --editor --import --quit
-          for suite in chapter_test hearth_walk_test bramm_work_test svala_work_test family_supper_test armed_gait_test dodge_step_test head_gear_test field_kitchen_test chapter_equipment_test developer_arena_test chapter_quality_test ogre_scale_test ogre_navigation_test loading_test menu_flow_test; do
+          for suite in chapter_test hearth_walk_test bramm_work_test svala_work_test family_supper_test armed_gait_test dodge_step_test head_gear_test field_kitchen_test chapter_loot_test chapter_equipment_test developer_arena_test chapter_quality_test ogre_scale_test ogre_navigation_test loading_test menu_flow_test; do
             check_godot "$suite" env XDG_DATA_HOME="$RUNNER_TEMP/$suite" Godot_v4.4.1-stable_linux.x86_64 --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test
           done
       - name: Render campaign and loading screens

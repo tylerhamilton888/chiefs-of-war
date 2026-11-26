@@ -34,6 +34,8 @@ Build around complete weapons and meaningful variations. Cleavers, heavy clubs, 
 
 ## Food, plunder and permanent development
 
+Treasure hunting is a core adventure loop. Roll qualities and modifiers on authored base equipment, with distinct legendary identities, armor sets and targeted alternatives to random drops. The first hunt teaches comparison, equipping and bringing spoils home. [Loot and equipment](LOOT_AND_EQUIPMENT.md)
+
 Earn ordinary experience and loot through adventures. Separately, eating dishes and using different preparation methods awards distinct kinds of dietary experience. Spend these resources on permanent talent unlocks. Equip a limited selection of active and passive talents and change builds conveniently. Show what a known dish awards and what the player can unlock. Diet categories need text or icons as well as color. An exceptional troll preparation could unlock regeneration. Learning every defeated creature's powers would undermine the value of a remarkable discovery.
 
 A hunt produces recognizable meat, organs, hides and occasional unusual ingredients. Common spoils collect conveniently. A cut can feed the Ogre, fill the pot, preserve a journey, bait prey, suit a particular animal, settle a bargain or earn hospitality. One ingredient spent on supper is gone from the pack. A recipe learned from an elder remains known when supplies run out. Give players recipe knowledge through people, commissions, heirlooms or finds. Show the needed ingredients and work. Let them repeat a learned cut, stir, roast or preserve action with increasingly good equipment and help.

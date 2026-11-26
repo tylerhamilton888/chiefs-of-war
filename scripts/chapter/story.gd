@@ -38,7 +38,7 @@ func objective() -> String:
         6:return "A NEW FIRE · Find Thyra, then speak with Runa at the beast pen"
         7:return "THE SUNDERED ROAD · Clear three rockfalls; feed the stone-eater; lead the wagon"
         8:
-            if s.has("contract"):return "MEAT FOR IRON · Return to Eydis for payment" if game.contract_done() else "MEAT FOR IRON · Defeat the three raiders at Goblin Cairn"
+            if s.has("contract"):return "MEAT FOR IRON · Collect the Red Hart crown and pay from Eydis" if game.contract_done() else "MEAT FOR IRON · Hunt the three Cairn raiders for pay and the Red Hart crown"
             return "MEAT FOR IRON · Ask Eydis at Blackstone about the goblin contract"
         9:return "A HEARTH OF YOUR OWN · Eydis needs 8 timber, 2 hides and 25 coin"
         _:return "THE OPEN ROAD · Your own hearth, your own choices · J journal and routes"
@@ -118,6 +118,8 @@ func action(id: String) -> void:
             if not game.contract_done():game.say("The contract is not complete. Three named raiders hold the Cairn.");return
             if s.has("paid"):return
             if s.has("bargained") and not s.pay({"meat":2}):game.say("Your bargain included two meat. Hunt or purchase supplies first.");return
+            s.treasure.xp = maxi(s.treasure.xp,8)
+            game.grant_find("eydis_hart","raider",game.player.position,"","red_hart")
             s.inventory.coin+=40 if s.has("bargained") else 30;s.mark("paid");s.chapter=9;s.change("eydis","admiration",2);s.change("hrothgar","admiration",2);game.dialogue("paid")
         "wagon":
             if s.has("own_wagon"):return

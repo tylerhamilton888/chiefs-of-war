@@ -1,5 +1,11 @@
 # Project state
 
+## First-hunt loot playtest
+
+Harvest the first wolf, open **I → Compare hunt spoils**, and equip the find. Look at the Ogre in Belongings and on the trail. Return to the wagon chest by Bramm to trade amber, store supplies or turn two hides into six additional pack slots. The playtest includes four equipment bases, the two-piece Cairnwatch set and one named legendary. New Ogres earn fitted armor through play. Pre-existing journeys retain their original basic equipment choices. [Loot rules and playtest questions](docs/design/LOOT_AND_EQUIPMENT.md)
+
+Godot 4.4.1 passed the seventeen gameplay suites, including save migration, full-pack recovery, set bonuses and the guaranteed contract reward. [In-game comparison](docs/review/first-hunt/comparison.webp)
+
 ## A Bowl for Bramm · 0.9.4
 
 At the start of The Fire We Carry, Bramm lines up a wooden peg and taps the near wheel. Svala stirs, tastes and serves beside the cookfire. They interrupt their work when addressed. The axle repair ends Bramm’s tapping and he acknowledges the player. After cooking, a spare packed meal unlocks **Take a bowl, Father.** Bramm takes it, eats, and returns to camp life. The first portion for Sava remains reserved until offered. The shared meal and relationship change persist. Early household routines are limited to the Crossing before the fall.
