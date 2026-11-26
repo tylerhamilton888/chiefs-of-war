@@ -48,6 +48,7 @@ func talk(id: String) -> void:
     match id:
         "bramm":
             if s.chapter==0:key="bramm_work"
+            elif s.chapter==1 and s.has("repaired"):key="bramm_repaired"
             elif s.chapter==2:key="bramm_hunt"
             elif s.chapter==3:key="bramm_feast"
             elif s.chapter>=6:key="bramm_survived"
@@ -66,8 +67,28 @@ func talk(id: String) -> void:
             elif s.chapter==9:key="eydis_wagon"
             else:key="eydis_forge" if not s.has("eydis_activity") else "eydis_court"
     game.dialogue(key)
+func can_share_with_bramm() -> bool:
+    return s.region == "crossing" and s.chapter in [1, 2, 3] and s.has("repaired") \
+        and not s.has("fed_bramm") and s.inventory.meals > (0 if s.has("offering") else 1)
+
+func choices_for(key: String) -> Array:
+    var choices: Array = scenes[key].choices
+    if key in ["bramm_repaired", "bramm_hunt", "bramm_feast"] and can_share_with_bramm():
+        return [["Take a bowl, Father.", "feed_bramm"]] + choices
+    return choices
+
 func action(id: String) -> void:
     match id:
+        "feed_bramm":
+            if not can_share_with_bramm() or not game.npcs.has("bramm") or not s.pay({"meals": 1}):
+                return
+            s.mark("fed_bramm")
+            s.change("bramm", "friendship", 1)
+            var father = game.npcs.bramm
+            if father.camp_work != null:
+                father.camp_work.accept_bowl()
+            game.family_line("bramm", "Your mother sent you, didn’t she? Smells good.")
+            game.say("You share a packed meal with Bramm.")
         "work":s.mark("work");game.say("Gather six timber beside the family wagon. Press E near a bundle.")
         "woodpile":game.dialogue("bramm_timber")
         "sava":game.dialogue("svala_hearth")

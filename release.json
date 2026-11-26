@@ -1,7 +1,7 @@
 {
-  "version": "0.9.3",
-  "title": "Hearth and Hunger 0.9.3 — Iron and Embers",
-  "notes": "docs/RELEASE_0_9_3.md",
+  "version": "0.9.4",
+  "title": "Hearth and Hunger 0.9.4 — A Bowl for Bramm",
+  "notes": "docs/RELEASE_0_9_4.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",

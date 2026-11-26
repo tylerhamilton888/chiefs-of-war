@@ -31,6 +31,7 @@ var fitting_angle := 0
 var modal: Control
 var stations: Array=[]
 var supplies: Array=[]
+var speech: PanelContainer
 var camp_pot: Node2D
 var family_wagon: Node2D
 var offering_stone: OfferingStone
@@ -40,6 +41,8 @@ var leaving=false
 # The dummy device has no listener; Godot Movie Maker is its one real consumer.
 var audio_output_enabled := AudioServer.get_driver_name() != "Dummy" or not Engine.get_write_movie_path().is_empty()
 var sfx: AudioStreamPlayer
+const HearthAudio = preload("res://scripts/chapter/hearth_audio.gd")
+var hearth_audio: HearthAudio
 var ambient: AudioStreamPlayer
 var helper=Menu.new()
 var portrait_data: Dictionary = preload("res://resources/chapter/portraits.json").data
@@ -93,6 +96,7 @@ func configure_movement() -> void:
 func build_world() -> void:
     nearest = {}
     camp_pot = null
+    hearth_audio = null
     stations.clear();supplies.clear();npcs.clear();enemies.clear();smoke_nodes.clear();caravan=null;beast=null;caravan_active=false
     region_root=Node2D.new();add_child(region_root)
     var ground_state = GroundState.new()
@@ -195,7 +199,7 @@ func use_food_shortcut(key: Key) -> void:
         if key == KEY_F and state.ladle_stew(nearest.id):
             served_from_pot(nearest)
         elif key == KEY_C and nearest.id != "yard":
-            cook_provisions()
+            cook_provisions(nearest.get("node"))
         else:
             return
     else:
@@ -226,15 +230,24 @@ func eat_carried_cut() -> void:
 
 func served_from_pot(entry: Dictionary) -> void:
     entry.node.set_servings(state.pot_servings[entry.id], true)
+    svala_at_hearth("serve", entry.node)
     play_sound("gather")
     say("One meal packed. Q eats it. %d portions left for the hearth." % state.pot_servings[entry.id])
 
-func cook_provisions() -> void:
+func cook_provisions(kettle = null) -> void:
+    var first_meal := not state.has("cooked")
     if state.cook():
+        svala_at_hearth("cook", kettle)
+        if first_meal:family_line("svala", "One for Sava. Take your father a bowl, too.")
         play_sound("success")
         say("Three hearty meals prepared. Q eats one; the carved hearth stone takes Sava's portion.")
     else:
         say("Two meat and one timber for three meals. Take the family provisions or hunt in the Pines.")
+
+func svala_at_hearth(action: String, kettle) -> void:
+    var cook = npcs.get("svala")
+    if is_instance_valid(cook) and is_instance_valid(cook.camp_work) and cook.camp_work.pot == kettle:
+        cook.camp_work.respond_to_meal(action)
 
 func build_camp() -> void:
     var host=state.region=="host"
@@ -248,6 +261,10 @@ func build_camp() -> void:
     tent(Vector2(1300,710))
     camp_item("provisions",Vector2(650,1000),Rect2(804,665,710,325),0.28,Vector2(150,40),Vector2(0,-16))
     build_pot(Vector2(1050,1050), state.region)
+    if not host and state.chapter < 4 and audio_output_enabled:
+        hearth_audio = HearthAudio.new()
+        region_root.add_child(hearth_audio)
+        hearth_audio.start(self, camp_pot.global_position)
     offering_stone = OfferingStone.new()
     offering_stone.position = Vector2(1190, 1080)
     offering_stone.offered = state.has("offering")
@@ -259,10 +276,16 @@ func build_camp() -> void:
         if state.chapter<4:
             for id in ["bramm","svala","gorund","dorrik","astrid"]:
                 npc(id)
+            var cook = preload("res://scripts/chapter/svala_work.gd").new()
+            npcs.svala.add_child(cook)
+            npcs.svala.camp_work = cook
+            cook.begin(npcs.svala, camp_pot)
+            var wheelwright := preload("res://scripts/chapter/bramm_work.gd").new()
+            npcs.bramm.add_child(wheelwright)
+            wheelwright.actor = npcs.bramm
+            npcs.bramm.camp_work = wheelwright
             if not state.has("repaired"):
-                npcs.bramm.position = Vector2(590, 735)
-                npcs.bramm.route = []
-                npcs.bramm.face(Vector2.RIGHT)
+                wheelwright.begin_wheel()
         elif state.chapter>=6:
             station("pendant",Vector2(790,800),"Search Astrid's family coffer")
             world_label("THE EMBERHIDE HEARTH",Vector2(1050,1000))
@@ -420,6 +443,8 @@ func update_nearest() -> void:
 
 func build_ui() -> void:
     var layer=CanvasLayer.new();add_child(layer)
+    speech = preload("res://scripts/chapter/camp_speech.gd").new()
+    layer.add_child(speech)
     var top=panel(Vector2(514,16),Vector2(746,84));layer.add_child(top)
     var box=VBoxContainer.new();box.add_theme_constant_override("separation",5);top.add_child(box)
     hud=helper.words("",18);box.add_child(hud);objective=helper.words("",17,"e3bb78");objective.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;box.add_child(objective)
@@ -513,6 +538,8 @@ func interact(entry: Dictionary) -> void:
                 if state.has("contest"):state.inventory.meals+=1;state.change("dorrik","friendship",2);state.mark("contest_won")
                 if npcs.has("bramm"):
                     npcs.bramm.route = cast.bramm.route
+                    if npcs.bramm.camp_work != null:
+                        npcs.bramm.camp_work.finish_repair()
                 var settle = family_wagon.create_tween().set_parallel(true)
                 settle.tween_property(family_wagon, "rotation", 0.0, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
                 settle.tween_property(family_wagon, "modulate", Color.WHITE, 0.55)
@@ -520,20 +547,25 @@ func interact(entry: Dictionary) -> void:
                     if station_info.kind == "repair":
                         station_info.text = "E  Inspect the repaired axle"
                 play_sound("gather")
-                say("The wheel takes the weight. Svala calls you over to the cookfire.")
+                family_line("bramm", "Hear that? No creak. Wash up, lad.")
+                say("The axle holds. Svala is at the cookfire.")
             else:say("Bring six lengths of timber to fit the axle. Look just left of the wagon.")
         "hearth":
             if entry.has("node") and state.stew_cut(entry.id):
                 var hand: Vector2 = entry.node.to_local(player.global_position) + Vector2.UP * player.height * 0.53
                 entry.node.set_servings(state.pot_servings[entry.id], true, hand)
+                svala_at_hearth("deposit", entry.node)
                 play_sound("success")
+                if entry.id == "crossing" and npcs.has("svala") and not state.has("svala_goblin_stew"):
+                    family_line("svala", "Leave the bone in. Your father likes the marrow.")
+                    state.mark("svala_goblin_stew")
                 say("Two portions of goblin stew. Ladle one for the road or leave it for the hearth.")
             elif entry.has("node") and state.ladle_stew(entry.id):
                 served_from_pot(entry)
             elif entry.id == "yard":
                 say("The cookpot is empty. Carry a cut from the goblin and return here.")
             else:
-                cook_provisions()
+                cook_provisions(entry.get("node"))
         "goblin_cut":
             take_field_cut(entry, false)
         "offering":
@@ -674,6 +706,10 @@ func resolve_defeat() -> void:
         state.hp=110;state.player_position=Vector2(1080,1120);rebuild();say("You drag yourself out of danger. Your stores are intact. Eat, then try another approach.")
     defeat_pending=false
 func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F from the side","Staggered — follow through"))
+func hearth_cue(kind: String, at: Vector2) -> void:
+    if is_instance_valid(hearth_audio):
+        hearth_audio.cue(kind, at)
+
 func play_sound(kind: String) -> void:
     if not audio_output_enabled:
         return
@@ -682,11 +718,15 @@ func play_sound(kind: String) -> void:
 func sound(kind: String) -> void:play_sound(kind)
 func freeze(value: bool) -> void:
     player.enabled=not value
-    for actor in npcs.values():actor.enabled=not value
+    for actor in npcs.values():
+        actor.enabled = not value
+        if value and actor.camp_work != null and actor.camp_work.has_method("pause_work"):
+            actor.camp_work.pause_work()
     for foe in enemies:
         if foe is Actor:foe.enabled=not value
         else:foe.active=not value
 func clear_modal() -> void:
+    if is_instance_valid(speech):speech.hide()
     for child in modal.get_children():modal.remove_child(child);child.queue_free()
     modal.show();freeze(true)
 func close_modal() -> void:
@@ -701,6 +741,12 @@ func dialogue(key: String,resume=false) -> void:
         state.scene.cursor+=1;dialogue(key,true);return
     var person=line.speaker
     director.stage(person,key)
+    # Everyday conversation at the wheel or cookfire holds its speaker.
+    # The other parent can still be seen working across the clearing.
+    if state.region == "crossing" and key in ["bramm_work", "bramm_timber", "bramm_repaired", "svala_food", "svala_hearth"]:
+        var neighbor: String = "svala" if person == "bramm" else "bramm"
+        if npcs.has(neighbor) and npcs[neighbor].camp_work != null:
+            npcs[neighbor].enabled = true
     var shade=ColorRect.new();shade.color=Color(0.03,0.025,0.02,0.25);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
     var illustration=line.get("art",scene.art)
     if illustration>=0:shade.color=Color(0.03,0.025,0.02,0.82)
@@ -714,11 +760,11 @@ func dialogue(key: String,resume=false) -> void:
     var column=VBoxContainer.new();column.size_flags_horizontal=Control.SIZE_EXPAND_FILL;column.add_theme_constant_override("separation",8);row.add_child(column)
     column.add_child(helper.words(cast[person].name.to_upper()+"  ·  "+cast[person].role,19,"efc580"))
     var spoken: String = line.get("brutal_text",line.text) if state.gore else line.text
-    dialog_text=helper.words(spoken.replace("{clan}",state.profile.clan_name),21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
+    dialog_text=helper.words(spoken.format({"clan": state.profile.clan_name, "name": state.profile.ogre_name}),21);dialog_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;dialog_text.custom_minimum_size=Vector2(960,112);dialog_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(dialog_text);reveal=0;dialog_text.visible_characters=0
     dialog_buttons=HBoxContainer.new();dialog_buttons.add_theme_constant_override("separation",10);column.add_child(dialog_buttons)
     if index<scene.lines.size()-1:helper.action("Continue  ·  Space",advance_dialogue,dialog_buttons)
     else:
-        for choice in scene.choices:
+        for choice in story.choices_for(key):
             var action=choice[1];var button=helper.action(choice[0],func():choose(action),dialog_buttons);button.add_theme_font_size_override("font_size",17)
     column.add_child(helper.words("Space / Enter reveal and advance · Esc skips to the choices · F5 saves this moment",13,"b5ad98"))
     if npcs.has(person):npcs[person].face(player.position-npcs[person].position);npcs[person].show_frame(0)
@@ -747,7 +793,9 @@ func advance_dialogue() -> void:
     if dialog_text.visible_characters>=0 and dialog_text.visible_characters<dialog_text.text.length():reveal=100000;dialog_text.visible_characters=-1;return
     var scene=story.scenes[state.scene.key]
     if state.scene.cursor<scene.lines.size()-1:state.scene.cursor+=1;dialogue(state.scene.key,true)
-    elif scene.choices.size()==1:choose(scene.choices[0][1])
+    else:
+        var choices: Array = story.choices_for(state.scene.key)
+        if choices.size() == 1:choose(choices[0][1])
 func finish_dialogue() -> void:
     var scene=story.scenes[state.scene.key]
     state.scene.cursor=scene.lines.size()-1;dialogue(state.scene.key,true);reveal=100000;dialog_text.visible_characters=-1
@@ -886,6 +934,8 @@ func home_menu() -> void:
 func prepare_exit() -> void:
     director.finish();freeze(true)
     leaving=true;player.enabled=false;set_process(false)
+    if is_instance_valid(hearth_audio):
+        hearth_audio.stop()
     # Reuse the legacy campaign's proven audio-mixer shutdown interval.
     for child in get_children():
         if child is AudioStreamPlayer:child.stop();child.stream=null
@@ -910,6 +960,10 @@ func camp_item(kind: String,at: Vector2,region: Rect2,size: float,collision: Vec
     var col=CollisionShape2D.new();var shape=RectangleShape2D.new();shape.size=collision;col.shape=shape;col.position=offset;body.add_child(col);world.add_child(body)
 func panel(at: Vector2,size: Vector2) -> PanelContainer:
     var p=PanelContainer.new();p.position=at;p.size=size;p.add_theme_stylebox_override("panel",helper.style("211e19ed","93734a"));return p
+func family_line(person: String, words: String) -> void:
+    if state.region == "crossing" and state.chapter < 4 and npcs.has(person) and is_instance_valid(speech):
+        speech.speak(npcs[person], words, npcs.values() + [player])
+
 func say(text: String) -> void:notice.text=text
 func return_to_menu() -> void:
     if leaving:return

@@ -5,6 +5,7 @@ var identity="player"
 var height=160.0
 var art: Dictionary={}
 var game
+var camp_work: Node
 var route: Array=[]
 var route_index=0
 var rest=2.0
@@ -248,6 +249,9 @@ func _physics_process(delta: float) -> void:
     elif attack_time>0:
         update_swing(delta)
     elif guarding:velocity=Vector2.ZERO;action_pose(3)
+    elif camp_work != null and camp_work.advance(delta):
+        queue_redraw()
+        return
     elif controlled and ready_time > 0.0:
         ready_time = maxf(0.0, ready_time - delta)
         armed_move(delta)

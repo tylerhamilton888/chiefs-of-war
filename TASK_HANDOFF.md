@@ -6,6 +6,8 @@ Before extending the hunt, verify what changes on the Ogre when the player chang
 
 A first-time player should be able to locate the wood, the damaged axle and Svala's fire from the objective and the scene. Check the wagon's visible response and save/reload from the completed repair. Build on these observations for the [First Hunt](docs/ROADMAP.md). Keep the arena useful for retesting the same actors and interactions with disposable state.
 
-In 0.9.3, open **Practice Yard** from the title and mix weapon, helm and shoulders with Tab, H and B. Watch the grip and shoulder when the Ogre raises the maul, dodges with his weapon drawn and turns his back. Take a fresh goblin cut to the pot to play the first cook loop. Use **I** in the campaign to inspect and turn the fitted Ogre. [Current gameplay and equipment](PROJECT_STATE.md)
+In 0.9.4, start a fresh journey to see the wheel and cookfire working together. After repair and cooking, speak with Bramm to give him a spare bowl. Confirm the forked player choices and watch the camp at ordinary movement speed. The other regions still use their existing routines.
+
+In the equipment playtest, open **Practice Yard** from the title and mix weapon, helm and shoulders with Tab, H and B. Watch the grip and shoulder when the Ogre raises the maul, dodges with his weapon drawn and turns his back. Take a fresh goblin cut to the pot to play the first cook loop. Use **I** in the campaign to inspect and turn the fitted Ogre. [Current gameplay and equipment](PROJECT_STATE.md)
 
 The next equipment proof is a second independently designed suit with a different cut. Resolve how a thin garment exposes areas covered by the original fur before commissioning more clothes. In the hunt, the next open encounter is tracking a beast, bringing it to bay and bringing its identifiable spoils home.

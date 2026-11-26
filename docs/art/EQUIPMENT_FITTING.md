@@ -10,6 +10,8 @@ For each view in the item definition, `views` gives the atlas rectangle in pixel
 
 The body atlas's full resource path and the frame's region origin identify a head socket. Its values give the skull center in region-local pixels, fitted width, tilt in degrees and item view. Optional polygons mark foreground parts of the hand or weapon. The renderer redraws those original pixels over the helmet, keeping the weapon detail and chosen hair color. A wider helmet may require additional hand or weapon coverage. [Head sockets](../../resources/equipment/head_sockets.json)
 
+An equipped helmet spans roughly 26–29 screen pixels in the yard's ready stance. The iron helm uses three broad steel planes, a brass brow and a few large rivets. Leave transparent gutters around each view and generate mipmaps for the head layer's minification filter. Inspect the front, profile and rear at native gameplay size and check the silhouette under a raised forearm. [In-engine comparison](../review/living-hearth/helm.webp)
+
 ## Fitting a mantle
 
 Paint three distinct views of the mantle. The shoulder rig supplies a panel rectangle and a coverage map for each body drawing. The mask's alpha channel retains the pose's shoulder outline and cuts out the hands, beard and weapon. Its red channel supplies the pose's local shading. Each mantle that fits the same shoulder outline shares these registrations; changing its paint requires three new views. [Scale mantle definition](../../resources/equipment/scale_mantle.json)

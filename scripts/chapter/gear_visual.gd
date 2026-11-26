@@ -31,6 +31,9 @@ func _init(slot_name := "head") -> void:
 func _ready() -> void:
     piece.region_enabled = true
     piece.region_filter_clip_enabled = true
+    if slot == "head":
+        # The fitted helm usually occupies 26–29 screen pixels at gameplay zoom.
+        piece.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
     add_child(piece)
     if slot == "body":
         coverage_material = ShaderMaterial.new()

@@ -3,7 +3,7 @@
     "lines": [
       {
         "speaker": "bramm",
-        "text": "See how the wheel leans? I heard the axle split from the far side of camp. Bring me six lengths of timber and we'll have her rolling by supper.",
+        "text": "There you are, {name}. Put your shoulder here. Feel her drop? Axle’s split. Fetch six lengths from the stack while I keep this wheel up.",
         "expression": "neutral"
       }
     ],
@@ -15,6 +15,22 @@
       [
         "Where did you stack the timber?",
         "woodpile"
+      ]
+    ],
+    "art": -1
+  },
+  "bramm_repaired": {
+    "lines": [
+      {
+        "speaker": "bramm",
+        "text": "Ran my thumb along that joint three times. Can’t find daylight in it. Who taught you to cut timber like that?",
+        "expression": "proud"
+      }
+    ],
+    "choices": [
+      [
+        "A stubborn old hunter.",
+        "close"
       ]
     ],
     "art": -1
@@ -781,7 +797,7 @@
     "lines": [
       {
         "speaker": "bramm",
-        "text": "Just left of the wagon, down by the wheel. I bound the straight pieces in pairs. Three bundles will do us.",
+        "text": "Left of the wagon, by the wheel. Three bundles. I tied the straight pieces in pairs so your uncle wouldn’t burn them.",
         "expression": "neutral"
       }
     ],
