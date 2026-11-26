@@ -8,6 +8,8 @@ after changing the base costume, adding poses, or adjusting its palette.
 import json
 from pathlib import Path
 
+from build_armed_run import register_wearables
+
 import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 from scipy import ndimage
@@ -157,6 +159,7 @@ def build():
         for x, y, panel in page:
             atlas.paste(panel, (x, y))
         atlas.save(RUNTIME / f"shoulder_coverage_{i}.png", optimize=True)
+    register_wearables(slots)
     groups = []
     for path, poses in sorted(slots.items()):
         pairs = [f"    {json.dumps(k)}: {json.dumps(v, separators=(',', ':'))}" for k, v in sorted(poses.items())]

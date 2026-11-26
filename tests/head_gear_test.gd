@@ -76,6 +76,9 @@ func run() -> void:
             for frame in dodge.rows[row]:
                 actor.FrameArt.cell(actor.sprite, dodge_art, frame, actor.height / dodge.height, facing == 1)
                 verify_pose(actor)
+            for i in 4:
+                actor.ArmedGait.run_pose(actor, facing, float(i) * 0.25)
+                verify_pose(actor)
             for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
                 for i in 4:
                     actor.ArmedGait.pose(actor, direction, float(i) * 0.25)

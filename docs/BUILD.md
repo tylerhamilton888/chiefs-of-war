@@ -30,6 +30,8 @@ Record a continuous 30-second run from the repository root with a display availa
 XDG_DATA_HOME="$(mktemp -d)" godot --audio-driver Dummy --fixed-fps 30 --write-movie /tmp/yard.avi --script tests/cleaver_benchmark_capture.gd -- --test --cleaver-benchmark
 ```
 
+To record the armed run with both armor pieces equipped and combat effects disabled, use the same command with `--script tests/armed_run_capture.gd -- --test --armed-run`. The continuous take includes a cleaver charge against both opponents and a return run with the maul.
+
 ## Artwork and review images
 
 Keep original artwork and retired variants in `art_source/`. Mirror the corresponding asset folder there so the original is easy to find. Godot ignores this directory and the Windows export excludes it. Store the current game images in `assets/`. Godot's lossless importer preserves sprite transparency and atlas geometry. The four opaque title and loading illustrations use a quality 0.90 lossy import. Their checked-in PNGs retain the original pixels.

@@ -66,6 +66,7 @@ func run() -> void:
         player.track_combat_aim(Vector2.RIGHT, true)
         await physics_frame
     verify(is_equal_approx(player.velocity.x, player.RUN_SPEED), "Forward run carries into engagement")
+    verify(player.sprite.texture == player.ArmedGait.RUN_SHEETS[player.equipped_weapon], "Forward run shows the equipped sprint drawing")
     for tick in 18:
         player.track_combat_aim(Vector2.LEFT, true)
         await physics_frame

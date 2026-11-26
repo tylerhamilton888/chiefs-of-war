@@ -42,6 +42,26 @@ func run() -> void:
         check(finish.distance_to(origin + aim * Stroke.STEP) < 0.1, "One committed step")
         player.update_swing(0.28)
         check(player.position.is_equal_approx(finish), "Feet settle during recovery")
+    player.cooldown = 0.0
+    player.run_grace = 0.09
+    player.run_facing = 2
+    player.run_heading = Vector2.RIGHT
+    player.run_phase = 0.25
+    player.position = origin
+    check(player.attack(Vector2.RIGHT) and player.running_cut, "Committed forward run links to the cut")
+    check(player.sprite.texture == player.ArmedGait.RUN_SHEETS["hunting_axe"], "The cut opens on the last running footfall")
+    player.update_swing(0.035)
+    check(player.sprite.region_rect.position.x == 960.0, "Passing boot becomes the next contact drawing")
+    check(player.position.x > origin.x + 6.0 and not player.attack_done, "Weight carries forward before contact")
+    player.update_swing(0.18)
+    check(player.attack_done and player.swing_phase == 3 and player.sprite.rotation > 0.1, "Shoulder drives through the contacting drawing")
+    player.update_swing(0.4)
+    check(is_equal_approx(player.position.x - origin.x, Stroke.STEP), "Full run preserves strike reach")
+    player.run_grace = 0.09
+    player.cooldown = 0.0
+    player.attack(Vector2.LEFT)
+    check(not player.running_cut and is_zero_approx(player.sprite.rotation), "Turning back plants a fresh standing cut")
+    player.update_swing(1.0)
     # Add solid scenery inside the step, then repeat against a living body.
     var wall := StaticBody2D.new()
     var wall_shape := CollisionShape2D.new()

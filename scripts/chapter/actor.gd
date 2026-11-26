@@ -41,6 +41,11 @@ const ORIGINAL_SWING_POSES := [0, 1, 1, 2, 2, 3]
 var swing_drawings := {}
 const CleaverStroke = preload("res://scripts/chapter/cleaver_stroke.gd")
 var mirror_oblique := false
+var run_grace := 0.0
+var run_heading := Vector2.ZERO
+var run_facing := 0
+var run_phase := 0.0
+var running_cut := false
 var swing_phase := 0
 var equipped_weapon := "hunting_axe"
 const ArmedGait = preload("res://scripts/chapter/armed_gait.gd")
@@ -81,6 +86,7 @@ func show_frame(index: int) -> void:
     if FrameArt.pose(sprite,walking_art,row*4+frame_index,height,facing==1):return
     apply_region(r,walking_art,facing==1,height/float(art.height))
 func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> void:
+    sprite.rotation = 0.0
     sprite.texture=texture;sprite.region_rect=Rect2(r[0],r[1],r[2],r[3]);sprite.flip_h=mirror
     sprite.scale=Vector2.ONE*factor;sprite.position=Vector2((r[4] if r.size()>4 else 0)*factor*(-1 if mirror else 1),-r[3]*factor/2.0+3)
 func equip_weapon(id: String) -> void:
@@ -139,6 +145,14 @@ func action_pose(index: int) -> void:
     if FrameArt.pose(sprite,action_art,row*4+index,height,facing==1):return
     apply_region(combat_art.frames[row][index],action_art,facing==1,height/float(combat_art.height))
 func show_swing(phase_index: int) -> void:
+    if running_cut and phase_index == 0:
+        swing_phase = 0
+        # Carry the passing boot to its next contact while closing the last gap.
+        var elapsed := float(WEAPONS.data[equipped_weapon].swing_seconds) - float(attack_time)
+        var beat := floori(run_phase * 4.0)
+        var plant_phase := (beat + beat % 2) * 0.25
+        ArmedGait.run_pose(self, run_facing, run_phase if elapsed < 0.025 else plant_phase)
+        return
     swing_phase = phase_index
     var view := "front" if facing == 0 else "rear" if facing == 3 else "side"
     var drawing: Dictionary = swing_drawings.get(view, {})
@@ -146,6 +160,15 @@ func show_swing(phase_index: int) -> void:
         action_pose(ORIGINAL_SWING_POSES[phase_index])
         return
     FrameArt.cell(sprite, drawing.texture, drawing.frames[phase_index], height / float(drawing.height), facing == 1 or mirror_oblique)
+    if running_cut:
+        # Rotate the illustrated body about the planted foot; gear inherits the pose.
+        var tilt: float = [0.0, -0.045, 0.045, 0.155, 0.11, 0.025][phase_index]
+        var side := -1.0 if facing == 1 or mirror_oblique else 1.0
+        if facing == 3:
+            side = 1.0 if mirror_oblique else -1.0
+        var plant := Vector2(side * 18.0, 0)
+        sprite.rotation = tilt * side
+        sprite.position = plant + (sprite.position - plant).rotated(sprite.rotation)
 
 func update_swing(delta: float) -> void:
     if contact_hold > 0.0:
@@ -159,7 +182,7 @@ func update_swing(delta: float) -> void:
     attack_time = maxf(0.0, attack_time - delta)
     if identity == "player" and not hostile and equipped_weapon == "hunting_axe":
         var duration := float(WEAPONS.data[equipped_weapon].swing_seconds)
-        var travel := CleaverStroke.distance_at(duration - attack_time) - CleaverStroke.distance_at(duration - before)
+        var travel := CleaverStroke.distance_at(duration - attack_time, running_cut) - CleaverStroke.distance_at(duration - before, running_cut)
         if travel > 0.0:
             # Bodies on the actor layer constrain a committed step, just like scenery.
             var old_mask := collision_mask
@@ -181,6 +204,7 @@ func update_swing(delta: float) -> void:
         attack_done = true
         struck.emit(self)
     if attack_time <= 0.0:
+        running_cut = false
         cooldown = 0.65 if hostile else 0.08
         if controlled:
             ready_time = READY_SECONDS
@@ -189,6 +213,8 @@ func direction() -> Vector2:return [Vector2.DOWN,Vector2.LEFT,Vector2.RIGHT,Vect
 func attack(aim: Vector2) -> bool:
     if not enabled or hp<=0 or attack_time>0 or dodge_time>0 or stun>0 or cooldown>0:return false
     locked = aim.normalized() if aim.length_squared() > 0.001 else direction()
+    running_cut = identity == "player" and not hostile and equipped_weapon == "hunting_axe" and run_grace > 0.0 and not guarding and locked.dot(run_heading) > 0.70
+    run_grace = 0.0
     face(locked)
     mirror_oblique = false
     if not hostile and equipped_weapon == "hunting_axe":
@@ -207,6 +233,8 @@ func dodge(aim: Vector2) -> bool:
     # Front/back views can slip side-to-side while keeping the opponent in sight.
     if absf(locked.y) > absf(locked.x) or facing in [1, 2]:
         face(locked)
+    run_grace = 0.0
+    running_cut = false
     dodge_time = DodgeStep.DURATION
     guarding = false
     attack_time = 0.0
@@ -244,7 +272,12 @@ func receive_hit(amount: float,source_direction: Vector2,breaks_block: bool=fals
 func parried() -> void:
     attack_time=0;stun=1.15;cooldown=1.0;velocity=Vector2.ZERO
 func _physics_process(delta: float) -> void:
-    if not enabled:return
+    if not enabled:
+        run_grace = 0.0
+        return
+    run_grace = maxf(0.0, run_grace - delta)
+    if stun > 0.0 or guarding or hp <= 0.0:
+        run_grace = 0.0
     flash=maxf(0,flash-delta);cooldown=maxf(0,cooldown-delta);guard_age+=delta;stun=maxf(0,stun-delta)
     sprite.modulate=Color(1.6,0.75,0.65) if flash>0 and hit_flash_enabled else Color.WHITE
     if hp<=0:velocity=Vector2.ZERO;action_pose(3);return
@@ -307,7 +340,16 @@ func armed_move(delta: float) -> void:
     if distance_since_step >= stride * 0.5:
         distance_since_step -= stride * 0.5
         stepped.emit()
-    ArmedGait.pose(self, movement.normalized(), phase)
+    if running and distance / delta > WALK_SPEED:
+        run_grace = 0.105
+        run_heading = movement.normalized()
+        run_facing = facing
+        run_phase = phase
+        ArmedGait.run_pose(self, run_facing, run_phase)
+    else:
+        if not intent.is_zero_approx() and forward < 0.5:
+            run_grace = 0.0
+        ArmedGait.pose(self, movement.normalized(), phase)
 
 func _draw() -> void:
     super._draw()

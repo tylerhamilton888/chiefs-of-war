@@ -4,6 +4,7 @@ extends RefCounted
 static var registrations: Dictionary={}
 static var prepared: Dictionary={}
 static func pose(sprite: Sprite2D,texture: Texture2D,index: int,height: float,mirror: bool) -> bool:
+    sprite.rotation = 0.0
     if registrations.is_empty():registrations=JSON.parse_string(FileAccess.get_file_as_string("res://resources/ogre_frame_registration.json"))
     var path=texture.resource_path
     if not registrations.has(path):
@@ -42,6 +43,7 @@ static func pose(sprite: Sprite2D,texture: Texture2D,index: int,height: float,mi
     return true
 
 static func use_sprite_region(sprite: Sprite2D) -> void:
+    sprite.rotation = 0.0
     if not sprite.has_meta("registered_pose"):
         return
     sprite.self_modulate = Color.WHITE

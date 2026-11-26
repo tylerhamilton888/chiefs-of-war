@@ -1,5 +1,9 @@
 # Project state
 
+## Armed run and running cut
+
+Hold Shift and move toward the cursor with the hunting axe or iron maul drawn. Each has four run poses in front, profile, and rear views, with the iron helm and mantle fitted throughout. A forward cleaver swing begun during the stride carries the last step into the hit. A sharp turn starts an ordinary planted swing. The two attacks have the same reach, damage, and time to contact.
+
 ## Ogre movement playtest
 
 In the Practice Yard, aim at the armored raider and hold Shift as you approach. The armed Ogre advances at 188 units per second and can run forward at 255. Backing away and sidestepping have shorter steps. The cleaver reaches contact 0.20 seconds into the swing and takes 0.33 seconds to follow through. The measurements are playtest settings.

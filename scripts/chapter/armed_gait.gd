@@ -4,6 +4,17 @@ extends RefCounted
 const STRIDE := 110.0
 const DATA_PATH := "res://resources/ogre/%s_walk.json"
 const ART_PATH := "res://assets/ogre/%s_walk.png"
+const RUN_SHEETS := {
+    "hunting_axe": preload("res://assets/ogre/hunting_axe_run.png"),
+    "iron_maul": preload("res://assets/ogre/iron_maul_run.png"),
+}
+
+static func run_pose(actor, facing: int, phase: float) -> void:
+    var row := 0 if facing == 0 else 2 if facing == 3 else 1
+    var index := floori(fposmod(phase, 1.0) * 4.0)
+    var frame := [index * 480, row * 304, 480, 304, 240, 282]
+    preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, RUN_SHEETS[actor.equipped_weapon], frame, actor.height / 280.0, facing == 1)
+
 static var definitions: Dictionary = {}
 static var textures: Dictionary = {}
 
