@@ -23,6 +23,7 @@ var dodge_time=0.0
 var dodge_drawing: Dictionary = {}
 var dodge_texture: Texture2D
 var stun=0.0
+var hit_flash_enabled := true
 var flash=0.0
 var cooldown=0.0
 var locked=Vector2.DOWN
@@ -38,6 +39,8 @@ var body_gear: GearVisual
 const WEAPONS = preload("res://resources/chapter/weapons.json")
 const ORIGINAL_SWING_POSES := [0, 1, 1, 2, 2, 3]
 var swing_drawings := {}
+const CleaverStroke = preload("res://scripts/chapter/cleaver_stroke.gd")
+var mirror_oblique := false
 var swing_phase := 0
 var equipped_weapon := "hunting_axe"
 const ArmedGait = preload("res://scripts/chapter/armed_gait.gd")
@@ -142,7 +145,7 @@ func show_swing(phase_index: int) -> void:
     if drawing.is_empty() or drawing.frames[phase_index] == null:
         action_pose(ORIGINAL_SWING_POSES[phase_index])
         return
-    FrameArt.cell(sprite, drawing.texture, drawing.frames[phase_index], height / float(drawing.height), facing == 1)
+    FrameArt.cell(sprite, drawing.texture, drawing.frames[phase_index], height / float(drawing.height), facing == 1 or mirror_oblique)
 
 func update_swing(delta: float) -> void:
     if contact_hold > 0.0:
@@ -152,7 +155,17 @@ func update_swing(delta: float) -> void:
         if delta <= 0.0:
             return
     var contact_remaining := 0.35 if hostile else float(WEAPONS.data[equipped_weapon].follow_through_seconds)
+    var before: float = attack_time
     attack_time = maxf(0.0, attack_time - delta)
+    if identity == "player" and not hostile and equipped_weapon == "hunting_axe":
+        var duration := float(WEAPONS.data[equipped_weapon].swing_seconds)
+        var travel := CleaverStroke.distance_at(duration - attack_time) - CleaverStroke.distance_at(duration - before)
+        if travel > 0.0:
+            # Bodies on the actor layer constrain a committed step, just like scenery.
+            var old_mask := collision_mask
+            collision_mask = old_mask | 2
+            move_and_collide(locked * travel, false, 0.08, true)
+            collision_mask = old_mask
     velocity = Vector2.ZERO
     if hostile:
         action_pose(1 if attack_time > contact_remaining else 2)
@@ -175,7 +188,13 @@ func update_swing(delta: float) -> void:
 func direction() -> Vector2:return [Vector2.DOWN,Vector2.LEFT,Vector2.RIGHT,Vector2.UP][facing]
 func attack(aim: Vector2) -> bool:
     if not enabled or hp<=0 or attack_time>0 or dodge_time>0 or stun>0 or cooldown>0:return false
-    face(aim);locked=aim.normalized()
+    locked = aim.normalized() if aim.length_squared() > 0.001 else direction()
+    face(locked)
+    mirror_oblique = false
+    if not hostile and equipped_weapon == "hunting_axe":
+        var bearing := posmod(roundi(locked.angle() / (PI / 4.0)), 8)
+        facing = [2, 0, 0, 0, 1, 3, 3, 3][bearing]
+        mirror_oblique = bearing == 3 or bearing == 7
     attack_time = 1.15 if hostile else float(WEAPONS.data[equipped_weapon].swing_seconds)
     contact_hold = 0.0
     attack_done=false;guarding=false
@@ -227,7 +246,7 @@ func parried() -> void:
 func _physics_process(delta: float) -> void:
     if not enabled:return
     flash=maxf(0,flash-delta);cooldown=maxf(0,cooldown-delta);guard_age+=delta;stun=maxf(0,stun-delta)
-    sprite.modulate=Color(1.6,0.75,0.65) if flash>0 else Color.WHITE
+    sprite.modulate=Color(1.6,0.75,0.65) if flash>0 and hit_flash_enabled else Color.WHITE
     if hp<=0:velocity=Vector2.ZERO;action_pose(3);return
     if hostile and is_instance_valid(target) and stun<=0:
         var off=target.position-position

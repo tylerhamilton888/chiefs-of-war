@@ -1,5 +1,9 @@
 # Project state
 
+## Cleaver playtest
+
+Enter **Practice Yard** and swing past the goblin, then strike him cleanly. Compare that fall with the armored raider’s planted recoil. The same cleaver step and target reactions run in the campaign. The yard has a cuttable sapling beside the pot, a combat effects toggle on **V** and a HUD toggle on **F2**. The current attack uses the existing front, rear and profile drawings mirrored to cover eight aim sectors. [Replay the encounter](docs/BUILD.md#practice-yard-combat-capture)
+
 ## First-hunt loot playtest
 
 Harvest the first wolf, open **I → Compare hunt spoils**, and equip the find. Look at the Ogre in Belongings and on the trail. Return to the wagon chest by Bramm to trade amber, store supplies or turn two hides into six additional pack slots. The playtest includes four equipment bases, the two-piece Cairnwatch set and one named legendary. New Ogres earn fitted armor through play. Pre-existing journeys retain their original basic equipment choices. [Loot rules and playtest questions](docs/design/LOOT_AND_EQUIPMENT.md)

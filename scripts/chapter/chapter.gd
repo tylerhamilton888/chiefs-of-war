@@ -53,6 +53,7 @@ var director
 var beast_frames: Dictionary={}
 var npcs: Dictionary={}
 var enemies: Array=[]
+var combat_effects_enabled := true
 var region_root: Node2D
 var dialog_text: Label
 var reveal=0.0
@@ -478,8 +479,7 @@ func _process(delta: float) -> void:
     if modal.visible:return
     state.clock+=delta;state.fed=maxf(0,state.fed-delta);state.hp=player.hp
     var aim := get_global_mouse_position() - player.position
-    var threat := enemies.any(func(foe): return is_instance_valid(foe) and foe.hp > 0 and player.position.distance_squared_to(foe.position) <= 350.0 * 350.0)
-    player.track_combat_aim(aim, threat)
+    player.track_combat_aim(aim, nearby_threat())
     player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT), aim)
     update_nearest()
     prompt.text = interaction_prompt("WASD move   ·   Shift run   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
@@ -670,13 +670,26 @@ func route_direction(actor: Node2D,dest: Vector2) -> Vector2:
         if Scale.clear_step(actor,trial*85):return trial
     return Vector2.ZERO
 var last_attacker
+func nearby_threat() -> bool:
+    return enemies.any(func(foe): return is_instance_valid(foe) and foe.hp > 0 and player.position.distance_squared_to(foe.position) <= 350.0 * 350.0)
+
+func in_strike_path(actor, offset: Vector2, radius: float) -> bool:
+    if actor.equipped_weapon == "hunting_axe":
+        return Actor.CleaverStroke.reaches(offset, actor.locked, radius)
+    return offset.length() < 121.0 + radius and actor.locked.dot(offset.normalized()) > 0.15
+
+func strike_scenery(_actor) -> bool:
+    return false
+
 func player_strike(actor) -> void:
     var hit=false
+    var met_armor := false
     for foe in enemies:
         if not is_instance_valid(foe) or foe.hp<=0:continue
-        var off=foe.position-player.position
-        if off.length()<121+Scale.body_radius(foe) and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
+        var off=foe.position-actor.position
+        if in_strike_path(actor, off, Scale.body_radius(foe)) and has_line(actor.position,foe.position):
             var protected_target: bool = foe is Raider and foe.kind == "orc"
+            met_armor = met_armor or protected_target
             var contact_height := Scale.LARGE_HEIGHT * 0.55 if protected_target else Scale.SMALL_HEIGHT * 0.54
             var contact_point: Vector2 = foe.position - Vector2(0, contact_height) - off.normalized() * 10.0
             impact(contact_point, actor.locked, protected_target)
@@ -686,14 +699,20 @@ func player_strike(actor) -> void:
             else:
                 foe.receive_hit(amount, off.normalized())
             hit = true
+    var hit_wood := strike_scenery(actor)
     if hit:
         var heavy: bool = actor.equipped_weapon == "iron_maul"
-        actor.contact_hold = 0.055 if heavy else 0.033
-        play_sound("maul" if heavy else "cleave")
+        actor.contact_hold = 0.065 if met_armor else 0.055 if heavy else 0.033
+        play_sound("maul" if heavy else "block" if met_armor else "cleave")
+    elif hit_wood:
+        actor.contact_hold = 0.045
+        play_sound("wood_hit")
     else:
         play_sound("swing")
 
 func impact(at: Vector2, direction: Vector2, on_iron: bool) -> void:
+    if not combat_effects_enabled:
+        return
     var effect := preload("res://scripts/chapter/strike_impact.gd").new()
     effect.position = at
     effect.z_index = 2
@@ -755,9 +774,9 @@ func hearth_cue(kind: String, at: Vector2) -> void:
         hearth_audio.cue(kind, at)
 
 func play_sound(kind: String) -> void:
-    if not audio_output_enabled:
+    if not audio_output_enabled or (not combat_effects_enabled and kind in ["hit", "block", "swing", "cleave", "maul", "wood_hit"]):
         return
-    var files={"maul":"audio/combat/maul","cleave":"audio/combat/cleave","hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
+    var files={"wood_hit":"camp/wood","maul":"audio/combat/maul","cleave":"audio/combat/cleave","hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
     if not leaving and kind in files and is_instance_valid(sfx):sfx.stream=load("res://assets/"+files[kind]+".wav");sfx.play()
 func sound(kind: String) -> void:play_sound(kind)
 func freeze(value: bool) -> void:

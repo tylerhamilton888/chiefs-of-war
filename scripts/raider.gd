@@ -19,9 +19,13 @@ var target: Node2D
 var game
 var locked_direction := Vector2.LEFT
 var sprite := Sprite2D.new()
+var hit_flash_enabled := true
 var flash := 0.0
 var recoil := Vector2.ZERO
 var death_clock := 0.0
+var brace_time := 0.0
+var brace_side := 0.0
+const BRACE_SECONDS := 0.30
 var recoiling := false
 var cleaved := false
 var held := false
@@ -45,6 +49,7 @@ func _ready() -> void:
  var c=CollisionShape2D.new();var shape=CircleShape2D.new();shape.radius=Scale.radius(kind) if ogre_world else (19 if kind=="orc" else 14);c.shape=shape;add_child(c)
  sprite.texture=ART;sprite.region_enabled=true;add_child(sprite);pose(0)
 func pose(index: int,cleave_row: bool=false) -> void:
+ sprite.rotation = 0.0
  if kind=="orc":
   var frame:=clampi(index,0,5)
   var region: Rect2=ORC_RECTS[frame]
@@ -52,6 +57,11 @@ func pose(index: int,cleave_row: bool=false) -> void:
   sprite.texture=ORC_ART;sprite.region_rect=region;sprite.scale=Vector2.ONE*factor
   var placement: Vector2=(region.get_center()-ORC_ANCHORS[frame])*factor
   if sprite.flip_h:placement.x=-placement.x
+  if brace_time > 0.0:
+   var t := 1.0 - brace_time / BRACE_SECONDS
+   var tilt := brace_side * 0.14 * (1.0 - smoothstep(0.12, 1.0, t))
+   sprite.rotation = tilt
+   placement = placement.rotated(tilt)
   sprite.position=placement;return
  sprite.texture=ART
  var row:=1 if cleave_row else 0
@@ -70,7 +80,18 @@ func receive_hit(amount: float,direction: Vector2) -> void:
 func receive_weapon_hit(amount: float, direction: Vector2, edged: bool) -> void:
  if hp<=0 or held:return
  hp=maxf(0,hp-amount);flash=0.12;posture+=1;recoil=direction*100
- if hp<=0: die(edged);return
+ if hp<=0:
+  recoil = direction.normalized() * 228.0 if ogre_world and edged and kind == "goblin" else Vector2.ZERO
+  die(edged)
+  return
+ var checked := ogre_world and edged and kind == "orc"
+ if checked:
+  recoil = direction.normalized() * 58.0
+  brace_side = direction.x
+  brace_time = BRACE_SECONDS
+  if state == "windup" and posture < 2:
+   pose(1)
+   return
  state="recover";clock=0;cooldown=0.65
  recoiling=true;pose(4)
  if vulnerable_cooldown<=0 and (posture>=2 or hp<=maximum*0.35):
@@ -90,10 +111,15 @@ func show_death_frame() -> void:
 
 func _physics_process(delta: float) -> void:
  if not active:return
+ brace_time = maxf(0.0, brace_time - delta)
  flash=maxf(0,flash-delta);cooldown=maxf(0,cooldown-delta);fear=maxf(0,fear-delta)
- sprite.modulate=Color(1.6,0.8,0.7) if flash>0 else Color.WHITE
+ sprite.modulate=Color(1.6,0.8,0.7) if flash>0 and hit_flash_enabled else Color.WHITE
  if held:return
  if hp<=0:
+  if not recoil.is_zero_approx():
+   var next := recoil.move_toward(Vector2.ZERO, 980.0 * delta)
+   var collision := move_and_collide((next + recoil) * 0.5 * delta)
+   recoil = Vector2.ZERO if collision else next
   death_clock+=delta
   show_death_frame()
   queue_redraw();return
@@ -123,12 +149,16 @@ func _physics_process(delta: float) -> void:
   velocity=Vector2.ZERO
   if chase and off.length()<88 and cooldown<=0 and game.has_line(position,target.position,null):
    locked_direction=off.normalized();state="windup";clock=0
-  elif distance.length()>22:
+  elif distance.length() > (78.0 if ogre_world and chase else 22.0):
    velocity=game.route_direction(self,dest)*(90 if kind=="orc" else 115)
   sprite.flip_h=distance.x>0
   pose(1 if velocity.length()>1 and fmod(clock,0.5)<0.25 else 0)
  move_and_slide();queue_redraw()
 func _draw() -> void:
+ if ogre_world:
+  draw_set_transform(Vector2(0, 1), 0.0, Vector2(1.0, 0.28))
+  draw_circle(Vector2.ZERO, 26.0 if kind == "orc" else 16.0, Color(0.10,0.07,0.05,0.24), true, -1, true)
+  draw_set_transform(Vector2.ZERO)
  if hp<=0:return
  if hp<maximum or state=="windup":
   draw_line(Vector2(-24,-105),Vector2(24,-105),Color("291e19"),4)

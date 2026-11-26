@@ -6,7 +6,7 @@ From the repository root, use a temporary user-data directory for every test. Th
 
 ```sh
 godot --headless --editor --import --quit
-for suite in menu_flow_test hearth_walk_test bramm_work_test svala_work_test family_supper_test armed_gait_test dodge_step_test head_gear_test field_kitchen_test chapter_loot_test developer_arena_test chapter_equipment_test loading_test chapter_test chapter_quality_test ogre_scale_test ogre_navigation_test; do
+for suite in menu_flow_test hearth_walk_test bramm_work_test svala_work_test family_supper_test armed_gait_test dodge_step_test head_gear_test field_kitchen_test chapter_loot_test developer_arena_test cleaver_stroke_test chapter_equipment_test loading_test chapter_test chapter_quality_test ogre_scale_test ogre_navigation_test; do
   XDG_DATA_HOME="$(mktemp -d)" godot --headless --fixed-fps 60 --script "tests/$suite.gd" -- --test || exit 1
 done
 python3 -m unittest discover -s tools -p test_release.py
@@ -19,6 +19,16 @@ godot --headless --export-release "Windows Desktop" builds/windows/HearthAndHung
 ```
 
 See [release procedure](engineering/validation-and-release.md) before publishing a new version.
+
+## Practice Yard combat capture
+
+From the title, enter **Practice Yard**. Press **V** to toggle combat particles, hit flashes and combat sounds. Footsteps, the swing clock, hit holds, collision and damage use the same settings in both passes. **F2** toggles the HUD and **R** resets the encounter.
+
+Record a continuous 30-second run from the repository root with a display available. Add `--effects-off` after `--cleaver-benchmark` for the matching pass. The capture checks the miss, goblin cut, armored hit, guard, dodge, felling and cookpot through gameplay controls.
+
+```sh
+XDG_DATA_HOME="$(mktemp -d)" godot --audio-driver Dummy --fixed-fps 30 --write-movie /tmp/yard.avi --script tests/cleaver_benchmark_capture.gd -- --test --cleaver-benchmark
+```
 
 ## Artwork and review images
 
