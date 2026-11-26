@@ -16,7 +16,11 @@ var guarding=false
 var guard_age=10.0
 var attack_time=0.0
 var attack_done=false
+var contact_hold := 0.0
+const DodgeStep = preload("res://scripts/chapter/dodge_step.gd")
 var dodge_time=0.0
+var dodge_drawing: Dictionary = {}
+var dodge_texture: Texture2D
 var stun=0.0
 var flash=0.0
 var cooldown=0.0
@@ -25,6 +29,11 @@ var hostile=false
 var companion=false
 var ai_time=0.0
 var target: Node2D
+const GearVisual = preload("res://scripts/chapter/gear_visual.gd")
+var equipped_head := "bare"
+var head_gear: GearVisual
+var equipped_body := "fur"
+var body_gear: GearVisual
 const WEAPONS = preload("res://resources/chapter/weapons.json")
 const ORIGINAL_SWING_POSES := [0, 1, 1, 2, 2, 3]
 var swing_drawings := {}
@@ -56,6 +65,10 @@ func _ready() -> void:
         equip_weapon(equipped_weapon)
     collision_layer=2;collision_mask=1
     show_frame(0)
+    if equipped_body != "fur":
+        equip_body(equipped_body)
+    if equipped_head != "bare":
+        equip_head(equipped_head)
 func show_frame(index: int) -> void:
     if art.is_empty():super.show_frame(index);return
     frame_index=clampi(index,0,3)
@@ -73,10 +86,44 @@ func equip_weapon(id: String) -> void:
         return
     equipped_weapon = id
     action_art = load(WEAPONS.data[id].texture)
+    dodge_drawing = load(WEAPONS.data[id].dodge).data
+    dodge_texture = load(dodge_drawing.texture)
     swing_drawings.clear()
     for view in WEAPONS.data[id].swing_views:
         var drawing: Dictionary = load(WEAPONS.data[id].swing_views[view]).data
         swing_drawings[view] = {"frames": drawing.frames, "texture": load(drawing.texture), "height": drawing.height}
+
+func equip_head(id: String) -> void:
+    if identity != "player" or not GearVisual.supports("head", id):
+        return
+    equipped_head = id
+    head_gear = set_worn_piece(head_gear, "head", id)
+
+func equip_body(id: String) -> void:
+    if identity != "player" or not GearVisual.supports("body", id):
+        return
+    equipped_body = id
+    body_gear = set_worn_piece(body_gear, "body", id)
+    if body_gear != null and head_gear != null and body_gear.get_index() > head_gear.get_index():
+        move_child(body_gear, head_gear.get_index())
+
+func set_worn_piece(layer: GearVisual, slot: String, id: String) -> GearVisual:
+    if sprite == null:
+        return layer
+    if layer == null:
+        if id == GearVisual.SLOTS[slot].default:
+            return null
+        layer = GearVisual.new(slot)
+        add_child(layer)
+    layer.equip(id)
+    layer.align_to(sprite, idle_breath)
+    return layer
+
+func align_worn_pieces() -> void:
+    if body_gear != null:
+        body_gear.align_to(sprite, idle_breath)
+    if head_gear != null:
+        head_gear.align_to(sprite, idle_breath)
 
 func weapon_damage(honed_axe := false) -> float:
     var base_damage := float(WEAPONS.data[equipped_weapon].damage)
@@ -97,6 +144,12 @@ func show_swing(phase_index: int) -> void:
     FrameArt.cell(sprite, drawing.texture, drawing.frames[phase_index], height / float(drawing.height), facing == 1)
 
 func update_swing(delta: float) -> void:
+    if contact_hold > 0.0:
+        var held := minf(delta, contact_hold)
+        contact_hold -= held
+        delta -= held
+        if delta <= 0.0:
+            return
     var contact_remaining := 0.35 if hostile else float(WEAPONS.data[equipped_weapon].follow_through_seconds)
     attack_time = maxf(0.0, attack_time - delta)
     velocity = Vector2.ZERO
@@ -123,19 +176,42 @@ func attack(aim: Vector2) -> bool:
     if not enabled or hp<=0 or attack_time>0 or dodge_time>0 or stun>0 or cooldown>0:return false
     face(aim);locked=aim.normalized()
     attack_time = 1.15 if hostile else float(WEAPONS.data[equipped_weapon].swing_seconds)
+    contact_hold = 0.0
     attack_done=false;guarding=false
     if not hostile:
         show_swing(0)
     return true
 func dodge(aim: Vector2) -> bool:
     if not enabled or hp<=0 or dodge_time>0 or attack_time>0.35 or stun>0:return false
-    locked=aim.normalized() if aim.length()>0.1 else direction();dodge_time=0.3;guarding=false;attack_time=0;return true
+    locked = aim.normalized() if aim.length() > 0.1 else direction()
+    # Front/back views can slip side-to-side while keeping the opponent in sight.
+    if absf(locked.y) > absf(locked.x) or facing in [1, 2]:
+        face(locked)
+    dodge_time = DodgeStep.DURATION
+    guarding = false
+    attack_time = 0.0
+    velocity = Vector2.ZERO
+    ready_time = maxf(ready_time, DodgeStep.DURATION + 0.24)
+    DodgeStep.pose(self, 0.0)
+    return true
+
+func update_dodge(delta: float) -> void:
+    var before: float = DodgeStep.DURATION - dodge_time
+    dodge_time = maxf(0.0, dodge_time - delta)
+    var elapsed: float = DodgeStep.DURATION - dodge_time
+    var travel := DodgeStep.distance_at(elapsed) - DodgeStep.distance_at(before)
+    velocity = locked * travel / delta
+    move_and_slide()
+    DodgeStep.pose(self, elapsed)
+    if before < DodgeStep.FIRST_CONTACT and elapsed >= DodgeStep.FIRST_CONTACT:
+        stepped.emit()
 func block(value: bool,aim: Vector2) -> void:
     if value and not guarding:guard_age=0
     guarding=value and enabled and hp>0 and stun<=0 and attack_time<=0 and dodge_time<=0
     if guarding:face(aim)
 func receive_hit(amount: float,source_direction: Vector2,breaks_block: bool=false) -> void:
     if hp<=0 or dodge_time>0.07:return
+    dodge_time = 0.0
     if guarding and direction().dot(-source_direction)>0.2:
         if guard_age<0.18:
             game.parry(self);return
@@ -168,7 +244,7 @@ func _physics_process(delta: float) -> void:
             if position.distance_to(dest)<35:drive=Vector2.ZERO;rest=3.5;route_index=(route_index+1)%route.size()
     if stun>0:velocity=velocity.move_toward(Vector2.ZERO,1500*delta);move_and_slide();action_pose(3)
     elif dodge_time>0:
-        dodge_time=maxf(0,dodge_time-delta);velocity=locked*590;move_and_slide();action_pose(3)
+        update_dodge(delta)
     elif attack_time>0:
         update_swing(delta)
     elif guarding:velocity=Vector2.ZERO;action_pose(3)
@@ -233,9 +309,12 @@ func set_hair_palette(hair: String) -> void:
 var idle_breath: Polygon2D
 
 func _process(delta: float) -> void:
-    if identity != "player" or not controlled or not is_instance_valid(sprite):
+    if identity != "player" or not is_instance_valid(sprite):
+        return
+    if not controlled:
         if is_instance_valid(idle_breath):
             idle_breath.stop(sprite)
+        align_worn_pieces()
         return
     var resting: bool = enabled and hp > 0.0 and sprite.texture == MOTION_TEXTURE \
         and frame_index == 0 and velocity.length_squared() < 0.01 \
@@ -245,6 +324,8 @@ func _process(delta: float) -> void:
         if not is_instance_valid(idle_breath):
             idle_breath = preload("res://scripts/chapter/idle_breath.gd").new()
             add_child(idle_breath)
+            move_child(idle_breath, sprite.get_index() + 1)
         idle_breath.breathe(sprite, delta)
     elif is_instance_valid(idle_breath):
         idle_breath.stop(sprite)
+    align_worn_pieces()

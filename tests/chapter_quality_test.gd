@@ -13,10 +13,24 @@ func frames(n: int) -> void:
 func settle() -> void:
     game.player.controlled=false;game.player.drive=Vector2.ZERO
     game.camera.reset_smoothing();await frames(3);game.camera.force_update_scroll()
+func fixed_story_panel() -> int:
+    for layer in game.modal.get_children():
+        if layer is TextureRect and layer.texture is AtlasTexture:
+            var atlas: AtlasTexture = layer.texture
+            if atlas.atlas.resource_path == game.cinematic_texture_path():
+                var frame := atlas.region
+                return roundi(frame.position.x / frame.size.x) + 2 * roundi(frame.position.y / frame.size.y)
+    return -1
 func run() -> void:
     DirAccess.remove_absolute(State.SAVE)
     game=load("res://scenes/fire_we_carry.tscn").instantiate();root.add_child(game);current_scene=game;await frames(3)
+    game.state.equipment.head = "iron_helm"
+    game.state.set_weapon("iron_maul")
+    game.player.equip_weapon("iron_maul")
+    game.player.equip_head("iron_helm")
     game.choose("woodpile")
+    await frames(3)
+    check(fixed_story_panel() == -1 and game.player.head_gear.is_visible_in_tree(), "Family dialogue keeps the equipped character on the live stage")
     check(game.state.scene.key == "bramm_timber", "Father can point out the nearby timber")
     game.choose("work")
     check("(0/6)" in game.story.objective(), "Opening objective shows timber still needed")
@@ -46,7 +60,11 @@ func run() -> void:
     game.interact(rescue);var loyalty=game.state.relationships.bramm.loyalty
     game.interact(rescue)
     check(game.state.relationships.bramm.loyalty==loyalty,"rescue relationship credit is awarded once")
-    game.finish_defense();game.choose("duel");await frames(3)
+    game.finish_defense()
+    check(fixed_story_panel() == 1, "Hrothgar's NPC-only cutaway remains visible with custom equipment")
+    game.finish_dialogue()
+    check(fixed_story_panel() == -1 and game.player.equipped_weapon == "iron_maul" and game.player.equipped_head == "iron_helm", "The challenge returns to the equipped Ogre")
+    game.choose("duel");await frames(3)
     game.player.hp=17;game.dialogue("mercy");game.finish_dialogue();game.choose("join")
     check(game.state.region=="host" and game.player.hp==160,"arrival recovery survives travel and save")
     game.choose("close")

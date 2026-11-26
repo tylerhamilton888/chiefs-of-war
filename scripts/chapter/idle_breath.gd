@@ -7,6 +7,7 @@ const LIFT := [0.54, 0.70, 1.0, 0.56, 0.0, 0.0, 0.0]
 const PERIOD := 3.5
 const SETTLE_TIME := 0.28
 var elapsed := 0.0
+var amplitude := 0.0
 var active_rect := Rect2()
 var mirrored := false
 var rest_vertices := PackedVector2Array()
@@ -34,7 +35,7 @@ func breathe(source: Sprite2D, delta: float) -> void:
     material = source.material
     texture = source.texture
     modulate = source.modulate
-    var amplitude := 0.5 - 0.5 * cos((elapsed - SETTLE_TIME) * TAU / PERIOD)
+    amplitude = 0.5 - 0.5 * cos((elapsed - SETTLE_TIME) * TAU / PERIOD)
     var vertices := rest_vertices.duplicate()
     for i in LEVELS.size():
         var rise: float = 3.2 * LIFT[i] * amplitude
@@ -43,6 +44,15 @@ func breathe(source: Sprite2D, delta: float) -> void:
     polygon = vertices
     source.hide()
     show()
+
+## The head piece follows the same interpolated vertical displacement as the
+## colored body strip underneath its socket (coordinates in drawing pixels).
+func lift_at(fraction: float) -> float:
+    for i in range(1, LEVELS.size()):
+        if fraction <= LEVELS[i]:
+            var t := clampf(inverse_lerp(LEVELS[i-1], LEVELS[i], fraction), 0.0, 1.0)
+            return -3.2 * amplitude * lerpf(LIFT[i-1], LIFT[i], t)
+    return 0.0
 
 func prepare_mesh(rect: Rect2) -> void:
     var tex_coords := PackedVector2Array()

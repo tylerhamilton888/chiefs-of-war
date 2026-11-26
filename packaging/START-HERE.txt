@@ -6,11 +6,14 @@ hair color, then join Bramm at the damaged wagon in Emberhide Crossing.
 
 WASD walks. Hold Shift to run while traveling. Aim with the mouse and left-click to swing your weapon. Right-click
 to guard or parry. Space dodges. E interacts and Q eats a meal.
-J opens your objectives and routes. I opens belongings and lets you switch your weapon. F5 saves.
+J opens your objectives and routes. I opens Belongings, where you can inspect and change your gear. F5 saves.
 Esc opens the pause menu, where you can save and return to the title.
 
 Your existing Fire We Carry save resumes automatically through Continue.
 Build information and engine notices are in Support.
 
 Choose Practice Yard on the title screen to try both weapons in a disposable encounter.
-Tab changes weapon, R resets the yard, and Esc returns to the title.
+Tab changes weapon, H toggles your helm, B toggles your mantle, R resets the yard, and Esc returns to the title.
+After a clean axe kill, stand beside the cut. F eats it raw. E carries it.
+Bring it to the pot north of the yard entrance and press E to make two portions.
+Ladle a portion to take with you. Q eats a packed meal.

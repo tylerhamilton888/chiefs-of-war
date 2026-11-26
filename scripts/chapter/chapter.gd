@@ -26,9 +26,12 @@ var hud: Label
 var objective: Label
 var notice: Label
 var prompt: Label
+const FITTING_VIEWS := [Vector2.DOWN, Vector2.RIGHT, Vector2.UP, Vector2.LEFT]
+var fitting_angle := 0
 var modal: Control
 var stations: Array=[]
 var supplies: Array=[]
+var camp_pot: Node2D
 var family_wagon: Node2D
 var offering_stone: OfferingStone
 var nearest: Dictionary={}
@@ -88,6 +91,8 @@ func configure_movement() -> void:
             var event=InputEventKey.new();event.physical_keycode={"move_left":KEY_A,"move_right":KEY_D,"move_up":KEY_W,"move_down":KEY_S}[key];InputMap.action_add_event(key,event)
 
 func build_world() -> void:
+    nearest = {}
+    camp_pot = null
     stations.clear();supplies.clear();npcs.clear();enemies.clear();smoke_nodes.clear();caravan=null;beast=null;caravan_active=false
     region_root=Node2D.new();add_child(region_root)
     var ground_state = GroundState.new()
@@ -111,7 +116,9 @@ func build_world() -> void:
     player=Actor.new();player.identity="player";player.game=self;player.position=state.player_position;player.hp=state.hp
     player.struck.connect(player_strike);player.felled.connect(player_felled);player.stepped.connect(func():play_sound("step"));world.add_child(player)
     player.set_hair_palette(state.profile.hair)
-    player.equip_weapon("iron_maul" if state.has("equipped_iron_maul") else "hunting_axe")
+    player.equip_weapon(state.equipment.weapon)
+    player.equip_body(state.equipment.body)
+    player.equip_head(state.equipment.head)
     camera=OgreCamera.new();player.add_child(camera)
     var forest=state.region in ["pines","hollow","crossing"]
     for i in range(24):
@@ -142,6 +149,93 @@ func wagon(at: Vector2,scale_factor: float=0.65) -> Node2D:
     camp_item("wagon",at,Rect2(10,4,800,580),scale_factor,Vector2(350,65),Vector2(0,-85));return world.get_child(world.get_child_count()-1)
 func tent(at: Vector2,scale_factor: float=0.55) -> void:camp_item("tent",at,Rect2(832,16,700,560),scale_factor,Vector2(275,50),Vector2(0,-85))
 func hearth(at: Vector2) -> void:camp_item("hearth",at,Rect2(140,555,560,440),0.32,Vector2(105,40),Vector2(0,-15))
+func build_pot(at: Vector2, site: String) -> void:
+    camp_pot = preload("res://scripts/chapter/camp_pot.gd").new()
+    camp_pot.position = at
+    world.add_child(camp_pot)
+    var kettle_body := StaticBody2D.new()
+    var collision := CollisionShape2D.new()
+    var shape := RectangleShape2D.new()
+    shape.size = Vector2(105, 40)
+    collision.shape = shape
+    collision.position = Vector2(0, -15)
+    kettle_body.add_child(collision)
+    camp_pot.add_child(kettle_body)
+    camp_pot.set_servings(int(state.pot_servings.get(site, 0)))
+    stations.append({"kind": "hearth", "id": site, "node": camp_pot, "position": at + Vector2(0, 44), "text": "E  Cook · 2 meat + 1 timber"})
+
+func spawn_cut(id: String) -> void:
+    var point: Array = state.field_cuts[id]
+    var cut = preload("res://scripts/chapter/goblin_cut.gd").new()
+    cut.position = Vector2(point[0], point[1])
+    world.add_child(cut)
+    cut.set_restrained(not state.gore)
+    supplies.append({"kind": "goblin_cut", "id": id, "position": cut.position, "node": cut, "text": "Goblin cut   ·   E  Carry   ·   F  Eat raw (+25 health)"})
+
+func interaction_prompt(fallback: String) -> String:
+    if nearest.get("kind") != "hearth":
+        return nearest.get("text", fallback)
+    var portions := int(state.pot_servings.get(nearest.id, 0))
+    var cook_hint := "" if nearest.id == "yard" else "   ·   C  Cook provisions"
+    if state.inventory.goblin_meat > 0:
+        var ladle := "   ·   F  Ladle stew" if portions > 0 else ""
+        return "E  Add goblin cut to pot" + ladle + cook_hint
+    if portions > 0:
+        return "E  Ladle goblin stew (%d left)%s" % [portions, cook_hint]
+    if nearest.id == "yard":
+        return "Cookpot   ·   Bring a goblin cut to make two portions of stew."
+    return nearest.text
+
+func use_food_shortcut(key: Key) -> void:
+    if player.hp <= 0:
+        return
+    if key == KEY_F and nearest.get("kind") == "goblin_cut":
+        take_field_cut(nearest, true)
+    elif nearest.get("kind") == "hearth":
+        if key == KEY_F and state.ladle_stew(nearest.id):
+            served_from_pot(nearest)
+        elif key == KEY_C and nearest.id != "yard":
+            cook_provisions()
+        else:
+            return
+    else:
+        return
+    save_progress()
+
+func take_field_cut(entry: Dictionary, eat_now: bool) -> void:
+    state.hp = player.hp
+    if not state.take_cut(entry.id, eat_now):
+        return
+    player.hp = state.hp
+    entry.node.queue_free()
+    supplies.erase(entry)
+    nearest = {}
+    play_sound("gather")
+    if eat_now:
+        say("You eat the goblin cut where it fell. Health %d / 160." % ceili(player.hp))
+    else:
+        say("Goblin cut packed. Drop it in a camp pot for two portions of stew.")
+
+func eat_carried_cut() -> void:
+    if not state.pay({"goblin_meat": 1}):
+        return
+    player.hp = minf(160.0, player.hp + ChapterState.RAW_CUT_HEAL)
+    play_sound("gather")
+    say("You eat a goblin cut. Health %d / 160." % ceili(player.hp))
+    save_progress()
+
+func served_from_pot(entry: Dictionary) -> void:
+    entry.node.set_servings(state.pot_servings[entry.id], true)
+    play_sound("gather")
+    say("One meal packed. Q eats it. %d portions left for the hearth." % state.pot_servings[entry.id])
+
+func cook_provisions() -> void:
+    if state.cook():
+        play_sound("success")
+        say("Three hearty meals prepared. Q eats one; the carved hearth stone takes Sava's portion.")
+    else:
+        say("Two meat and one timber for three meals. Take the family provisions or hunt in the Pines.")
+
 func build_camp() -> void:
     var host=state.region=="host"
     var w=wagon(Vector2(740,690),0.76 if host else 0.65)
@@ -151,9 +245,9 @@ func build_camp() -> void:
             family_wagon.rotation = deg_to_rad(-4)
             family_wagon.modulate = Color("b7a38b")
     if not host and state.chapter>=4:w.modulate=Color("554a41")
-    tent(Vector2(1300,710));hearth(Vector2(1050,1050))
+    tent(Vector2(1300,710))
     camp_item("provisions",Vector2(650,1000),Rect2(804,665,710,325),0.28,Vector2(150,40),Vector2(0,-16))
-    station("hearth",Vector2(1050,1100),"Cook · 2 meat + 1 timber")
+    build_pot(Vector2(1050,1050), state.region)
     offering_stone = OfferingStone.new()
     offering_stone.position = Vector2(1190, 1080)
     offering_stone.offered = state.has("offering")
@@ -196,9 +290,9 @@ func build_trade() -> void:
     for i in range(3):
         var building=preload("res://scripts/building.gd").new();building.kind=i;building.settlement_scale=Scale.SETTLEMENT_SCALE;building.position=[Vector2(620,620),Vector2(1400,640),Vector2(1760,1080)][i];world.add_child(building)
     for x in range(350,1900,85):world_prop("wall",Vector2(x,470))
-    wagon(Vector2(650,1080),0.5);hearth(Vector2(1160,1040))
+    wagon(Vector2(650,1080),0.5);build_pot(Vector2(1160,1040), "trade")
     npc("eydis",Vector2(1380,920));station("trade",Vector2(1520,1010),"Trade · meat and hides")
-    world_label("BLACKSTONE EXCHANGE",Vector2(1370,810));station("hearth",Vector2(1160,1100),"Cook at the trade hearth")
+    world_label("BLACKSTONE EXCHANGE",Vector2(1370,810))
 func build_resources() -> void:
     var cycle=int(state.clock/480)
     var wood_positions = [Vector2(400,850),Vector2(885,810),Vector2(1475,900),Vector2(1880,800),Vector2(500,1220),Vector2(960,1180),Vector2(1500,1260),Vector2(1940,1170)]
@@ -245,7 +339,10 @@ func add_wolf(id: String,at: Vector2,alpha: bool) -> void:
     var wolf=Wolf.new();wolf.ogre_world=true;wolf.position=at;wolf.alpha=alpha;wolf.game=self;wolf.target=player;wolf.loot_id=id;wolf.set_meta("id",id)
     wolf.strike.connect(enemy_strike);wolf.slain.connect(enemy_slain);world.add_child(wolf);wolf.hp=state.encounters.get(id,wolf.hp);enemies.append(wolf)
 func add_raider(id: String,at: Vector2,kind: String) -> void:
-    if id in state.defeated:return
+    if id in state.defeated:
+        if state.field_cuts.has(id):
+            spawn_cut(id)
+        return
     var foe=Raider.new();foe.ogre_world=true;foe.kind=kind;foe.position=at;foe.game=self;foe.target=player;foe.set_meta("id",id)
     foe.strike.connect(enemy_strike)
     foe.slain.connect(enemy_slain)
@@ -275,7 +372,7 @@ func add_beast(at: Vector2,factor: float) -> Node2D:
         var spr=Sprite2D.new();b.add_child(spr);BeastArt.pose(spr,0,0,maxf(Scale.COMPANION_HEIGHT,273*factor))
     return b
 func build_home() -> void:
-    wagon(Vector2(1800,1230),0.46);hearth(Vector2(1940,1280));station("home",Vector2(1800,1310),"Your household · rest, improve, or take the road")
+    wagon(Vector2(1800,1230),0.46);build_pot(Vector2(1940,1260), "home");station("home",Vector2(1800,1310),"Your household · rest, improve, or take the road")
     world_label("YOUR HEARTH",Vector2(1830,1110))
     if state.has("platform"):camp_item("provisions",Vector2(1620,1300),Rect2(804,665,710,325),0.25,Vector2(140,40),Vector2(0,-16))
 func fire_column(at: Vector2) -> void:
@@ -307,7 +404,20 @@ func interaction_available(entry: Dictionary) -> bool:
         "rescue":return state.chapter==4 and not state.has("saved_"+entry.id)
         "feast":return state.chapter==2 and not state.has("feast")
         "harvest":return not ("loot_"+entry.id) in state.collected
+        "goblin_cut":return state.field_cuts.has(entry.id)
     return true
+func update_nearest() -> void:
+    nearest={};var best=125.0
+    for entry in stations+supplies:
+        if not interaction_available(entry):continue
+        var distance=player.position.distance_to(entry.position)
+        if distance<best:nearest=entry;best=distance
+    for id in npcs:
+        var actor=npcs[id]
+        if actor.hostile or actor.hp<=0:continue
+        var distance=player.position.distance_to(actor.position)
+        if distance<best:nearest={"kind":"npc","id":id,"position":actor.position,"text":"E  Speak with "+cast[id].name};best=distance
+
 func build_ui() -> void:
     var layer=CanvasLayer.new();add_child(layer)
     var top=panel(Vector2(514,16),Vector2(746,84));layer.add_child(top)
@@ -334,17 +444,8 @@ func _process(delta: float) -> void:
     var threat := enemies.any(func(foe): return is_instance_valid(foe) and foe.hp > 0 and player.position.distance_squared_to(foe.position) <= 350.0 * 350.0)
     player.track_combat_aim(aim, threat)
     player.block(Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT), aim)
-    nearest={};var best=125.0
-    for entry in stations+supplies:
-        if not interaction_available(entry):continue
-        var distance=player.position.distance_to(entry.position)
-        if distance<best:nearest=entry;best=distance
-    for id in npcs:
-        var actor=npcs[id]
-        if actor.hostile or actor.hp<=0:continue
-        var distance=player.position.distance_to(actor.position)
-        if distance<best:nearest={"kind":"npc","id":id,"position":actor.position,"text":"E  Speak with "+cast[id].name};best=distance
-    prompt.text=nearest.get("text","WASD move   ·   Shift run   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
+    update_nearest()
+    prompt.text = interaction_prompt("WASD move   ·   Shift run   ·   E interact   ·   J journal   ·   I belongings   ·   Esc menu")
     if state.chapter==4:
         state.defense_left=maxf(0,state.defense_left-delta)
         if state.defense_left<=0:finish_defense()
@@ -372,6 +473,10 @@ func _unhandled_input(event: InputEvent) -> void:
     match key:
         KEY_E:
             if not nearest.is_empty():interact(nearest)
+        KEY_F:
+            use_food_shortcut(KEY_F)
+        KEY_C:
+            use_food_shortcut(KEY_C)
         KEY_SPACE:player.dodge(Input.get_vector("move_left","move_right","move_up","move_down"))
         KEY_Q:
             state.hp=player.hp
@@ -418,8 +523,19 @@ func interact(entry: Dictionary) -> void:
                 say("The wheel takes the weight. Svala calls you over to the cookfire.")
             else:say("Bring six lengths of timber to fit the axle. Look just left of the wagon.")
         "hearth":
-            if state.cook():say("Three hearty meals prepared. Q eats one; the carved hearth stone takes Sava's portion.");play_sound("success")
-            else:say("Two meat and one timber for three meals. Take the family provisions or hunt in the Pines.")
+            if entry.has("node") and state.stew_cut(entry.id):
+                var hand: Vector2 = entry.node.to_local(player.global_position) + Vector2.UP * player.height * 0.53
+                entry.node.set_servings(state.pot_servings[entry.id], true, hand)
+                play_sound("success")
+                say("Two portions of goblin stew. Ladle one for the road or leave it for the hearth.")
+            elif entry.has("node") and state.ladle_stew(entry.id):
+                served_from_pot(entry)
+            elif entry.id == "yard":
+                say("The cookpot is empty. Carry a cut from the goblin and return here.")
+            else:
+                cook_provisions()
+        "goblin_cut":
+            take_field_cut(entry, false)
         "offering":
             if state.has("offering"):say("Sava has received the first portion. The fire is tended.")
             elif state.pay({"meals":1}):
@@ -494,21 +610,32 @@ func player_strike(actor) -> void:
         if not is_instance_valid(foe) or foe.hp<=0:continue
         var off=foe.position-player.position
         if off.length()<121+Scale.body_radius(foe) and actor.locked.dot(off.normalized())>0.15 and has_line(player.position,foe.position):
-            impact(foe.position)
+            var protected_target: bool = foe is Raider and foe.kind == "orc"
+            var contact_height := Scale.LARGE_HEIGHT * 0.55 if protected_target else Scale.SMALL_HEIGHT * 0.54
+            var contact_point: Vector2 = foe.position - Vector2(0, contact_height) - off.normalized() * 10.0
+            impact(contact_point, actor.locked, protected_target)
             var amount: float = actor.weapon_damage(state.has("honed_axe")) + (6 if state.fed > 0 else 0)
             if foe is Raider:
                 foe.receive_weapon_hit(amount, off.normalized(), actor.equipped_weapon == "hunting_axe")
             else:
                 foe.receive_hit(amount, off.normalized())
             hit = true
-    if hit:play_sound("hit")
-    else:play_sound("swing")
-func impact(at: Vector2) -> void:
-    if not state.gore:return
-    var splash=Node2D.new();splash.position=at;splash.z_index=1;world.add_child(splash)
-    for i in range(5):
-        var drop=Polygon2D.new();drop.color=Color("7e322f");drop.polygon=PackedVector2Array([Vector2(-3,-2),Vector2(4,-1),Vector2(2,3),Vector2(-2,2)]);drop.position=Vector2.from_angle(i*2.4)*float(8+i*4);splash.add_child(drop)
-    var fade=splash.create_tween();fade.tween_interval(0.4);fade.tween_property(splash,"modulate:a",0.0,0.4);fade.tween_callback(splash.queue_free)
+    if hit:
+        var heavy: bool = actor.equipped_weapon == "iron_maul"
+        actor.contact_hold = 0.055 if heavy else 0.033
+        play_sound("maul" if heavy else "cleave")
+    else:
+        play_sound("swing")
+
+func impact(at: Vector2, direction: Vector2, on_iron: bool) -> void:
+    var effect := preload("res://scripts/chapter/strike_impact.gd").new()
+    effect.position = at
+    effect.z_index = 2
+    effect.direction = direction
+    effect.on_iron = on_iron
+    effect.restrained = not state.gore
+    world.add_child(effect)
+
 func enemy_strike(foe) -> void:
     var off=player.position-foe.position
     var reach=220 if foe is Actor else 115 if foe is Wolf else 120
@@ -522,9 +649,17 @@ func enemy_slain(foe) -> void:
     var id=foe.get_meta("id","")
     if id=="duel":
         state.mark("duel_won");state.change("hrothgar","admiration",5);dialogue("victory");return
-    if not id in state.defeated:state.defeated.append(id)
+    if id in state.defeated:return
+    state.defeated.append(id)
     if foe is Wolf:station("harvest",foe.position,"Harvest meat, hide and trophy",id)
-    elif id.begins_with("cairn"):state.inventory.coin+=2;state.inventory.meat+=1
+    elif foe is Raider and foe.kind == "goblin":
+        if id.begins_with("cairn"):
+            state.inventory.coin += 2
+        if foe.cleaved:
+            var at: Vector2 = foe.position.lerp(player.position, 0.35)
+            state.field_cuts[id] = [clampf(at.x, 60, 2200), clampf(at.y, 60, 1330)]
+            spawn_cut(id)
+            say("Fresh goblin meat. Move close to carry the cut or eat it here.")
     save_progress()
 func player_felled(_actor) -> void:
     if defeat_pending:return
@@ -542,7 +677,7 @@ func toast(text: String,_at: Vector2) -> void:say(text.replace("Staggered • F 
 func play_sound(kind: String) -> void:
     if not audio_output_enabled:
         return
-    var files={"hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
+    var files={"maul":"audio/combat/maul","cleave":"audio/combat/cleave","hit":"camp/hit","block":"camp/metal","gather":"camp/wood","step":"camp/step","swing":"opener/swing","growl":"opener/growl","success":"opener/success"}
     if not leaving and kind in files and is_instance_valid(sfx):sfx.stream=load("res://assets/"+files[kind]+".wav");sfx.play()
 func sound(kind: String) -> void:play_sound(kind)
 func freeze(value: bool) -> void:
@@ -628,11 +763,19 @@ func simple_menu(title: String,copy: String) -> VBoxContainer:
     clear_modal();var shade=ColorRect.new();shade.color=Color(0.03,0.03,0.02,0.7);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);modal.add_child(shade)
     var box=panel(Vector2(150,145),Vector2(980,520));modal.add_child(box);var col=VBoxContainer.new();col.add_theme_constant_override("separation",12);box.add_child(col)
     col.add_child(helper.words(title,27));var label=helper.words(copy,18);label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.custom_minimum_size.x=920;col.add_child(label);return col
+func toggle_brutality() -> void:
+    state.gore = not state.gore
+    for entry in supplies:
+        if entry.kind == "goblin_cut":
+            entry.node.set_restrained(not state.gore)
+    save_progress()
+    pause_menu()
+
 func pause_menu() -> void:
     var col=simple_menu("THE FIRE WE CARRY","Your journey saves automatically. Press F5 to save on the road.")
     helper.action("Return to the fire",close_modal,col)
     helper.action("Journal and routes",journal,col)
-    helper.action("Brutality: "+("full" if state.gore else "restrained"),func():state.gore=not state.gore;save_progress();pause_menu(),col)
+    helper.action("Brutality: "+("full" if state.gore else "restrained"),toggle_brutality,col)
     helper.action("Save and return to title" if not state.unreadable else "Leave this unsaved visit",return_to_menu,col)
     helper.action("Save and quit" if not state.unreadable else "Quit without changing unreadable save",quit_game,col)
 func belongings() -> void:
@@ -644,37 +787,81 @@ func belongings() -> void:
     row.add_theme_constant_override("separation", 20)
     col.add_child(row)
     var view := Control.new()
-    view.custom_minimum_size = Vector2(220, 165)
+    view.custom_minimum_size = Vector2(250, 205)
     row.add_child(view)
-    var mount := Node2D.new()
-    mount.position = Vector2(100, 152)
-    view.add_child(mount)
-    var pose := Sprite2D.new()
-    pose.material = player.sprite.material
-    mount.add_child(pose)
-    Actor.FrameArt.pose(pose, player.action_art, 0, 137, false)
+    var preview := Actor.new()
+    preview.name = "EquippedOgre"
+    preview.position = Vector2(115, 197)
+    preview.height = 178
+    preview.enabled = false
+    preview.controlled = false
+    view.add_child(preview)
+    preview.collision_layer = 0
+    preview.collision_mask = 0
+    preview.set_hair_palette(state.profile.hair)
+    preview.equip_weapon(player.equipped_weapon)
+    preview.face(FITTING_VIEWS[fitting_angle])
+    preview.action_pose(0)
+    preview.equip_body(player.equipped_body)
+    preview.equip_head(player.equipped_head)
     var gear = VBoxContainer.new()
     gear.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     gear.add_theme_constant_override("separation", 7)
     row.add_child(gear)
     var weapon: Dictionary = Actor.WEAPONS.data[player.equipped_weapon]
     gear.add_child(helper.words(weapon.label, 24, "efc580"))
+    gear.add_child(helper.words("%s  ·  %s" % [ChapterState.HEADGEAR[player.equipped_head], ChapterState.BODYGEAR[player.equipped_body]], 17))
     gear.add_child(helper.words("%d damage  ·  %.2f s per swing" % [player.weapon_damage(state.has("honed_axe")), weapon.swing_seconds], 17))
     gear.add_child(helper.words(weapon.description, 16))
     var next_id = "iron_maul" if player.equipped_weapon == "hunting_axe" else "hunting_axe"
-    var swap = helper.action("Equip " + Actor.WEAPONS.data[next_id].label.to_lower(), func():change_weapon(next_id), gear)
-    swap.disabled = player.attack_time > 0 or player.dodge_time > 0 or player.stun > 0
-    if swap.disabled:
-        gear.add_child(helper.words("Finish your current action to change weapons.", 15))
+    var choices := HBoxContainer.new()
+    choices.add_theme_constant_override("separation", 10)
+    gear.add_child(choices)
+    var weapon_button = helper.action("Equip " + Actor.WEAPONS.data[next_id].label.to_lower(), func(): change_equipment("weapon", next_id), choices)
+    helper.action("Turn Ogre", func():
+        fitting_angle = (fitting_angle + 1) % FITTING_VIEWS.size()
+        preview.face(FITTING_VIEWS[fitting_angle])
+        preview.action_pose(0), choices)
+    var armor := HBoxContainer.new()
+    armor.add_theme_constant_override("separation", 10)
+    gear.add_child(armor)
+    var helmet: bool = player.equipped_head == "iron_helm"
+    var head_button = helper.action("Remove iron helm" if helmet else "Equip iron helm",
+        func(): change_equipment("head", "bare" if helmet else "iron_helm"), armor)
+    var body_id := "scale_mantle" if player.equipped_body == "fur" else "fur"
+    var body_button = helper.action("Equip " + ChapterState.BODYGEAR[body_id].to_lower(),
+        func(): change_equipment("body", body_id), armor)
+    var locked := not can_change_equipment()
+    for button: Button in [weapon_button, head_button, body_button]:
+        button.disabled = locked
+    if locked:
+        gear.add_child(helper.words("Finish your current action to change equipment.", 15))
     col.add_child(helper.words("Well fed adds 6 weapon damage. A meal restores 65 health.", 16))
+    if state.inventory.get("goblin_meat", 0) > 0:
+        helper.action("Eat a goblin cut (+25 health)", func(): eat_carried_cut(); belongings(), col)
     helper.action("Return", close_modal, col)
 
-func change_weapon(id: String) -> void:
-    player.equip_weapon(id)
-    state.flags["equipped_iron_maul"] = player.equipped_weapon == "iron_maul"
-    player.ready_time = 0.85
+func can_change_equipment() -> bool:
+    return player.hp > 0 and player.attack_time <= 0 and player.dodge_time <= 0 and player.stun <= 0
+
+func change_equipment(slot: String, id: String) -> void:
+    if not can_change_equipment():
+        return
+    match slot:
+        "weapon":
+            player.equip_weapon(id)
+            state.set_weapon(player.equipped_weapon)
+            player.ready_time = 0.85
+        "head":
+            player.equip_head(id)
+            state.equipment.head = player.equipped_head
+        "body":
+            player.equip_body(id)
+            state.equipment.body = player.equipped_body
+        _:
+            return
     if not save_progress():
-        say("Weapon changed for this visit. Your previous save is preserved.")
+        say("Equipment changed for this visit. Your previous save is preserved.")
     belongings()
 
 func journal() -> void:

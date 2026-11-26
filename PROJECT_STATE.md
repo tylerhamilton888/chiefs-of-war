@@ -1,5 +1,15 @@
 # Project state
 
+## Iron and Embers · 0.9.3
+
+The campaign and Practice Yard use the same Ogre renderer. His weapon, head and shoulder selections save independently. Two weapons, the bare head or iron helm, and the original fur or scale mantle produce eight loadouts. Each armor piece has three wearable views shared by both weapon families. The body drawings supply the position and coverage for each pose. Belongings uses the game actor for its turnable preview. Earlier saves retain their original weapon and appearance.
+
+The field kitchen starts at a clean axe kill. E carries the cut and F eats it for up to 25 health. Throw the carried cut in a local cookpot for two portions of stew. Servings remain in that pot until ladled. The campaign keeps dropped cuts, packed cuts and pots in its save. The default yard encounter includes a cookpot and resets independently. The axe and maul have weapon-specific dodge paintings and impact sounds.
+
+Godot 4.4.1 passed all thirteen gameplay suites. The fitting test checked 136 distinct active drawings, including the four viewing directions and both weapons, and passed against exported game data. New checks exercise the actual inventory choices, save migration, cut collection, stew and planted dodge. The runtime texture audit passed on 64 images. [Four fitted loadouts](docs/review/iron-and-embers/equipment.webp)
+
+The armor slots currently change appearance. Arms, boots and belt are painted into the base, and each weapon family still needs grip and swing art. The mantle's coverage follows the fur outline. A close-cut tunic or bare shoulder would need an underlying clean body drawing. See the [wearable art guide](docs/art/EQUIPMENT_FITTING.md) and [gameplay capture](docs/review/iron-and-embers/yard-to-hearth.mp4).
+
 ## Ogre in Motion · 0.9.2
 
 The Ogre breathes when he comes to rest at Emberhide Crossing. His dedicated run has twelve full-body drawings across front, rear and profile, with the west view mirrored. The hunting axe and iron maul stay visible while he advances, retreats and sidesteps facing the cursor. Each swing has six silhouette changes, and resolves damage when its contact drawing appears. An unarmored goblin has an illustrated cleave and fall for an edged killing strike in full brutality. The maul and restrained presentation use the intact fall. Field butchery, eating individual pieces, and depositing them in the pot are still open.

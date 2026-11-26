@@ -7,6 +7,7 @@ Run `project.godot` in Godot 4.4.1. The title screen opens *The Fire We Carry*, 
 | What the game is and how its systems fit together | [Game Design Bible](docs/design/GAME_DESIGN_BIBLE.md) |
 | Settled direction and choices still open to playtesting | [Decisions](DECISIONS.md) |
 | Visual targets, seven workshop references and nine acceptance gates | [Art & Animation Bible](docs/art/ART_AND_ANIMATION_BIBLE.md) |
+| Fitting independent armor to the animated Ogre | [Wearable art guide](docs/art/EQUIPMENT_FITTING.md) |
 | Cast, first objectives and what the prologue teaches | [Opening outline](docs/design/OPENING_OUTLINE.md) |
 | Milestone order and playable exit criteria | [Roadmap](docs/ROADMAP.md) |
 | What exists and what has actually been tested | [Project state](PROJECT_STATE.md) |

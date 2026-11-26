@@ -55,8 +55,12 @@ func run() -> void:
     await settle(2)
     check(goblin.sprite.region_rect == goblin.RECTS[0][5], "Restrained presentation uses the intact fall")
     check(yard.enemies[1].hp == yard.enemies[1].maximum, "Distant target untouched")
+    key(KEY_H)
+    check(yard.player.equipped_head == "iron_helm" and yard.player.equipped_weapon == "hunting_axe", "Practice can wear the helm with the axe")
+    key(KEY_B)
+    check(yard.player.equipped_body == "scale_mantle" and yard.player.equipped_head == "iron_helm", "Practice equips a mantle independently of the helm")
     key(KEY_TAB)
-    check(yard.player.equipped_weapon == "iron_maul", "Practice loadout swaps to the campaign maul")
+    check(yard.player.equipped_weapon == "iron_maul" and yard.player.equipped_head == "iron_helm" and yard.player.equipped_body == "scale_mantle", "Practice swaps weapons independently of armor")
     yard.player.position = yard.enemies[1].position - Vector2(80, 0)
     check(yard.player.attack(Vector2.RIGHT), "Maul attack accepted")
     await settle(60)
@@ -66,6 +70,7 @@ func run() -> void:
         key(KEY_R)
         await settle(8)
         yard = current_scene
+        check(yard.player.equipped_head == "bare" and yard.player.equipped_body == "fur", "Reset restores practice armor")
         check(yard.player.position == yard.START and yard.enemies.size() == 2, "Reset restores encounter")
         check(yard.player.equipped_weapon == "hunting_axe" and yard.enemies[0].hp == 28 and yard.enemies[1].hp == yard.enemies[1].maximum, "Reset restores loadout and foes")
     yard.enemies[0].active = false

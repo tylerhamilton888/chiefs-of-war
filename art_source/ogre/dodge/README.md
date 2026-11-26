@@ -1,0 +1,3 @@
+# Shoulder slip
+
+The lossless WebP files preserve the source drawings for the Ogre's hunting axe and iron maul. Each sheet contains a crouch, a low driving step and the catch on the lead boot, seen from the front, profile and back. The shared fore-and-aft source adds a foreshortened lead foot for each weapon when the Ogre drives into depth. These alternate drive cells are column four of the front and rear rows. The runtime copies under `assets/ogre/` use consistent scale within each sheet. The matching `resources/ogre/*_dodge.json` files record each cell boundary and its ground origin. West-facing profiles and leftward frontal sidesteps use whole-sprite mirroring.

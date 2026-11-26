@@ -1,0 +1,23 @@
+{
+  "texture": "res://assets/equipment/scale_mantle.png",
+  "views": {
+    "front": [
+      3,
+      3,
+      238,
+      110
+    ],
+    "side": [
+      247,
+      3,
+      235,
+      246
+    ],
+    "rear": [
+      491,
+      3,
+      238,
+      156
+    ]
+  }
+}

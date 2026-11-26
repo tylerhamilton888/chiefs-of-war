@@ -1,7 +1,7 @@
 {
-  "version": "0.9.2",
-  "title": "Hearth and Hunger 0.9.2 — Ogre in Motion",
-  "notes": "docs/RELEASE_0_9_2.md",
+  "version": "0.9.3",
+  "title": "Hearth and Hunger 0.9.3 — Iron and Embers",
+  "notes": "docs/RELEASE_0_9_3.md",
   "prerelease": true,
   "package_layout": "ogre-only",
   "archive_prefix": "HearthAndHunger",
