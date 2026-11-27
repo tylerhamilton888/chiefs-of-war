@@ -4,6 +4,8 @@ import json
 import math
 from pathlib import Path
 
+from weapon_views import turn_sheet
+
 import numpy as np
 from PIL import Image, ImageChops, ImageDraw
 
@@ -92,7 +94,7 @@ def weapon_strip(weapon):
     return result
 
 
-def draw_cell(body, weapon, pose, rear):
+def draw_cell(body, weapon, pose, row):
     gx, gy, angle, dx, dy = pose
     # Preserve the face, chest, fur, and their sockets as one rigid drawing.
     # Transfer the lean through the belt while leaving the planted boots fixed.
@@ -120,23 +122,27 @@ def draw_cell(body, weapon, pose, rear):
     rad = math.radians(angle)
     c, s = math.cos(rad), math.sin(rad)
     scale = 280 / 192  # Same physical head size as the armed walk.
-    a, b = c / scale, s / scale
+    # Project the haft along its length about the fist. Its thickness stays fixed.
+    shaft_scale = scale * (1.0, 0.62, 0.85)[row]
+    a, b = c / shaft_scale, s / shaft_scale
+    cross_x, cross_y = -s / scale, c / scale
     carried = weapon.transform(
         cell.size,
         Image.Transform.AFFINE,
-        (a, b, 85 - a * grip[0] - b * grip[1], -b, a, 43 + b * grip[0] - a * grip[1]),
+        (a, b, 85 - a * grip[0] - b * grip[1], cross_x, cross_y, 43 - cross_x * grip[0] - cross_y * grip[1]),
         Image.Resampling.BICUBIC,
     )
-    if rear:
+    head_mount = [round(grip[0] + 19 * c * shaft_scale, 2), round(grip[1] + 19 * s * shaft_scale, 2), angle, 280]
+    if row == 2:
         # The shaft passes in front of his belly, hidden from the rear camera.
-        return Image.alpha_composite(carried, cell)
+        return Image.alpha_composite(carried, cell), head_mount
     # Only the clenched fist covers the haft. This also keeps the weapon in front of the leg.
     hand = Image.new("L", cell.size)
     x, y = grip
     ImageDraw.Draw(hand).ellipse((x - 15, y - 14, x + 14, y + 14), fill=255)
     result = Image.alpha_composite(cell, carried)
     result.paste(cell, (0, 0), ImageChops.multiply(hand, cell.getchannel("A")))
-    return result
+    return result, head_mount
 
 
 def register_wearables(table):
@@ -174,16 +180,21 @@ def write_rig(path):
 
 def main():
     run = Image.open(ART / "hearthlord_run.png").convert("RGBA")
+    run_heads = {}
     for weapon in ("hunting_axe", "iron_maul"):
         atlas = Image.new("RGBA", (4 * WIDTH, 3 * HEIGHT))
         prop = weapon_strip(weapon)
-        prop.crop((104, 0, 155, 88)).save(ROOT / "assets/equipment" / (weapon + "_head.png"))
+        head = prop.crop((104, 0, 155, 88))
+        turn_sheet(head, weapon).save(ROOT / "assets/equipment" / (weapon + "_head.png"), optimize=True)
+        prop.paste((0, 0, 0, 0), (104, 0, prop.width, prop.height))
+        sockets = {}
         for row, poses in enumerate(POSES):
             for col, pose in enumerate(poses):
                 body = run.crop(
                     (col * 320, row * 288, (col + 1) * 320, (row + 1) * 288)
                 )
-                cell = draw_cell(body, prop, pose, rear=(row == 2))
+                cell, mount = draw_cell(body, prop, pose, row)
+                sockets[f"{col * WIDTH},{row * HEIGHT}"] = mount
                 x0, y0, x1, y1 = cell.getbbox()
                 if min(x0, y0, WIDTH - x1, HEIGHT - y1) < 2:
                     raise ValueError(
@@ -191,6 +202,8 @@ def main():
                     )
                 atlas.paste(cell, (col * WIDTH, row * HEIGHT))
         atlas.save(ART / (weapon + "_run.png"), optimize=True)
+        run_heads[f"res://assets/ogre/{weapon}_run.png"] = sockets
+    (RIG / "run_weapon_sockets.json").write_text(json.dumps(run_heads, indent=2) + "\n")
     for slot in ("head", "shoulder"):
         write_rig(RIG / (slot + "_sockets.json"))
 

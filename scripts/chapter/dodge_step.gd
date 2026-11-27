@@ -17,6 +17,10 @@ static func pose(actor, elapsed: float) -> void:
     var index := 0 if elapsed < PUSH_OFF else 1 if elapsed < FIRST_CONTACT else 2
     if index == 1 and view != 1 and absf(actor.locked.y) > absf(actor.locked.x):
         index = 3 # Toward/away from the camera, the lead boot is foreshortened.
+    if view == 2:
+        # The depth-step drawing already has its iron on the opposite side.
+        if index != 3:
+            mirror = not mirror
     if actor.dodge_drawing.is_empty():
         actor.action_pose(3)
         return

@@ -13,7 +13,7 @@ static func run_pose(actor, facing: int, phase: float) -> void:
     var row := 0 if facing == 0 else 2 if facing == 3 else 1
     var index := floori(fposmod(phase, 1.0) * 4.0)
     var frame := [index * 480, row * 304, 480, 304, 240, 282]
-    preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, RUN_SHEETS[actor.equipped_weapon], frame, actor.height / 280.0, facing == 1)
+    preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, RUN_SHEETS[actor.equipped_weapon], frame, actor.height / 280.0, facing in [1, 3])
 
 static var definitions: Dictionary = {}
 static var textures: Dictionary = {}
@@ -38,6 +38,6 @@ static func pose(actor, move_direction: Vector2, cycle: float) -> void:
     var index := mini(frames.size()-1, floori(phase * frames.size()))
     var frame: Array = frames[index]
     var factor: float = actor.height / data.height
-    # The rear maul walk was drawn with the iron on the opposite side of its ready pose.
-    var mirror: bool = actor.facing == 1 or (row == 2 and weapon == "iron_maul")
+    # The maul walk already puts the held end on screen-left in the rear view.
+    var mirror: bool = actor.facing == 1 or (row == 2 and weapon == "hunting_axe")
     preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, textures[weapon], frame, factor, mirror)

@@ -40,6 +40,14 @@ func verify_pose(actor: Actor, fitted_iron := false) -> void:
         check(mask != null and Rect2(Vector2.ZERO, mask.get_size()).encloses(sample_rect), "Covered panel inside mask atlas")
         check(mantle.piece.flip_h == body.flip_h, "Covered panel follows handedness")
         check(mantle.get_index() < gear.get_index(), "Head draws over body armor on " + label)
+    if fitted_iron:
+        var column := 0
+        if gear.socket[4] == "side":
+            column = 3 if body.flip_h else 1
+        elif gear.socket[4] == "rear":
+            column = 2
+        check(weapon.iron.region_rect.position.x == column * weapon.CELL.x, "Weapon turns with helmet and shoulders on " + label)
+        check((weapon.get_index() < body.get_index()) == (gear.socket[4] == "rear"), "Torso covers the rear weapon on " + label)
     unique[label] = true
     check(gear.piece.flip_h == body.flip_h, "Helm mirror on " + label)
     check(gear.transform == body.transform, "Matching body transform on " + label)
@@ -85,7 +93,7 @@ func run() -> void:
                 verify_pose(actor, true)
             for i in 4:
                 actor.ArmedGait.run_pose(actor, facing, float(i) * 0.25)
-                verify_pose(actor)
+                verify_pose(actor, true)
             for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
                 for i in 4:
                     actor.ArmedGait.pose(actor, direction, float(i) * 0.25)
@@ -99,6 +107,20 @@ func run() -> void:
     check(actor.head_gear.position.y < actor.sprite.position.y, "Breath lifts the head attachment at its socket")
     check(actor.body_gear.visible and actor.body_gear.position.y < actor.sprite.position.y, "Mantle follows the shoulders through the breathing idle")
     check(actor.body_gear.get_index() > actor.idle_breath.get_index() and actor.body_gear.get_index() < actor.head_gear.get_index(), "Breathing body, mantle, head draw in order")
+    # Check the actual screen-space position at a half turn, independently of the flip flags.
+    for id in actor.WEAPONS.data:
+        actor.equip_weapon(id)
+        for bearing in [Vector2.DOWN, Vector2.UP]:
+            actor.face(bearing)
+            actor.action_pose(0)
+            actor._process(0.0)
+            var mount := actor.to_local(actor.weapon_head.iron.global_position)
+            check(mount.x * bearing.y > 15.0, "Ready weapon crosses the torso on a half turn: " + id)
+            for gait in 4:
+                actor.ArmedGait.run_pose(actor, actor.facing, float(gait) / 4)
+                actor._process(0.0)
+                var run_mount := actor.to_local(actor.weapon_head.iron.global_position)
+                check(run_mount.x * bearing.y > 10.0, "Run grip stays on its carrying side: " + id)
     var strike_key: Array = []
     for head in ["bare", "iron_helm"]:
         actor.equip_head(head)

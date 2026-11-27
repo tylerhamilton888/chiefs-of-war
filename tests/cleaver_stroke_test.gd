@@ -30,7 +30,7 @@ func run() -> void:
         player.position = origin
         player.cooldown = 0.0
         check(player.attack(aim), "Attack accepted")
-        check(player.sprite.texture == player.swing_drawings[view].texture and player.sprite.flip_h == (sector in [3,4,7]), "Edge points into sector %d" % sector)
+        check(player.sprite.texture == player.swing_drawings[view].texture and player.sprite.flip_h == (sector in [3,4,6,7]), "Edge points into sector %d" % sector)
         check(Stroke.reaches(aim * 96, aim, 16), "Target at edge")
         check(not Stroke.reaches(aim * -12, aim, 16), "Target behind Ogre")
         check(not Stroke.reaches(aim * 72 + aim.orthogonal() * 45, aim, 16), "Target outside sweep")

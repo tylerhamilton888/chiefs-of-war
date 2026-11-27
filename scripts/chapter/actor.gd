@@ -153,8 +153,9 @@ func weapon_damage(honed_axe := false) -> float:
 func action_pose(index: int) -> void:
     if combat_art.is_empty():show_frame(1 if index==1 else 0);return
     var row=0 if facing==0 else 2 if facing==3 else 1
-    if FrameArt.pose(sprite,action_art,row*4+index,height,facing==1):return
-    apply_region(combat_art.frames[row][index],action_art,facing==1,height/float(combat_art.height))
+    var mirror := facing == 1 or (facing == 3 and identity == "player")
+    if FrameArt.pose(sprite,action_art,row*4+index,height,mirror):return
+    apply_region(combat_art.frames[row][index],action_art,mirror,height/float(combat_art.height))
 func show_swing(phase_index: int) -> void:
     if running_cut and phase_index == 0:
         swing_phase = 0
@@ -227,11 +228,11 @@ func attack(aim: Vector2) -> bool:
     running_cut = identity == "player" and not hostile and equipped_weapon == "hunting_axe" and run_grace > 0.0 and not guarding and locked.dot(run_heading) > 0.70
     run_grace = 0.0
     face(locked)
-    mirror_oblique = false
+    mirror_oblique = facing == 3
     if not hostile and equipped_weapon == "hunting_axe":
         var bearing := posmod(roundi(locked.angle() / (PI / 4.0)), 8)
         facing = [2, 0, 0, 0, 1, 3, 3, 3][bearing]
-        mirror_oblique = bearing == 3 or bearing == 7
+        mirror_oblique = bearing in [3, 6, 7]
     attack_time = 1.15 if hostile else float(WEAPONS.data[equipped_weapon].swing_seconds)
     contact_hold = 0.0
     attack_done=false;guarding=false

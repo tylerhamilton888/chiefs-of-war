@@ -101,7 +101,7 @@ func run() -> void:
         for index in range(4):
             game.player.action_pose(index)
             verify(game.player.sprite.get_meta("registered_pose", "").contains("player_maul_nordic.png"), "Registered maul pose")
-            verify(game.player.sprite.flip_h == (facing == 1), "Weapon follows the facing direction")
+            verify(game.player.sprite.flip_h == (facing in [1, 3]), "Weapon follows the facing direction")
     verify(game.player.weapon_damage(true) == 42, "Honing applies to the axe only")
     verify(game.player.attack(Vector2.RIGHT) and is_equal_approx(game.player.attack_time, 0.88), "Maul attack timing")
     game.player.attack_time = 0
@@ -119,7 +119,7 @@ func run() -> void:
                 if game.player.swing_phase != phases.back():
                     phases.append(game.player.swing_phase)
                 poses[[game.player.sprite.texture.resource_path, game.player.sprite.region_rect]] = true
-                verify(game.player.sprite.flip_h == (aim == Vector2.LEFT), "Pose holds swing direction")
+                verify(game.player.sprite.flip_h == (aim in [Vector2.LEFT, Vector2.UP]), "Pose holds swing direction")
             verify(phases == [0, 1, 2, 3, 4, 5], "All six authored beats play")
             verify(poses.size() >= 6, "Each beat supplies its own silhouette")
             verify(contact_phases == [3], "One damage event on the contacting drawing")

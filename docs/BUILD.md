@@ -32,6 +32,8 @@ XDG_DATA_HOME="$(mktemp -d)" godot --audio-driver Dummy --fixed-fps 30 --write-m
 
 To record the armed run with both armor pieces equipped and combat effects disabled, use the same command with `--script tests/armed_run_capture.gd -- --test --armed-run`. The take keeps the hunting axe equipped through the charges, guard and return run. Append `--maul` to record the same sequence with the iron maul.
 
+For a turning review, run `tests/equipment_turn_capture.gd` with `-- --test --turns`. Add `--maul` for the second weapon. The yard opponents are stationary. The recording turns the cursor through all four facings while ready, guarding and moving, then turns during a sprint and strikes toward the rear.
+
 ## Artwork and review images
 
 Keep original artwork and retired variants in `art_source/`. Mirror the corresponding asset folder there so the original is easy to find. Godot ignores this directory and the Windows export excludes it. Store the current game images in `assets/`. Godot's lossless importer preserves sprite transparency and atlas geometry. The four opaque title and loading illustrations use a quality 0.90 lossy import. Their checked-in PNGs retain the original pixels.
