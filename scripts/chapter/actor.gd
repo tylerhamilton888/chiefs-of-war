@@ -47,6 +47,8 @@ var run_facing := 0
 var run_phase := 0.0
 var running_cut := false
 var swing_phase := 0
+const WeaponHead = preload("res://scripts/chapter/weapon_head.gd")
+var weapon_head: WeaponHead
 var equipped_weapon := "hunting_axe"
 const ArmedGait = preload("res://scripts/chapter/armed_gait.gd")
 const READY_SECONDS := 2.4
@@ -71,6 +73,11 @@ func _ready() -> void:
         if not ResourceLoader.exists(action_texture):action_texture="res://assets/chapter/"+identity+"_combat.png"
         action_art=load(action_texture)
     if identity == "player":
+        var palette := ShaderMaterial.new()
+        palette.shader = preload("res://shaders/ogre_palette.gdshader")
+        sprite.material = palette
+        weapon_head = WeaponHead.new()
+        add_child(weapon_head)
         equip_weapon(equipped_weapon)
     collision_layer=2;collision_mask=1
     show_frame(0)
@@ -92,6 +99,8 @@ func apply_region(r: Array,texture: Texture2D,mirror: bool,factor: float) -> voi
 func equip_weapon(id: String) -> void:
     if identity != "player" or not WEAPONS.data.has(id):
         return
+    if weapon_head != null and (equipped_weapon != id or weapon_head.iron.texture == null):
+        weapon_head.equip(load(WEAPONS.data[id].head_texture))
     if equipped_weapon == id and not swing_drawings.is_empty():
         return
     equipped_weapon = id
@@ -130,6 +139,8 @@ func set_worn_piece(layer: GearVisual, slot: String, id: String) -> GearVisual:
     return layer
 
 func align_worn_pieces() -> void:
+    if weapon_head != null:
+        weapon_head.align_to(sprite)
     if body_gear != null:
         body_gear.align_to(sprite, idle_breath)
     if head_gear != null:
@@ -364,13 +375,12 @@ func _draw() -> void:
 
 func set_hair_palette(hair: String) -> void:
     var palette: int = preload("res://scripts/chapter/state.gd").HAIR.find(hair)
-    if palette <= 0:
-        sprite.material = null
-        return
-    var shader_material := ShaderMaterial.new()
-    shader_material.shader = preload("res://shaders/ogre_palette.gdshader")
-    shader_material.set_shader_parameter("palette", palette)
-    sprite.material = shader_material
+    var shader_material: ShaderMaterial = sprite.material
+    if shader_material == null:
+        shader_material = ShaderMaterial.new()
+        shader_material.shader = preload("res://shaders/ogre_palette.gdshader")
+        sprite.material = shader_material
+    shader_material.set_shader_parameter("palette", maxi(0, palette))
 
 ## Only the playable Ogre's steady exploration rest gets the subtle chest motion.
 ## Authored weapon, cinematic and moving poses own the complete drawing elsewhere.

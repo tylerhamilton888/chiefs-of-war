@@ -23,3 +23,9 @@ Run `python tools/build_shoulder_coverage.py` after editing the source poses or 
 ## Adding a pose or weapon
 
 A new full-body drawing needs registrations for each supported gear slot. At gameplay zoom, inspect the raised hands, behind-the-back swings, forward lean, turn and landing. Run `tests/head_gear_test.gd` to check fitted frames, mirrored transforms, layer order, breathing and the independent combinations. The axe and maul still own their painted grips and strike silhouettes. A different grip or swing needs its own weapon-family art. Boots, back items, shields and fully replaceable torso armor remain future slots.
+
+## Weapon continuity
+
+The hunting axe and iron maul each use one painted head at the same in-world size through the armed walk, dodge, guard and strike. The run sheets bake that same head into the carrying hand. The authored shaft and fingers establish the grip in each combat drawing.
+
+When changing the carry art, run `python tools/build_armed_run.py` to extract the head masters and rebuild the run sheets. The head sockets and outlines of the original iron are registered in native frame pixels in `art_source/equipment/weapon_head_registration.json`. Each entry gives the socket x and y, the clockwise shaft angle, the source body height, and the outline as x/y pairs. Run `python tools/build_weapon_head_patches.py` with Pillow, NumPy and SciPy to rebuild the body patches and runtime sockets. Review both weapons from the front, side and rear with the helmet and shoulders fitted.

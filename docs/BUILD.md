@@ -30,7 +30,7 @@ Record a continuous 30-second run from the repository root with a display availa
 XDG_DATA_HOME="$(mktemp -d)" godot --audio-driver Dummy --fixed-fps 30 --write-movie /tmp/yard.avi --script tests/cleaver_benchmark_capture.gd -- --test --cleaver-benchmark
 ```
 
-To record the armed run with both armor pieces equipped and combat effects disabled, use the same command with `--script tests/armed_run_capture.gd -- --test --armed-run`. The continuous take includes a cleaver charge against both opponents and a return run with the maul.
+To record the armed run with both armor pieces equipped and combat effects disabled, use the same command with `--script tests/armed_run_capture.gd -- --test --armed-run`. The take keeps the hunting axe equipped through the charges, guard and return run. Append `--maul` to record the same sequence with the iron maul.
 
 ## Artwork and review images
 

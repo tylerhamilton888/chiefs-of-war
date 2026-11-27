@@ -11,7 +11,8 @@
       "front": "res://resources/chapter/player_axe_front_swing.json",
       "rear": "res://resources/chapter/player_axe_back_swing.json"
     },
-    "dodge": "res://resources/ogre/hunting_axe_dodge.json"
+    "dodge": "res://resources/ogre/hunting_axe_dodge.json",
+    "head_texture": "res://assets/equipment/hunting_axe_head.png"
   },
   "iron_maul": {
     "label": "Iron maul",
@@ -25,6 +26,7 @@
       "side": "res://resources/chapter/player_maul_side_swing.json",
       "rear": "res://resources/chapter/player_maul_rear_swing.json"
     },
-    "dodge": "res://resources/ogre/iron_maul_dodge.json"
+    "dodge": "res://resources/ogre/iron_maul_dodge.json",
+    "head_texture": "res://assets/equipment/iron_maul_head.png"
   }
 }

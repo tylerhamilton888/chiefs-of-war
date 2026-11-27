@@ -38,4 +38,6 @@ static func pose(actor, move_direction: Vector2, cycle: float) -> void:
     var index := mini(frames.size()-1, floori(phase * frames.size()))
     var frame: Array = frames[index]
     var factor: float = actor.height / data.height
-    preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, textures[weapon], frame, factor, actor.facing == 1)
+    # The rear maul walk was drawn with the iron on the opposite side of its ready pose.
+    var mirror: bool = actor.facing == 1 or (row == 2 and weapon == "iron_maul")
+    preload("res://scripts/ogre_frame_art.gd").cell(actor.sprite, textures[weapon], frame, factor, mirror)

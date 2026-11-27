@@ -5,8 +5,26 @@ uniform int palette = 0;
 // On paired finisher sheets, an authored rectangle covers only the Ogre's hair/beard.
 uniform vec4 hair_region = vec4(0.0);
 
+// These small repairs expose the body that remains under the detachable iron.
+uniform bool has_iron_patch = false;
+uniform vec2 body_source;
+uniform vec2 patch_size;
+uniform vec2 patch_origin;
+uniform sampler2D body_patches : source_color, filter_linear, repeat_disable;
+varying vec4 body_tint;
+
+void vertex() {
+    body_tint = COLOR;
+}
+
 void fragment() {
     vec4 c = COLOR;
+    if (has_iron_patch) {
+        vec2 p = UV / TEXTURE_PIXEL_SIZE - body_source;
+        if (all(greaterThanEqual(p, vec2(0))) && all(lessThan(p, patch_size))) {
+            c = texture(body_patches, (p + patch_origin) / vec2(textureSize(body_patches, 0))) * body_tint;
+        }
+    }
     if (palette > 0 && c.a > 0.0) {
         float red = c.r;
         // Inspect colors in perceptual space; warm skin is otherwise mistaken for red hair.

@@ -17,22 +17,22 @@ LEFT_PAD = (WIDTH - 320) // 2
 # Opposite boot contacts get different pitches. Both hands keep their anatomical side.
 POSES = [
     [
-        (204, 136, 26, 8, 17),
-        (240, 140, 50, -8, 14),
-        (238, 146, 45, -10, 19),
-        (198, 140, 22, 7, 13),
+        (204, 136, 10, 8, 17),
+        (240, 140, 13, -8, 14),
+        (238, 146, 16, -10, 19),
+        (198, 140, 9, 7, 13),
     ],
     [
-        (96, 160, 163, 22, 16),
-        (233, 108, 69, 17, 11),
-        (267, 98, 57, 25, 15),
-        (111, 158, 158, 19, 10),
+        (96, 160, 39, 22, 16),
+        (233, 108, 24, 17, 11),
+        (267, 98, 17, 25, 15),
+        (111, 158, 36, 19, 10),
     ],
     [
-        (85, 164, 148, -7, 7),
-        (89, 136, 157, 7, 3),
-        (86, 132, 161, 9, 6),
-        (86, 136, 150, -6, 3),
+        (235, 135, 26, -7, 7),
+        (235, 128, 18, 7, 3),
+        (233, 158, 30, 9, 6),
+        (232, 136, 23, -6, 3),
     ],
 ]
 
@@ -79,7 +79,7 @@ def weapon_strip(weapon):
     mask = Image.new("L", image.size)
     ImageDraw.Draw(mask).polygon(head, fill=255)
     result = Image.new("RGBA", (176, 88))
-    # Working strip is horizontal, with the Ogre's grip at (46,43).
+    # The head sockets to the haft at (104, 43) in this horizontal strip.
     handle = image.crop((70, grip_y - 5, 96, grip_y + 6)).resize((95, 11))
     result.paste(handle, (13, 38))
     pommel = image.crop((28, 114, 39, 131) if axe else (3, 108, 15, 126))
@@ -92,7 +92,7 @@ def weapon_strip(weapon):
     return result
 
 
-def draw_cell(body, weapon, pose, row):
+def draw_cell(body, weapon, pose, rear):
     gx, gy, angle, dx, dy = pose
     # Preserve the face, chest, fur, and their sockets as one rigid drawing.
     # Transfer the lean through the belt while leaving the planted boots fixed.
@@ -119,14 +119,17 @@ def draw_cell(body, weapon, pose, row):
     grip = (gx + LEFT_PAD + dx * k, gy + dy * k)
     rad = math.radians(angle)
     c, s = math.cos(rad), math.sin(rad)
-    scale = 1.30 if row == 1 else 1.38
+    scale = 280 / 192  # Same physical head size as the armed walk.
     a, b = c / scale, s / scale
     carried = weapon.transform(
         cell.size,
         Image.Transform.AFFINE,
-        (a, b, 46 - a * grip[0] - b * grip[1], -b, a, 43 + b * grip[0] - a * grip[1]),
+        (a, b, 85 - a * grip[0] - b * grip[1], -b, a, 43 + b * grip[0] - a * grip[1]),
         Image.Resampling.BICUBIC,
     )
+    if rear:
+        # The shaft passes in front of his belly, hidden from the rear camera.
+        return Image.alpha_composite(carried, cell)
     # Only the clenched fist covers the haft. This also keeps the weapon in front of the leg.
     hand = Image.new("L", cell.size)
     x, y = grip
@@ -174,12 +177,13 @@ def main():
     for weapon in ("hunting_axe", "iron_maul"):
         atlas = Image.new("RGBA", (4 * WIDTH, 3 * HEIGHT))
         prop = weapon_strip(weapon)
+        prop.crop((104, 0, 155, 88)).save(ROOT / "assets/equipment" / (weapon + "_head.png"))
         for row, poses in enumerate(POSES):
             for col, pose in enumerate(poses):
                 body = run.crop(
                     (col * 320, row * 288, (col + 1) * 320, (row + 1) * 288)
                 )
-                cell = draw_cell(body, prop, pose, row)
+                cell = draw_cell(body, prop, pose, rear=(row == 2))
                 x0, y0, x1, y1 = cell.getbbox()
                 if min(x0, y0, WIDTH - x1, HEIGHT - y1) < 2:
                     raise ValueError(

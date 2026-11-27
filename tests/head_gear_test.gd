@@ -15,11 +15,18 @@ func check(ok: bool, message: String) -> void:
         failures += 1
         push_error(message)
 
-func verify_pose(actor: Actor) -> void:
+func verify_pose(actor: Actor, fitted_iron := false) -> void:
     var gear := actor.head_gear
     var body := actor.sprite
     gear.align_to(body)
     var label := "%s %s" % [body.texture.resource_path.get_file(), body.region_rect]
+    var weapon := actor.weapon_head
+    weapon.align_to(body)
+    check(weapon.visible == fitted_iron, "Correct weapon-head layer on " + label)
+    if fitted_iron:
+        check(weapon.iron.texture.resource_path == actor.WEAPONS.data[actor.equipped_weapon].head_texture, "Equipped iron is shared on " + label)
+        var world_size := absf(weapon.iron.scale.y * body.scale.y)
+        check(is_equal_approx(world_size, actor.height / weapon.WALK_HEIGHT), "Consistent weapon-head scale on " + label)
     check(gear.visible and not gear.socket.is_empty(), "Missing fitted head socket on " + label)
     if not gear.visible:
         return
@@ -66,23 +73,23 @@ func run() -> void:
             actor.equip_weapon(weapon)
             for i in 4:
                 actor.action_pose(i)
-                verify_pose(actor)
+                verify_pose(actor, true)
             for phase in 6:
                 actor.show_swing(phase)
-                verify_pose(actor)
+                verify_pose(actor, true)
             var dodge_art: Texture2D = load("res://assets/ogre/%s_dodge.png" % weapon)
             var dodge: Dictionary = load("res://resources/ogre/%s_dodge.json" % weapon).data
             var row := 0 if facing == 0 else 2 if facing == 3 else 1
             for frame in dodge.rows[row]:
                 actor.FrameArt.cell(actor.sprite, dodge_art, frame, actor.height / dodge.height, facing == 1)
-                verify_pose(actor)
+                verify_pose(actor, true)
             for i in 4:
                 actor.ArmedGait.run_pose(actor, facing, float(i) * 0.25)
                 verify_pose(actor)
             for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
                 for i in 4:
                     actor.ArmedGait.pose(actor, direction, float(i) * 0.25)
-                    verify_pose(actor)
+                    verify_pose(actor, true)
     check(tested_foreground, "A hand or weapon passes in front of the helmet")
     actor.facing = 0
     actor.show_frame(0)
